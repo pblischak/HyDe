@@ -116,8 +116,8 @@ void HyDe::_parseSpeciesMap(){
   if(!_mapStream.is_open()){
     while(_mapStream >> _s1 >> _s2){
       _indCount++;
-      _speciesMap.push_back(_s1);
-      _speciesMap.push_back(_s2);
+      _indNames.push_back(_s1);
+      _speciesMap[_s2].push_back(_indCount);
       if(_s2.compare(_s2prev) != 0){
         _taxaCount++;
         _s2prev = _s2;
@@ -142,6 +142,8 @@ void HyDe::_parseSpeciesMap(){
   }
 }
 
+/* Read in DNA matrix in sequential Phylip format w/o header info.        */
+/* Converts DNA bases to integer codes using inlined _convert function.   */
 void HyDe::_readInfile(){
   std::ifstream _infileStream(_infile);
   std::string _str1, _str2;
@@ -150,9 +152,9 @@ void HyDe::_readInfile(){
 
   } else {
     while(_infileStream >> _str1 >> _str2){
-      if(_str1.compare(_speciesMap[_indIndex * 2]) != 0){
+      if(_str1.compare(_indNames[_indIndex]) != 0){
         std::cerr << "\n** ERROR: Name in infile does not match name in map file. **\n" << std::endl
-                  << "  Line " << _indIndex + 1 << ": " << _str1 << " vs." << _speciesMap[_indIndex * 2] << "\n" << std::endl;
+                  << "  Line " << _indIndex + 1 << ": " << _str1 << " vs." << _indNames[_indIndex] << "\n" << std::endl;
         _errCount++;
       }
 
