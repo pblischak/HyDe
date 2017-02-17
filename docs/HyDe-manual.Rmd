@@ -1,0 +1,96 @@
+---
+title: 'HyDe: hybrid detection using phylogenetic invariants'
+date: '`r format(Sys.time(), "%d %B, %Y")`'
+output:
+  html_document:
+    highlight: tango
+    theme: lumen
+    #toc: true
+    #toc_float: true
+---
+<style>
+p {
+  font-size: 125%;
+}
+
+li {
+  font-size: 115%;
+}
+</style>
+
+The program **HyDe** implements the method for hybrid detection described in:
+
+ - Laura S. Kubatko and Julia Chifman. An Invariants-based Method for Efficient Identification of Hybrid Species From Large-scale Genomic Data. *bioRxiv* **doi**: <a href="https://doi.org/10.1101/034348" target="_blank">https://doi.org/10.1101/034348</a>.
+ 
+# Installation
+
+**HyDe** is written in C++ and can be compiled into an executable (`hyde`) using the Makefile provided in the `src/` folder. Some of the features in **HyDe** use the C++11 standard, so a compatible compiler is required.
+
+```bash
+cd HyDe/src
+make
+sudo make install
+```
+
+The last command will copy `hyde` to `/usr/local/bin` so that it is available for execution from anywhere on your computer. If you want to remove it, simply type `sudo make uninstall`.
+
+# Command line interface
+
+### Getting help
+
+```bash
+hyde --help
+
+## Usage: hyde -i <infile> -n <num-individuals> -s <num-sites> 
+##        -m <species-map> -o <outgroup> [additional options]
+##
+## Information options:
+##   -h [--help]          Prints this help message
+##   -v [--version]       Prints version information
+##
+## Program options:
+##   -i [--infile]        Name of the data input file
+##   -n [--num-ind]       Number of individuals in data matrix
+##   -s [--num-sites]     Number of sites in the data matrix
+##   -t [--num-taxa]      Number of taxa (species, OTUs)
+##   -m [--map]           Map of individuals to taxa
+##   -o [--outgroup]      Name of the outgroup (only one accepted)
+##
+## Additional options:
+##   -p [--p-value]       P-value cutoff for test of significance (default=0.05)
+##   --prefix             Append a prefix to the beginning of outfile and logfile
+##   --quiet              Turn off printing to stdout
+##   --log                Print run info to logfile
+```
+
+### Version information
+
+```bash
+hyde --version
+
+## This is HyDe version 0.1.0-alpha (February 2017).
+```
+
+# Getting started
+
+## Input file
+
+```
+Individual1    AGTCGTGCGAGTACAGTGTGAC...
+Individual2    AGTCGCGCGAGTACAGTGTGAC...
+.
+.
+.
+IndividualN    AGTCGTGCGAGRACAGTGTGAC...
+```
+
+## Map file
+
+```
+Individual1 Taxon1
+Individual2 Taxon1
+.
+.
+.
+IndividualN TaxonM
+```

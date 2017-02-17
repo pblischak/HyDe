@@ -36,7 +36,7 @@ int main(int argc, char* argv[]){
 }
 
 void usage(){
-  std::cerr << "\nUsage: hyde {-h|-v} -i <infile> -n <num-individuals> -s <num-sites> -m <species-map> -o <outgroup> [additional options]" << std::endl
+  std::cerr << "\nUsage: hyde -i <infile> -n <num-individuals> -s <num-sites> -m <taxon-map> -o <outgroup> [additional options]" << std::endl
             << "\nInformation options:" << std::endl
             << "  -h [--help]          Prints this help message" << std::endl
             << "  -v [--version]       Prints version information" << std::endl
@@ -45,11 +45,11 @@ void usage(){
             << "  -n [--num-ind]       Number of individuals in data matrix" << std::endl
             << "  -s [--num-sites]     Number of sites in the data matrix" << std::endl
             << "  -t [--num-taxa]      Number of taxa (species, OTUs)" << std::endl
-            << "  -m [--map]           Map of individuals to species" << std::endl
-            << "  -o [--outgroup]      Name of the outgroup species (only one accepted)" << std::endl
+            << "  -m [--map]           Map of individuals to taxa" << std::endl
+            << "  -o [--outgroup]      Name of the outgroup (only one accepted)" << std::endl
             << "\nAdditional options:" << std::endl
             << "  -p [--p-value]       P-value cutoff for test of significance (default=0.05)" << std::endl
             << "  --prefix             Append a prefix to the beginning of outfile and logfile" << std::endl
-            << "  --quiet              Turn of printing to stdout" << std::endl
+            << "  --quiet              Turn off printing to stdout" << std::endl
             << "  --log                Print run info to logfile\n" << std::endl;
 }

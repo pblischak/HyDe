@@ -108,19 +108,20 @@ void HyDe::_checkCommandLineInput(){
   }
 }
 
-/* Read in species map file. */
+/* Read in taxon map file. */
 void HyDe::_parseSpeciesMap(){
   std::ifstream _mapStream(_mapfile);
-  std::string _s1, _s2, _s2prev = "";
+  std::string _str1, _str2, _str2prev = "";
   int _indCount = 0, _taxaCount = 0;
   if(!_mapStream.is_open()){
-    while(_mapStream >> _s1 >> _s2){
+    while(_mapStream >> _str1 >> _str2){
       _indCount++;
-      _indNames.push_back(_s1);
-      _speciesMap[_s2].push_back(_indCount);
-      if(_s2.compare(_s2prev) != 0){
+      _indNames.push_back(_str1);
+      _taxaMap[_str2].push_back(_indCount);
+      if(_str2.compare(_str2prev) != 0){
         _taxaCount++;
-        _s2prev = _s2;
+        _taxaNames.push_back(_str2);
+        _str2prev = _str2;
       }
     }
   } else {

@@ -37,8 +37,8 @@ private:
               _outfile = "out.txt", _prefix = "hyde", _outgroup = "none";
   double _pValue = 0.05;
   int _nInd = -999, _nSites = -999, _nTaxa = -999;
-  std::vector<std::string> _indNames, _speciesNames;
-  std::unordered_map<std::string, std::vector<int> > _speciesMap;
+  std::vector<std::string> _indNames, _taxaNames;
+  std::unordered_map<std::string, std::vector<int> > _taxaMap;
   std::vector<int>  _dnaMatrix, _uniqueSitePatterns, _uniqueSitePatternCounts;
   bool _log = 0, _quiet = 0;
 
