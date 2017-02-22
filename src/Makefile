@@ -2,7 +2,7 @@ EXE = hyde
 OBJ = HyDe.o main.o
 
 CXX = g++
-CXXFLAGS = -Wall -O3 -g -std=c++11 -march=native
+CXXFLAGS = -Wall -O3 -g -std=c++11
 
 .PHONY : clean install uninstall
 

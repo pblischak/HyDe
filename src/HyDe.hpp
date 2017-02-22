@@ -22,26 +22,31 @@ private:
   void _checkCommandLineInput();
   void _parseSpeciesMap();
   void _readInfile();
-  void _writeOoutfile();
-  void _writeLogFile();
+  void _printOut(std::string p1,
+                 std::string hyb,
+                 std::string p2,
+                 double z, double p,
+                 double cp[16][16],
+                 std::ofstream& out);
 
-  /* Functions for calculating .*/
-  inline int _convert(char str);          /* Convert DNA bases form characters to ints.      */
-  void _resolveAmbiguity(int code);        /* Randomly resolves ambiguity codes.              */
-  double _getGH();                         /* Calculates GH test statistic.                   */
-  double _getPvalue();                     /* Calculate p-value with bonferroni correction.   */
-  double _bonferroniCorrect();             /* Bonferroni correctiono based on number of taxa. */
+  /* Functions for calculating stuff.*/
+  inline int _convert(char str);                 /* Convert DNA bases form characters to ints.      */
+  int _resolveAmbiguity(int out, int p1,        /* Randomly resolves ambiguity codes.              */
+                        int hyb, int p2,
+                        double cp[16][16]);
+  double _calcGH(double cp[16][16], int nObs);   /* Calculates GH test statistic.                   */
+  double _calcPvalue(double myZ);                /* Calculate p-value with bonferroni correction.   */
+  double _bonferroniCorrect();                   /* Bonferroni correction based on number of taxa.  */
+  int _getCountMatrix(const std::string p1,            /* Populates count matrix from given triplet.      */
+                      const std::string hyb,
+                      const std::string p2,
+                      double cp[16][16]);
 
   /* private member variables */
-  std::string _infile = "none", _mapfile = "none", _logfile = "log.txt",
-              _outfile = "out.txt", _prefix = "hyde", _outgroup = "none";
+  std::string _infile = "none", _mapfile = "none", _prefix = "hyde";
   double _pValue = 0.05;
-  int _nInd = -999, _nSites = -999, _nTaxa = -999;
-  std::vector<std::string> _indNames, _taxaNames;
-  std::unordered_map<std::string, std::vector<int> > _taxaMap;
-  std::vector<int>  _dnaMatrix, _uniqueSitePatterns, _uniqueSitePatternCounts;
-  bool _log = 0, _quiet = 0;
-
+  int _nInd = -999, _nSites = -999, _nTaxa = -999, _threads = 1;
+  std::vector<std::string> _indNames;
 };
 
 inline int HyDe::_convert(char str){
@@ -64,7 +69,8 @@ inline int HyDe::_convert(char str){
     case 'N': case 'n': _baseCode = 15;  break;
     case '-': _baseCode = 4; break;
     case '?': _baseCode = 15; break;
-    default : break;
+    default : {std::cerr << "\n** ERROR: Unrecognized base character in DNA matrix: \"" << str << "\". **\n" << std::endl;
+               exit(EXIT_FAILURE);} break;
   }
 
   return _baseCode;

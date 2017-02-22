@@ -4,14 +4,15 @@
 
 #include "HyDe.hpp"
 
+/* Version info. */
 const std::string Version = "0.1.0-alpha";
-const std::string Date = "February 2017";
+const std::string Date    = "February 2017";
 
 void usage();
 
 int main(int argc, char* argv[]){
   /* Initial parsing of command line options to look for -h / --help,
-   * -v / --version, or an incorrect number of arguments.*/
+   * -v / --version, or an incorrect number of arguments. */
   if(argc < 2){
     std::cerr << "\n** ERROR: Incorrect number of arguments. **" << std::endl;
     usage();
@@ -28,9 +29,9 @@ int main(int argc, char* argv[]){
     exit(EXIT_SUCCESS);
   }
   /* Pass argc and argv to constructor for HyDe class. It does a more intense
-   * level of command line option parsing. */
-   HyDe hObj(argc, argv);
-   hObj.run();
+   * level of command line option parsing and initializes all variables. */
+   HyDe hydeObj(argc, argv);
+   hydeObj.run();
 
   return EXIT_SUCCESS;
 }
@@ -49,7 +50,7 @@ void usage(){
             << "  -o [--outgroup]      Name of the outgroup (only one accepted)" << std::endl
             << "\nAdditional options:" << std::endl
             << "  -p [--p-value]       P-value cutoff for test of significance (default=0.05)" << std::endl
+            << "  --threads            Number of threads to use for parallelization (default=1)" << std::endl
             << "  --prefix             Append a prefix to the beginning of outfile and logfile" << std::endl
-            << "  --quiet              Turn off printing to stdout" << std::endl
-            << "  --log                Print run info to logfile\n" << std::endl;
+            << "  --quiet              Turn off printing to stdout\n" << std::endl;
 }
