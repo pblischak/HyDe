@@ -177,6 +177,12 @@ li {
 <span class="kw">make</span>
 <span class="kw">sudo</span> make install</code></pre></div>
 <p>The last command will copy <code>hyde</code> to <code>/usr/local/bin</code> so that it is available for execution from anywhere on your computer. If you want to remove it, simply type <code>sudo make uninstall</code>.</p>
+<div id="multithreading-using-openmp" class="section level3">
+<h3>Multithreading using OpenMP</h3>
+<p>In the <code>Makefile</code>, set the <code>OPENMP</code> variable to <code>yes</code>.</p>
+<pre><code># Set this to `yes` if you have OpenMP.
+OPENMP ?= yes</code></pre>
+</div>
 </div>
 <div id="command-line-interface" class="section level1">
 <h1>Command line interface</h1>
@@ -202,9 +208,7 @@ li {
 <span class="co">## Additional options:</span>
 <span class="co">##   -p [--p-value]       P-value cutoff for test of significance (default=0.05)</span>
 <span class="co">##   --threads            Number of threads to use for parallelization (default=1)</span>
-<span class="co">##   --prefix             Append a prefix to the beginning of outfile and logfile</span>
-<span class="co">##   --quiet              Turn off printing to stdout</span>
-<span class="co">##   --log                Print run info to logfile</span></code></pre></div>
+<span class="co">##   --prefix             Append a prefix to the beginning of outfile and logfile</span></code></pre></div>
 </div>
 <div id="version-information" class="section level3">
 <h3>Version information</h3>

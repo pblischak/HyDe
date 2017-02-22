@@ -26,7 +26,8 @@ The program HyDe implements the method for hybrid detection described in:
  
 # Installation
 
-HyDe is written in C++ and can be compiled into an executable (`hyde`) using the `Makefile` provided in the `src/` folder. Some of the features in HyDe use the C++11 standard, so a compatible compiler is required.
+HyDe is written in C++ and can be compiled into an executable (`hyde`) using the `Makefile` provided in the `src/` folder. 
+Some of the features in HyDe use the C++11 standard, so a compatible compiler is required.
 
 ```bash
 cd HyDe/src
@@ -34,7 +35,17 @@ make
 sudo make install
 ```
 
-The last command will copy `hyde` to `/usr/local/bin` so that it is available for execution from anywhere on your computer. If you want to remove it, simply type `sudo make uninstall`.
+The last command will copy `hyde` to `/usr/local/bin` so that it is available for execution from anywhere on your computer. 
+If you want to remove it, simply type `sudo make uninstall`.
+
+### Multithreading using OpenMP
+
+In the `Makefile`, set the `OPENMP` variable to `yes`.
+
+```
+# Set this to `yes` if you have OpenMP.
+OPENMP ?= yes
+```
 
 # Command line interface
 
@@ -62,8 +73,6 @@ hyde --help
 ##   -p [--p-value]       P-value cutoff for test of significance (default=0.05)
 ##   --threads            Number of threads to use for parallelization (default=1)
 ##   --prefix             Append a prefix to the beginning of outfile and logfile
-##   --quiet              Turn off printing to stdout
-##   --log                Print run info to logfile
 ```
 
 ### Version information
