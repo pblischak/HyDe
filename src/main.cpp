@@ -51,6 +51,5 @@ void usage(){
             << "\nAdditional options:" << std::endl
             << "  -p [--p-value]       P-value cutoff for test of significance (default=0.05)" << std::endl
             << "  --threads            Number of threads to use for parallelization (default=1)" << std::endl
-            << "  --prefix             Append a prefix to the beginning of outfile and logfile" << std::endl
-            << "  --quiet              Turn off printing to stdout\n" << std::endl;
+            << "  --prefix             Append a prefix to the beginning of outfile and logfile\n" << std::endl;
 }

@@ -69,6 +69,8 @@ void HyDe::run(){
     _outStream << "P1\tHybrid\tP2\tZscore\tPvalue\tX1\tX2\tX3\tX4\tX5\tX6\tX7\tX8\tX9\tX10\tX11\tX12\tX13\tX14\tX15" << std::endl;
   }
 
+  int _chunk = std::ceil((_nTaxa - 1) / _threads);
+  #pragma omp parallel for num_threads(_threads) schedule(dynamic, _chunk) firstprivate(_counts1, _counts2, _counts3, _taxaMap, _taxaNames, _dnaMatrix, _baseLookup, _outgroup, _numObs, _zVals, _pVals)
   for(unsigned i = 0; i < _taxaNames.size() - 2; i++){
     for(unsigned j = i + 1; j < _taxaNames.size() - 1; j++){
       for(unsigned k = j + 1; k < _taxaNames.size(); k++){
@@ -95,9 +97,15 @@ void HyDe::run(){
         _pVals[1] = _calcPvalue(_zVals[1]);
         _pVals[2] = _calcPvalue(_zVals[2]);
 
-        _printOut(_taxaNames[i], _taxaNames[j], _taxaNames[k], _zVals[0], _pVals[0], _counts1, _outStream);
-        _printOut(_taxaNames[j], _taxaNames[i], _taxaNames[k], _zVals[1], _pVals[1], _counts2, _outStream);
-        _printOut(_taxaNames[i], _taxaNames[k], _taxaNames[j], _zVals[2], _pVals[2], _counts3, _outStream);
+        #pragma omp critical
+        {
+          if(_zVals[0] != -99999.9)
+            _printOut(_taxaNames[i], _taxaNames[j], _taxaNames[k], _zVals[0], _pVals[0], _counts1, _outStream);
+          if(_zVals[1] != -99999.9)
+            _printOut(_taxaNames[j], _taxaNames[i], _taxaNames[k], _zVals[1], _pVals[1], _counts2, _outStream);
+          if(_zVals[2] != -99999.9)
+            _printOut(_taxaNames[i], _taxaNames[k], _taxaNames[j], _zVals[2], _pVals[2], _counts3, _outStream);
+        }
       }
     }
   }

@@ -4,6 +4,13 @@ OBJ = HyDe.o main.o
 CXX = g++
 CXXFLAGS = -Wall -O3 -g -std=c++11
 
+# Set this to `yes` if you have OpenMP.
+OPENMP ?= yes
+
+ifeq ($(strip $(OPENMP)), yes)
+	CXXFLAGS += -fopenmp
+endif
+
 .PHONY : clean install uninstall
 
 $(EXE) : $(OBJ)
