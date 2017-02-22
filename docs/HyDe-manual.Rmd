@@ -1,12 +1,12 @@
 ---
-title: 'HyDe: hybrid detection using phylogenetic invariants'
-date: '`r format(Sys.time(), "%d %B, %Y")`'
+title: '**HyDe: hybrid detection using phylogenetic invariants**'
 output:
   html_document:
     highlight: tango
     theme: lumen
-    #toc: true
-    #toc_float: true
+    toc: yes
+    toc_depth: 1
+date: '`r format(Sys.time(), "%d %B, %Y")`'
 ---
 <style>
 p {
@@ -18,13 +18,15 @@ li {
 }
 </style>
 
-The program **HyDe** implements the method for hybrid detection described in:
+--------
+
+The program HyDe implements the method for hybrid detection described in:
 
  - Laura S. Kubatko and Julia Chifman. An Invariants-based Method for Efficient Identification of Hybrid Species From Large-scale Genomic Data. *bioRxiv* **doi**: <a href="https://doi.org/10.1101/034348" target="_blank">https://doi.org/10.1101/034348</a>.
  
 # Installation
 
-**HyDe** is written in C++ and can be compiled into an executable (`hyde`) using the Makefile provided in the `src/` folder. Some of the features in **HyDe** use the C++11 standard, so a compatible compiler is required.
+HyDe is written in C++ and can be compiled into an executable (`hyde`) using the `Makefile` provided in the `src/` folder. Some of the features in HyDe use the C++11 standard, so a compatible compiler is required.
 
 ```bash
 cd HyDe/src
@@ -58,6 +60,7 @@ hyde --help
 ##
 ## Additional options:
 ##   -p [--p-value]       P-value cutoff for test of significance (default=0.05)
+##   --threads            Number of threads to use for parallelization (default=1)
 ##   --prefix             Append a prefix to the beginning of outfile and logfile
 ##   --quiet              Turn off printing to stdout
 ##   --log                Print run info to logfile
@@ -94,3 +97,5 @@ Individual2 Taxon1
 .
 IndividualN TaxonM
 ```
+
+For more details on the analysis carried out by HyDe, see the <a href="http://pblischak.github.io/HyDe/HyDe-notes.html" target="_blank">program notes</a>.

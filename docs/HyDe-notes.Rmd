@@ -1,0 +1,28 @@
+---
+title: '**HyDe program notes**'
+output:
+  html_document:
+    highlight: tango
+    theme: lumen
+    toc: yes
+    toc_depth: 1
+date: '`r format(Sys.time(), "%d %B, %Y")`'
+---
+
+<style>
+p {
+  font-size: 125%;
+}
+
+li {
+  font-size: 115%;
+}
+</style>
+
+# Resolving ambiguity codes
+
+$$
+a + b = c
+$$
+
+# Integrating over missing data
