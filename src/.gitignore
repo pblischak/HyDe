@@ -1,4 +1,5 @@
 *.o
 hyde
 *.dSYM
-hyde-out.txt
+*.txt
+test

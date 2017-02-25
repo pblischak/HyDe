@@ -22,24 +22,24 @@ private:
   void _checkCommandLineInput();
   void _parseSpeciesMap();
   void _readInfile();
-  void _printOut(std::string p1,
-                 std::string hyb,
-                 std::string p2,
-                 double z, double p,
-                 double cp[16][16],
+  void _printOut(const std::string& p1,
+                 const std::string& hyb,
+                 const std::string& p2,
+                 const double& z, const double& p,
+                 const double cp[16][16],
                  std::ofstream& out);
 
   /* Functions for calculating stuff.*/
   inline int _convert(char str);                 /* Convert DNA bases form characters to ints.      */
-  int _resolveAmbiguity(int out, int p1,        /* Randomly resolves ambiguity codes.              */
-                        int hyb, int p2,
+  int _resolveAmbiguity(const int& out, const int& p1,        /* Randomly resolves ambiguity codes.              */
+                        const int& hyb, const int& p2,
                         double cp[16][16]);
-  double _calcGH(double cp[16][16], int nObs);   /* Calculates GH test statistic.                   */
-  double _calcPvalue(double myZ);                /* Calculate p-value with bonferroni correction.   */
+  double _calcGH(const double cp[16][16], const int& nObs);   /* Calculates GH test statistic.                   */
+  double _calcPvalue(const double& myZ);                /* Calculate p-value with bonferroni correction.   */
   double _bonferroniCorrect();                   /* Bonferroni correction based on number of taxa.  */
-  int _getCountMatrix(const std::string p1,            /* Populates count matrix from given triplet.      */
-                      const std::string hyb,
-                      const std::string p2,
+  int _getCountMatrix(const int& p1,            /* Populates count matrix from given triplet.      */
+                      const int& hyb,
+                      const int& p2,
                       double cp[16][16]);
 
   /* private member variables */

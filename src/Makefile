@@ -22,7 +22,7 @@ $(OBJ) : %.o: %.cpp
 
 clean :
 	@printf "\n Removing object (*.o) files and executable...\n\n"
-	@rm -i $(OBJ) $(EXE)
+	@rm $(OBJ) $(EXE)
 
 install :
 	@printf "\nCopying executable to /usr/local/bin...\n\n"

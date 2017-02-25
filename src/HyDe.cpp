@@ -14,33 +14,36 @@
  * all of these variables were members of the HyDe class, which required
  * copying them before passing to threads. I think that this prevents
  * needing to copy things. */
- double _counts1[16][16] = {0.0},
-        _counts2[16][16] = {0.0},
-        _counts3[16][16] = {0.0},
+ double _counts1[16][16] = {{0.0}},
+        _counts2[16][16] = {{0.0}},
+        _counts3[16][16] = {{0.0}},
         _pVals[3] = {0.0},
         _zVals[3] = {0.0};
- int _numObs[3] = {0};
+ int _numObs[3] = {0}, _outgroup = -999;
  std::vector<int> _dnaMatrix;
- std::unordered_map<std::string, std::vector<int> > _taxaMap;
+ //std::unordered_map<std::string, std::vector<int> > _taxaMap;
+ std::vector<std::vector<int> > _taxaMap;
+ //std::vector<int> _taxaIndex, _taxaCounts;
  std::vector<std::string> _taxaNames;
- std::string _outgroup = "none";
- std::unordered_map<int, std::vector<int> > _baseLookup = { /* {A,G,C,T} == {0,1,2,3} */
-  {0, {0}},
-  {1, {1}},
-  {2, {2}},
-  {3, {3}},
-  {4, {4}},           /* - == ignore */
-  {5,  {0, 2}},       /* M == A or C */
-  {6,  {0, 1}},       /* R == A or G */
-  {7,  {0, 3}},       /* W == A ot T */
-  {8,  {1, 2}},       /* S == G or C */
-  {9,  {2, 3}},       /* Y == C or T */
-  {10, {1, 3}},       /* K == G or T */
-  {11, {1, 2, 3}},    /* B == C or G or T */
-  {12, {0, 1, 3}},    /* D == A or G or T */
-  {13, {0, 2, 3}},    /* H == A or C or T */
-  {14, {0, 1, 2}},    /* V == A or G or C */
-  {15, {0, 1, 2, 3}}  /* N == A or G or C or T */
+ std::string _outgroupName = "none";
+
+ static std::vector<std::vector<int> > _baseLookup = { /* {A,G,C,T} == {0,1,2,3} */
+  {0},
+  {1},
+  {2},
+  {3},
+  {4},          /* - == ignore */
+  {0, 2},       /* M == A or C */
+  {0, 1},       /* R == A or G */
+  {0, 3},       /* W == A ot T */
+  {1, 2},       /* S == G or C */
+  {2, 3},       /* Y == C or T */
+  {1, 3},       /* K == G or T */
+  {1, 2, 3},    /* B == C or G or T */
+  {0, 1, 3},    /* D == A or G or T */
+  {0, 2, 3},    /* H == A or C or T */
+  {0, 1, 2},    /* V == A or G or C */
+  {0, 1, 2, 3}  /* N == A or G or C or T */
  };
 
 /*************************************************/
@@ -51,6 +54,7 @@
 HyDe::HyDe(int c, char* v[]){
   _parseCommandLine(c, v);
   _checkCommandLineInput();
+  _taxaMap.resize(_nTaxa);
   _parseSpeciesMap();
   _dnaMatrix.resize(_nInd * _nSites);
   _readInfile();
@@ -81,9 +85,9 @@ void HyDe::run(){
             _counts3[a][b] = 0.0;
           }
         }
-        _numObs[0] = _getCountMatrix(_taxaNames[i], _taxaNames[j], _taxaNames[k], _counts1);
-        _numObs[1] = _getCountMatrix(_taxaNames[j], _taxaNames[i], _taxaNames[k], _counts2);
-        _numObs[2] = _getCountMatrix(_taxaNames[i], _taxaNames[k], _taxaNames[j], _counts3);
+        _numObs[0] = _getCountMatrix(i, j, k, _counts1);
+        _numObs[1] = _getCountMatrix(j, i, k, _counts2);
+        _numObs[2] = _getCountMatrix(i, k, j, _counts3);
         //std::cerr << _numObs[0] << "\t" << _numObs[1] << "\t" << _numObs[2] << std::endl;
 
         /* Calculate the GH statistic. */
@@ -130,7 +134,7 @@ void HyDe::_parseCommandLine(int ac, char* av[]){
     } else if(strcmp(av[i], "-m") == 0 || strcmp(av[i], "--map") == 0){
       _mapfile = av[i + 1];
     } else if(strcmp(av[i], "-o") == 0 || strcmp(av[i], "--outgroup") == 0){
-      _outgroup = av[i + 1];
+      _outgroupName = av[i + 1];
     } else if(strcmp(av[i], "-p") == 0 || strcmp(av[i], "--pvalue") == 0){
       _pValue = atof(av[i + 1]);
     } else if(strcmp(av[i], "--threads") == 0){
@@ -186,7 +190,7 @@ void HyDe::_checkCommandLineInput(){
     std::cerr << "\nMissing or invalid option for -m [--map].\n";
     _errorCaught++;
   }
-  if(strcmp(_outgroup.c_str(), "none") == 0){
+  if(strcmp(_outgroupName.c_str(), "none") == 0){
     std::cerr << "\nMissing or invalid option for -o [--outgroup].\n";
     _errorCaught++;
   }
@@ -201,23 +205,27 @@ void HyDe::_checkCommandLineInput(){
 void HyDe::_parseSpeciesMap(){
   std::ifstream _mapStream(_mapfile);
   std::string _str1, _str2, _str2prev = "";
-  int _indCount = 0, _taxaCount = 0;
+  int _indCount = 0, _taxaCount = 0, _currTaxonIndex=-1;
   bool _outgroupFound = 0;
   if(_mapStream.is_open()){
     while(_mapStream >> _str1 >> _str2){
       //std::cerr << _str1 << "\t" << _str2 << std::endl;
-      _indNames.push_back(_str1);
-      _taxaMap[_str2].push_back(_indCount);
-      _indCount++;
       if(_str2.compare(_str2prev) != 0){
         _taxaCount++;
-        if(_str2.compare(_outgroup) != 0){
+        _currTaxonIndex++;
+        if(_str2.compare(_outgroupName) != 0){
           _taxaNames.push_back(_str2);
         } else {
-          if(!_outgroupFound) _outgroupFound = 1;
+          if(!_outgroupFound){
+            _outgroupFound = 1;
+            _outgroup = _currTaxonIndex;
+          }
         }
         _str2prev = _str2;
       }
+      _indNames.push_back(_str1);
+      _taxaMap[_currTaxonIndex].push_back(_indCount);
+      _indCount++;
     }
   } else {
     std::cerr << "\n** ERROR: Cannot open species map file. **\n" << std::endl
@@ -240,7 +248,7 @@ void HyDe::_parseSpeciesMap(){
   }
 
   if(!_outgroupFound){
-    std::cerr << "\n** ERROR: Outgroup specified at the command line (" << _outgroup << ") does not match any taxon names in the species map file.\n" << std::endl
+    std::cerr << "\n** ERROR: Outgroup specified at the command line (" << _outgroupName << ") does not match any taxon names in the species map file.\n" << std::endl
               << "Taxon names in species map file:" << std::endl;
     for(unsigned i = 0; i < _taxaNames.size(); i++){
       std::cerr << "  " << _taxaNames[i] << std::endl;
@@ -282,7 +290,7 @@ void HyDe::_readInfile(){
 }
 
 /* Calculate the GH test statistic using counts for current quartet. */
-double HyDe::_calcGH(double cp[16][16], int nObs){
+double HyDe::_calcGH(const double cp[16][16], const int& nObs){
   double pxxxx = cp[0][0] + cp[5][5] + cp[10][10] + cp[15][15];
   double pxxxy = cp[0][1] + cp[0][2] + cp[0][3] + cp[5][4]
                + cp[5][6] + cp[5][7] + cp[10][8] + cp[10][9]
@@ -381,7 +389,7 @@ double HyDe::_calcGH(double cp[16][16], int nObs){
 }
 
 /* Calculate p-value for GH test statistic. */
-double HyDe::_calcPvalue(double myZ){
+double HyDe::_calcPvalue(const double& myZ){
   double a1 = 0.278393;
   double a2 = 0.230389;
   double a3 = 0.000972;
@@ -396,7 +404,7 @@ double HyDe::_calcPvalue(double myZ){
   return myP;
 }
 
-int HyDe::_getCountMatrix(std::string p1, std::string hyb, std::string p2, double cp[16][16]){
+int HyDe::_getCountMatrix(const int& p1, const int& hyb, const int& p2, double cp[16][16]){
   int nn = 0, resolved = 0;
   for(unsigned i = 0; i < _taxaMap[_outgroup].size(); i++){
     for(unsigned j = 0; j < _taxaMap[p1].size(); j++){
@@ -426,7 +434,7 @@ int HyDe::_getCountMatrix(std::string p1, std::string hyb, std::string p2, doubl
   return nn;
 }
 
-int HyDe::_resolveAmbiguity(int out, int p1, int hyb, int p2, double cp[16][16]){
+int HyDe::_resolveAmbiguity(const int& out, const int& p1, const int& hyb, const int& p2, double cp[16][16]){
   /* Check to see if any combination of three of the four taxa are ambiguous. */
   double denom = 0.0;
   if((out >= 4 && p1  >= 4 && hyb >= 4) ||
@@ -452,7 +460,8 @@ int HyDe::_resolveAmbiguity(int out, int p1, int hyb, int p2, double cp[16][16])
   }
 }
 
-void HyDe::_printOut(std::string p1, std::string hyb, std::string p2, double z, double p, double cp[16][16], std::ofstream& out){
+void HyDe::_printOut(const std::string& p1, const std::string& hyb, const std::string& p2,
+                     const double& z, const double& p, const double cp[16][16], std::ofstream& out){
   /* These values are now calculated by the program twice. Not sure what the computational cost is. */
   double pxxxx = cp[0][0] + cp[5][5] + cp[10][10] + cp[15][15];
   double pxxxy = cp[0][1] + cp[0][2] + cp[0][3] + cp[5][4]

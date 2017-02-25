@@ -30,6 +30,9 @@ int main(int argc, char* argv[]){
   }
   /* Pass argc and argv to constructor for HyDe class. It does a more intense
    * level of command line option parsing and initializes all variables. */
+   //std::cout << "Please press ENTER to continue: ";
+   //std::string in = "";
+   //in = std::cin.get();
    HyDe hydeObj(argc, argv);
    hydeObj.run();
 
