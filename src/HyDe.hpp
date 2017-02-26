@@ -33,7 +33,9 @@ private:
   int _resolveAmbiguity(const int& out, const int& p1,                           /* Randomly resolves ambiguity codes.              */
                         const int& hyb, const int& p2,
                         double cp[16][16]);
-  double _calcGH(const double cp[16][16], const int& nObs, const int& avgObs);   /* Calculates GH test statistic.                   */
+  double _calcGH(const double cp[16][16], const int& nObs,
+                 const int& avgObs, const int& p1,
+                 const int& hyb, const int& p2);                                 /* Calculates GH test statistic.                   */
   double _calcPvalue(const double& myZ);                                         /* Calculate p-value with bonferroni correction.   */
   double _calcPvalueTwo(const double& myZ);
   inline long int _nCk(long int& n, long int& k);                                /* Calculates binomial coefficient: n choose k.    */

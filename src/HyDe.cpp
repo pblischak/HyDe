@@ -105,9 +105,9 @@ void HyDe::run(){
 
         /* Calculate the GH statistic. */
         _avgNumObs = _numObs[0] / (_taxaMap[_outgroup].size() * _taxaMap[i].size() * _taxaMap[j].size() * _taxaMap[k].size());
-        _zVals[0] = _calcGH(_counts1, _numObs[0], _avgNumObs);
-        _zVals[1] = _calcGH(_counts2, _numObs[1], _avgNumObs);
-        _zVals[2] = _calcGH(_counts3, _numObs[2], _avgNumObs);
+        _zVals[0] = _calcGH(_counts1, _numObs[0], _avgNumObs, i, j, k);
+        _zVals[1] = _calcGH(_counts2, _numObs[1], _avgNumObs, j, i, k);
+        _zVals[2] = _calcGH(_counts3, _numObs[2], _avgNumObs, i, k, j);
 
         /* Get p-values. */
         _pVals[0] = _calcPvalueTwo(_zVals[0]);
@@ -310,7 +310,8 @@ void HyDe::_readInfile(){
 }
 
 /* Calculate the GH test statistic using counts for current quartet. */
-double HyDe::_calcGH(const double cp[16][16], const int& nObs, const int& avgObs){
+double HyDe::_calcGH(const double cp[16][16], const int& nObs, const int& avgObs,
+                     const int& p1, const int& hyb, const int& p2){
   double pxxxx = cp[0][0] + cp[5][5] + cp[10][10] + cp[15][15];
   double pxxxy = cp[0][1] + cp[0][2] + cp[0][3] + cp[5][4]
                + cp[5][6] + cp[5][7] + cp[10][8] + cp[10][9]
@@ -379,6 +380,8 @@ double HyDe::_calcGH(const double cp[16][16], const int& nObs, const int& avgObs
   if(fabs((1.0 / nObs) * (pxxxx + pxxxy + pxxyx + pxxyy + pxxyz + pxyxx + pxyxy + pxyxz
                        +  pxyyx + pyxxx + pxyyz + pzxyz + pyxzx + pyzxx + pxyzw) - 1.0) > 0.005){
     std::cerr << "\n** ERROR: There was a problem counting site patterns... exiting. **\n" << std::endl;
+    std::cerr << "  Failed for comparison between " << _taxaNames[p1] << "\t" << _taxaNames[hyb]
+              << "\t" << _taxaNames[p2] << std::endl << std::endl;
     exit(EXIT_FAILURE);
   }
 
