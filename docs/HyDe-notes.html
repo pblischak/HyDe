@@ -101,14 +101,14 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore"><strong>HyDe program notes</strong></h1>
-<h4 class="date"><em>18 February, 2017</em></h4>
+<h4 class="date"><em>26 February, 2017</em></h4>
 
 </div>
 
 <div id="TOC">
 <ul>
-<li><a href="#resolving-ambiguity-codes">Resolving ambiguity codes</a></li>
-<li><a href="#integrating-over-missing-data">Integrating over missing data</a></li>
+<li><a href="#including-multiple-individuals-per-taxon">Including multiple individuals per taxon</a></li>
+<li><a href="#integrating-over-missing-andor-ambiguous-data">Integrating over missing and/or ambiguous data</a></li>
 </ul>
 </div>
 
@@ -121,14 +121,26 @@ li {
   font-size: 115%;
 }
 </style>
-<div id="resolving-ambiguity-codes" class="section level1">
-<h1>Resolving ambiguity codes</h1>
+<hr />
+<div id="including-multiple-individuals-per-taxon" class="section level1">
+<h1>Including multiple individuals per taxon</h1>
+<p>To include multiple individuals</p>
 <p><span class="math display">\[
-a + b = c
+N_{obs} = N_{OUT} \times N_{P1} \times N_{HYB} \times N_{P2} \times S
+\]</span></p>
+<p><span class="math display">\[
+p_7 = \frac{X_{ijji}}{N_{obs}}, \\
+p_9 = \frac{X_{ijij}}{N_{obs}}, \\
+p_4 = \frac{X_{iijj}}{N_{obs}}. \\
 \]</span></p>
 </div>
-<div id="integrating-over-missing-data" class="section level1">
-<h1>Integrating over missing data</h1>
+<div id="integrating-over-missing-andor-ambiguous-data" class="section level1">
+<h1>Integrating over missing and/or ambiguous data</h1>
+<p>In phylogenetics it is common to encode missing or ambiguous DNA bases using IUPAC codes (e.g., Y = C or T, N/? = A or G or C or T, etc.). In the original version of HyDe these sites were ignored. However, we wanted to include these sites in the hybrid detection method if possible. To do this, we realized that we could integrate over missing or ambiguous data in forming the site count pattern matrix by weighting the counts for each possible site pattern that included an ambiguous site. For example, a site pattern of {A, A, G, Y} can be resolved as either {A, A, G, C} or {A, A, G, T}. Therefore, we add 0.5 to each of these patterns in the count matrix. In general, for a given site pattern, we consider all possible resolutions of ambiguity codes into the bases A, G, C, and T and then add a weight equal to 1 divided by the size of the set of resolutions to each resolved site pattern in the count matrix. We do this with the following constraints:</p>
+<ul>
+<li>No gaps <span class="math inline">\(\rightarrow\)</span> Sites with gaps are ignored.</li>
+<li>No more than two ambiguous bases per site pattern <span class="math inline">\(\rightarrow\)</span> the minimum weight is then equal to 1/16 (two taxa have missing data).</li>
+</ul>
 </div>
 
 

@@ -227,6 +227,7 @@ li {
 </div>
 <div id="getting-started" class="section level1">
 <h1>Getting started</h1>
+<p>The two most important files for running HyDe are the data input file and the map file. The data file is a simple text file that is similar to sequential Phylip format (each individual gets 1 line) but with the first row with the number of individuals and sites removed. There are virtually no restrictions on the length of individual names and they don’t all have to be the same length. There does need to be some form of white space (e.g., tab delimited) separating the individual name from the DNA data. The map file is a two column file that maps individuals in the data file to their respective taxa. The individual names are in the first column and need to be in the same order as the data file. Taxon names are in the second column. They don’t need to be the same length and only need to be separated from the individual names by white space. Make sure to organize the data and map so that all individuals within the same taxon occur sequentially. Examples of these files can be found in the <code>examples/</code> folder.</p>
 <div id="input-file" class="section level2">
 <h2>Input file</h2>
 <pre><code>Individual1    AGTCGTGCGAGTACAGTGTGAC...
