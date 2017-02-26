@@ -14,20 +14,19 @@
  * all of these variables were members of the HyDe class, which required
  * copying them before passing to threads. I think that this prevents
  * needing to copy things. */
- double _counts1[16][16] = {{0.0}},
-        _counts2[16][16] = {{0.0}},
-        _counts3[16][16] = {{0.0}},
-        _pVals[3] = {0.0},
-        _zVals[3] = {0.0};
- int _numObs[3] = {0}, _outgroup = -999;
- std::vector<int> _dnaMatrix;
- //std::unordered_map<std::string, std::vector<int> > _taxaMap;
- std::vector<std::vector<int> > _taxaMap;
- //std::vector<int> _taxaIndex, _taxaCounts;
- std::vector<std::string> _taxaNames;
- std::string _outgroupName = "none";
-
- static std::vector<std::vector<int> > _baseLookup = { /* {A,G,C,T} == {0,1,2,3} */
+double _counts1[16][16] = {{0.0}},
+       _counts2[16][16] = {{0.0}},
+       _counts3[16][16] = {{0.0}},
+       _pVals[3] = {0.0},
+       _zVals[3] = {0.0};
+int _numObs[3] = {0}, _outgroup = -999;
+std::vector<int> _dnaMatrix;
+//std::unordered_map<std::string, std::vector<int> > _taxaMap;
+std::vector<std::vector<int> > _taxaMap;
+//std::vector<int> _taxaIndex, _taxaCounts;
+std::vector<std::string> _taxaNames;
+std::string _outgroupName = "none";
+static std::vector<std::vector<int> > _baseLookup = { /* {A,G,C,T} == {0,1,2,3} */
   {0},
   {1},
   {2},
@@ -44,7 +43,7 @@
   {0, 2, 3},    /* H == A or C or T */
   {0, 1, 2},    /* V == A or G or C */
   {0, 1, 2, 3}  /* N == A or G or C or T */
- };
+};
 
 /*************************************************/
 /* Public member functions accessed from main(). */
@@ -63,6 +62,19 @@ HyDe::HyDe(int c, char* v[]){
 /* Runs HyDe analysis. */
 void HyDe::run(){
   /* Open outfile and logfile (if specified). */
+  std::clog << "\nHyDe: hybrid detection using phylogenetic invariants\n" << std::endl;
+  #ifdef _OPENMP
+    std::clog << "Multithreading with OpenMP enabled. Currently using " << _threads << " threads." << std::endl;
+  #else
+    std::clog << "Multithreading with OpenMP not enabled. Running analysis serially." << std::endl;
+  #endif
+  std::clog << "\nNumber of individuals:   " << _nInd << std::endl
+            << "Number of taxa:          " << _nTaxa << std::endl
+            << "Outgroup:                " << _outgroupName << std::endl
+            << "Number of sites:         " << _nSites << std::endl;
+  std::clog << "\nBonferroni corrected p-value for significance test at \u03b1-level = "
+            << _pValue << " : " << _bonferroniCorrect() << ".\n" << std::endl;
+
   std::string _outfile = _prefix + "-out.txt";
   std::ofstream _outStream;
   _outStream.open(_outfile, std::ios::out | std::ios::app);
@@ -77,6 +89,7 @@ void HyDe::run(){
   for(unsigned i = 0; i < _taxaNames.size() - 2; i++){
     for(unsigned j = i + 1; j < _taxaNames.size() - 1; j++){
       for(unsigned k = j + 1; k < _taxaNames.size(); k++){
+        double _avgNumObs = 0.0;
         /* Re-initialize count matrices to 0. */
         for(int a = 0; a < 16; a++){
           for(int b = 0; b < 16; b++){
@@ -91,17 +104,20 @@ void HyDe::run(){
         //std::cerr << _numObs[0] << "\t" << _numObs[1] << "\t" << _numObs[2] << std::endl;
 
         /* Calculate the GH statistic. */
-        _zVals[0] = _calcGH(_counts1, _numObs[0]);
-        _zVals[1] = _calcGH(_counts2, _numObs[1]);
-        _zVals[2] = _calcGH(_counts3, _numObs[2]);
+        _avgNumObs = _numObs[0] / (_taxaMap[_outgroup].size() * _taxaMap[i].size() * _taxaMap[j].size() * _taxaMap[k].size());
+        _zVals[0] = _calcGH(_counts1, _numObs[0], _avgNumObs);
+        _zVals[1] = _calcGH(_counts2, _numObs[1], _avgNumObs);
+        _zVals[2] = _calcGH(_counts3, _numObs[2], _avgNumObs);
 
         /* Get p-values. */
-        _pVals[0] = _calcPvalue(_zVals[0]);
-        _pVals[1] = _calcPvalue(_zVals[1]);
-        _pVals[2] = _calcPvalue(_zVals[2]);
+        _pVals[0] = _calcPvalueTwo(_zVals[0]);
+        _pVals[1] = _calcPvalueTwo(_zVals[1]);
+        _pVals[2] = _calcPvalueTwo(_zVals[2]);
 
         #pragma omp critical
         {
+          //std::cout << _taxaMap[i].size() << "\t" << _taxaMap[j].size() << "\t" << _taxaMap[k].size() << "\t" << _taxaMap[_outgroup].size()
+          //          << "\t" << _taxaMap[i].size() * _taxaMap[j].size() * _taxaMap[k].size() * _taxaMap[_outgroup].size() * _nSites << "\t" << _avgNumObs << std::endl;
           if(_zVals[0] != -99999.9)
             _printOut(_taxaNames[i], _taxaNames[j], _taxaNames[k], _zVals[0], _pVals[0], _counts1, _outStream);
           if(_zVals[1] != -99999.9)
@@ -196,7 +212,7 @@ void HyDe::_checkCommandLineInput(){
   }
 
   if(_errorCaught > 0){
-    std::cerr << "** ERROR: " << _errorCaught << " command line option(s) were improperly specified. **\n" << std::endl;
+    std::cerr << "** ERROR: " << _errorCaught << " command line option(s) improperly specified. **\n" << std::endl;
     exit(EXIT_FAILURE);
   }
 }
@@ -212,6 +228,10 @@ void HyDe::_parseSpeciesMap(){
       //std::cerr << _str1 << "\t" << _str2 << std::endl;
       if(_str2.compare(_str2prev) != 0){
         _taxaCount++;
+        if(_taxaCount > _nTaxa){
+          std::cerr << "\n** ERROR: Reading in more taxa from map file (>= " << _taxaCount << ") than were specified at the command line (" << _nTaxa << "). **\n" << std::endl;
+          exit(EXIT_FAILURE);
+        }
         _currTaxonIndex++;
         if(_str2.compare(_outgroupName) != 0){
           _taxaNames.push_back(_str2);
@@ -248,8 +268,8 @@ void HyDe::_parseSpeciesMap(){
   }
 
   if(!_outgroupFound){
-    std::cerr << "\n** ERROR: Outgroup specified at the command line (" << _outgroupName << ") does not match any taxon names in the species map file.\n" << std::endl
-              << "Taxon names in species map file:" << std::endl;
+    std::cerr << "\n** ERROR: Outgroup specified at the command line (" << _outgroupName << ") does not match any taxon names in the map file.\n" << std::endl
+              << "Taxon names in map file:" << std::endl;
     for(unsigned i = 0; i < _taxaNames.size(); i++){
       std::cerr << "  " << _taxaNames[i] << std::endl;
     }
@@ -273,7 +293,7 @@ void HyDe::_readInfile(){
                   << "  Line " << _indIndex + 1 << ": " << _str1 << " vs." << _indNames[_indIndex] << "\n" << std::endl;
         _errCount++;
       } else if(_str2.length() != (unsigned) _nSites){
-        std::cerr << "\n** ERROR: Length of input sequence not equal to specified number of sites (" << _nSites << ")\n" << std::endl
+        std::cerr << "\n** ERROR: Length of input sequence not equal to specified number of sites (" << _nSites << "). **\n" << std::endl
                   << "  Line " << _indIndex + 1 << " in " << _infile << " has " << _str2.length() << " sites.\n" << std::endl;
         _errCount++;
       }
@@ -290,7 +310,7 @@ void HyDe::_readInfile(){
 }
 
 /* Calculate the GH test statistic using counts for current quartet. */
-double HyDe::_calcGH(const double cp[16][16], const int& nObs){
+double HyDe::_calcGH(const double cp[16][16], const int& nObs, const int& avgObs){
   double pxxxx = cp[0][0] + cp[5][5] + cp[10][10] + cp[15][15];
   double pxxxy = cp[0][1] + cp[0][2] + cp[0][3] + cp[5][4]
                + cp[5][6] + cp[5][7] + cp[10][8] + cp[10][9]
@@ -358,14 +378,26 @@ double HyDe::_calcGH(const double cp[16][16], const int& nObs){
 
   if(fabs((1.0 / nObs) * (pxxxx + pxxxy + pxxyx + pxxyy + pxxyz + pxyxx + pxyxy + pxyxz
                        +  pxyyx + pyxxx + pxyyz + pzxyz + pyxzx + pyzxx + pxyzw) - 1.0) > 0.005){
-    std::cerr << "\n** WARNING: There was a problem counting site patterns ... exiting. **\n" << std::endl;
-    //exit(EXIT_FAILURE);
+    std::cerr << "\n** ERROR: There was a problem counting site patterns... exiting. **\n" << std::endl;
+    exit(EXIT_FAILURE);
   }
 
   double p9 = (double) (pxyyx + 0.05) / nObs;
   double p7 = (double) (pxyxy + 0.05) / nObs;
   double p4 = (double) (pxxyy + 0.05) / nObs;
-  double obs_invp1 = nObs * (p9 - p7);
+  double obs_invp1 = avgObs * (p9 - p7);
+  double obs_invp2 = avgObs * (p4 - p7);
+  if(obs_invp1 == 0){
+    obs_invp1 += 1;
+    obs_invp2 += 1;
+  }
+  double obs_var_invp1 = avgObs * p9 * (1 - p9) + avgObs * p7 * (1 - p7) + 2 * avgObs * p9 * p7;
+  double obs_var_invp2 = avgObs * p4 * (1 - p4) + avgObs * p7 * (1 - p7) + 2 * avgObs * p4 * p7;
+  double obs_cov_invp1_invp2 = -1 * avgObs * p9 * p4 + avgObs * p9 * p7 + avgObs * p7 * p4 + avgObs * p7 * (1 - p7);
+  double ratio = obs_invp2 / obs_invp1;
+  double GH_ts = (obs_invp1) * (ratio) / sqrt(obs_var_invp1 * (pow(ratio, 2.0)) - 2.0
+               *  obs_cov_invp1_invp2 * ratio + obs_var_invp2);
+  /*double obs_invp1 = nObs * (p9 - p7);
   double obs_invp2 = nObs * (p4 - p7);
   if(obs_invp1 == 0){
     obs_invp1 += 1;
@@ -376,8 +408,7 @@ double HyDe::_calcGH(const double cp[16][16], const int& nObs){
   double obs_cov_invp1_invp2 = -1 * nObs * p9 * p4 + nObs * p9 * p7 + nObs * p7 * p4 + nObs * p7 * (1 - p7);
   double ratio = obs_invp2 / obs_invp1;
   double GH_ts = (obs_invp1) * (ratio) / sqrt(obs_var_invp1 * (pow(ratio, 2.0)) - 2.0
-               *  obs_cov_invp1_invp2 * ratio + obs_var_invp2);
-
+               *  obs_cov_invp1_invp2 * ratio + obs_var_invp2); ORIGINAL CODE BY LSK. */
   double temp = -99999.9;
   if((p7 > p9) && (p7 > p4)){
     return temp;
@@ -397,11 +428,29 @@ double HyDe::_calcPvalue(const double& myZ){
   double z, erf;
   double myP;
 
-  z = myZ / pow(2,0.5);
+  z = myZ / pow(2.0 ,0.5);
   erf = 1.0 - 1.0 / pow(1.0 + a1 * z + a2 * z * z + a3 * z * z * z + a4 * z * z * z * z, 4);
   myP = 2.0 * (1.0 - 0.5 * (1.0 + erf));
 
   return myP;
+}
+
+/* Code from John D. Cook: https://www.johndcook.com/blog/cpp_phi/. Many thanks! */
+double HyDe::_calcPvalueTwo(const double& myZ){
+  const double a1 =  0.254829592;
+  const double a2 = -0.284496736;
+  const double a3 =  1.421413741;
+  const double a4 = -1.453152027;
+  const double a5 =  1.061405429;
+  const double p  =  0.3275911;
+
+  int sign = 1;
+  if (myZ < 0) sign = -1;
+  double z = fabs(myZ) / sqrt(2.0);
+  double t = 1.0 / (1.0 + p * z);
+  double y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * exp(-z * z);
+
+  return 1.0 - (0.5 * (1.0 + sign * y));
 }
 
 int HyDe::_getCountMatrix(const int& p1, const int& hyb, const int& p2, double cp[16][16]){
@@ -532,4 +581,9 @@ void HyDe::_printOut(const std::string& p1, const std::string& hyb, const std::s
       << pxxyz << "\t" << pxyxx << "\t" << pxyxy << "\t" << pxyxz << "\t"
       << pxyyx << "\t" << pyxxx << "\t" << pxyyz << "\t" << pzxyz << "\t"
       << pyxzx << "\t" << pyzxx << "\t" << pxyzw << std::endl;
+}
+
+double HyDe::_bonferroniCorrect(){
+  long int n = _nTaxa - 1, k = 3;
+  return (double) _pValue / (_nCk(n, k) * 2.0);
 }

@@ -5,7 +5,7 @@ CXX = g++
 CXXFLAGS = -Wall -O3 -g -std=c++11
 
 # Set this to `yes` if you have OpenMP.
-OPENMP ?= yes
+OPENMP ?= no
 
 ifeq ($(strip $(OPENMP)), yes)
 	CXXFLAGS += -fopenmp

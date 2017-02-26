@@ -7,7 +7,6 @@
 
 /* Include these here so that they available in main.cpp as well. */
  #include <vector>
- #include <unordered_map>
 
 class HyDe {
 public:
@@ -30,14 +29,16 @@ private:
                  std::ofstream& out);
 
   /* Functions for calculating stuff.*/
-  inline int _convert(char str);                 /* Convert DNA bases form characters to ints.      */
-  int _resolveAmbiguity(const int& out, const int& p1,        /* Randomly resolves ambiguity codes.              */
+  inline int _convert(char str);                                                 /* Convert DNA bases form characters to ints.      */
+  int _resolveAmbiguity(const int& out, const int& p1,                           /* Randomly resolves ambiguity codes.              */
                         const int& hyb, const int& p2,
                         double cp[16][16]);
-  double _calcGH(const double cp[16][16], const int& nObs);   /* Calculates GH test statistic.                   */
-  double _calcPvalue(const double& myZ);                /* Calculate p-value with bonferroni correction.   */
-  double _bonferroniCorrect();                   /* Bonferroni correction based on number of taxa.  */
-  int _getCountMatrix(const int& p1,            /* Populates count matrix from given triplet.      */
+  double _calcGH(const double cp[16][16], const int& nObs, const int& avgObs);   /* Calculates GH test statistic.                   */
+  double _calcPvalue(const double& myZ);                                         /* Calculate p-value with bonferroni correction.   */
+  double _calcPvalueTwo(const double& myZ);
+  inline long int _nCk(long int& n, long int& k);                                /* Calculates binomial coefficient: n choose k.    */
+  double _bonferroniCorrect();                                                   /* Bonferroni correction based on number of taxa.  */
+  int _getCountMatrix(const int& p1,                                             /* Populates count matrix from given triplet.      */
                       const int& hyb,
                       const int& p2,
                       double cp[16][16]);
@@ -74,6 +75,18 @@ inline int HyDe::_convert(char str){
   }
 
   return _baseCode;
+}
+
+inline long int HyDe::_nCk(long int& n, long int& k){
+  long int res = 1;
+  if(k > n - k)
+    k = n - k;
+
+  for(long int i = 0; i < k; i++){
+    res *= (n - i);
+    res /= (i + 1.0);
+  }
+  return res;
 }
 
 #endif //HYDE_HPP
