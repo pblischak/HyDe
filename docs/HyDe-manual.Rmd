@@ -27,9 +27,10 @@ The program HyDe implements the method for hybrid detection described in:
 # Installation
 
 HyDe is written in C++ and can be compiled into an executable (`hyde`) using the `Makefile` provided in the `src/` folder. 
-Some of the features in HyDe use the C++11 standard, so a compatible compiler is required.
+Some of the features in HyDe use the C++11 standard, so a compatible compiler is required. There are a few different options for compiling the executable, but the simplest way is to download the HyDe source code, change into the `src/` directory and type `make`:
 
 ```bash
+# Basic compilation and installation of hyde
 cd HyDe/src
 make
 sudo make install
@@ -40,14 +41,22 @@ If you want to remove it, simply type `sudo make uninstall`.
 
 ### Multithreading using OpenMP
 
-In the `Makefile`, set the `OPENMP` variable to `yes`.
+HyDe was written with the option to allow multithreading using the OpenMP library. OpenMP is included with the GNU g++ compilers by default, but Apple based C++ compilers no longer support OpenMP. One of the easiest ways to get GNU g++ on a Mac is to install it using Homebrew. The steps for compiling with OpenMP multithreading are almost the same as before but with one slight modification to the `make` command:
 
+```bash
+# Compiling with OpenMP, add OPENMP=yes to make step
+cd HyDe/src
+make OPENMP=yes
+sudo make install
 ```
-# Set this to `yes` if you have OpenMP.
-OPENMP ?= yes
-```
+
+### Recompiling
+
+If at any point you need to start the compilation process from scratch (e.g., you want to recompile with multithreading), type `make clean` in the `src/` directory. This will remove the `hyde` executable and C++ object files (`*.o`) so that everything can be recompiled in the way that you want.
 
 # Command line interface
+
+HyDe has a simple command line interface that allows users to run the program on their data by passing the relevant files and information using flags. 
 
 ### Getting help
 
@@ -72,7 +81,7 @@ hyde --help
 ## Additional options:
 ##   -p [--p-value]       P-value cutoff for test of significance (default=0.05)
 ##   --threads            Number of threads to use for parallelization (default=1)
-##   --prefix             Append a prefix to the beginning of outfile and logfile
+##   --prefix             Append a prefix to the beginning of outfile
 ```
 
 ### Version information
@@ -105,6 +114,19 @@ Individual2 Taxon1
 .
 .
 IndividualN TaxonM
+```
+
+## Example analysis with *Sistrurus* rattlesnake data set
+
+```bash
+cd HyDe/examples
+hyde --infile snake-data.txt \
+     --map snake-map.txt \
+     --num-ind 52 \
+     --num-taxa 7 \
+     --num-sites 8466 \
+     --outgroup out \
+     --prefix snake
 ```
 
 For more details on the analysis carried out by HyDe, see the <a href="http://pblischak.github.io/HyDe/HyDe-notes.html" target="_blank">program notes</a>.

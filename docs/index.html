@@ -144,7 +144,7 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore"><strong>HyDe: hybrid detection using phylogenetic invariants</strong></h1>
-<h4 class="date"><em>22 February, 2017</em></h4>
+<h4 class="date"><em>26 February, 2017</em></h4>
 
 </div>
 
@@ -172,20 +172,28 @@ li {
 </ul>
 <div id="installation" class="section level1">
 <h1>Installation</h1>
-<p>HyDe is written in C++ and can be compiled into an executable (<code>hyde</code>) using the <code>Makefile</code> provided in the <code>src/</code> folder. Some of the features in HyDe use the C++11 standard, so a compatible compiler is required.</p>
-<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">cd</span> HyDe/src
+<p>HyDe is written in C++ and can be compiled into an executable (<code>hyde</code>) using the <code>Makefile</code> provided in the <code>src/</code> folder. Some of the features in HyDe use the C++11 standard, so a compatible compiler is required. There are a few different options for compiling the executable, but the simplest way is to download the HyDe source code, change into the <code>src/</code> directory and type <code>make</code>:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># Basic compilation and installation of hyde</span>
+<span class="kw">cd</span> HyDe/src
 <span class="kw">make</span>
 <span class="kw">sudo</span> make install</code></pre></div>
 <p>The last command will copy <code>hyde</code> to <code>/usr/local/bin</code> so that it is available for execution from anywhere on your computer. If you want to remove it, simply type <code>sudo make uninstall</code>.</p>
 <div id="multithreading-using-openmp" class="section level3">
 <h3>Multithreading using OpenMP</h3>
-<p>In the <code>Makefile</code>, set the <code>OPENMP</code> variable to <code>yes</code>.</p>
-<pre><code># Set this to `yes` if you have OpenMP.
-OPENMP ?= yes</code></pre>
+<p>HyDe was written with the option to allow multithreading using the OpenMP library. OpenMP is included with the GNU g++ compilers by default, but Apple based C++ compilers no longer support OpenMP. One of the easiest ways to get GNU g++ on a Mac is to install it using Homebrew. The steps for compiling with OpenMP multithreading are almost the same as before but with one slight modification to the <code>make</code> command:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># Compiling with OpenMP, add OPENMP=yes to make step</span>
+<span class="kw">cd</span> HyDe/src
+<span class="kw">make</span> OPENMP=yes
+<span class="kw">sudo</span> make install</code></pre></div>
+</div>
+<div id="recompiling" class="section level3">
+<h3>Recompiling</h3>
+<p>If at any point you need to start the compilation process from scratch (e.g., you want to recompile with multithreading), type <code>make clean</code> in the <code>src/</code> directory. This will remove the <code>hyde</code> executable and C++ object files (<code>*.o</code>) so that everything can be recompiled in the way that you want.</p>
 </div>
 </div>
 <div id="command-line-interface" class="section level1">
 <h1>Command line interface</h1>
+<p>HyDe has a simple command line interface that allows users to run the program on their data by passing the relevant files and information using flags.</p>
 <div id="getting-help" class="section level3">
 <h3>Getting help</h3>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">hyde</span> --help
@@ -208,7 +216,7 @@ OPENMP ?= yes</code></pre>
 <span class="co">## Additional options:</span>
 <span class="co">##   -p [--p-value]       P-value cutoff for test of significance (default=0.05)</span>
 <span class="co">##   --threads            Number of threads to use for parallelization (default=1)</span>
-<span class="co">##   --prefix             Append a prefix to the beginning of outfile and logfile</span></code></pre></div>
+<span class="co">##   --prefix             Append a prefix to the beginning of outfile</span></code></pre></div>
 </div>
 <div id="version-information" class="section level3">
 <h3>Version information</h3>
@@ -236,6 +244,17 @@ Individual2 Taxon1
 .
 .
 IndividualN TaxonM</code></pre>
+</div>
+<div id="example-analysis-with-sistrurus-rattlesnake-data-set" class="section level2">
+<h2>Example analysis with <em>Sistrurus</em> rattlesnake data set</h2>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">cd</span> HyDe/examples
+<span class="kw">hyde</span> --infile snake-data.txt \
+     --map snake-map.txt \
+     --num-ind 52 \
+     --num-taxa 7 \
+     --num-sites 8466 \
+     --outgroup out \
+     --prefix snake</code></pre></div>
 <p>For more details on the analysis carried out by HyDe, see the <a href="http://pblischak.github.io/HyDe/HyDe-notes.html" target="_blank">program notes</a>.</p>
 </div>
 </div>
