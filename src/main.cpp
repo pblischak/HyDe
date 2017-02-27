@@ -52,7 +52,7 @@ void usage(){
             << "  -t [--num-taxa]      Number of taxa (species, OTUs)" << std::endl
             << "  -s [--num-sites]     Number of sites in the data matrix" << std::endl
             << "\nAdditional options:" << std::endl
-            << "  -p [--p-value]       P-value cutoff for test of significance (default=0.05)" << std::endl
+            << "  -p [--pvalue]       P-value cutoff for test of significance (default=0.05)" << std::endl
             << "  --threads            Number of threads to use for parallelization (default=1)" << std::endl
             << "  --prefix             Append a prefix to the beginning of outfile and logfile\n" << std::endl;
 }

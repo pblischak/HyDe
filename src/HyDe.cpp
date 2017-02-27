@@ -84,7 +84,7 @@ void HyDe::run(){
     std::cerr << "** ERROR: Could not open outfile: " << _outfile << ". **\n" << std::endl;
     exit(EXIT_FAILURE);
   } else {
-    _outStream << "P1\tHybrid\tP2\tZscore\tPvalue\tX1\tX2\tX3\tX4\tX5\tX6\tX7\tX8\tX9\tX10\tX11\tX12\tX13\tX14\tX15" << std::endl;
+    _outStream << "P1\tHybrid\tP2\tZscore\tPvalue\tgamma\tX1\tX2\tX3\tX4\tX5\tX6\tX7\tX8\tX9\tX10\tX11\tX12\tX13\tX14\tX15" << std::endl;
   }
 
   #pragma omp parallel for num_threads(_threads) schedule(dynamic) firstprivate(_counts1, _counts2, _counts3, _taxaMap, _taxaNames, _dnaMatrix, _baseLookup, _outgroup, _numObs, _zVals, _pVals)
@@ -118,18 +118,18 @@ void HyDe::run(){
 
         #pragma omp critical
         {
-          std::cout << _taxaNames[i] << ":" << _taxaMap[i].size() <<  "\t" << _taxaNames[j]
+          /*std::cout << _taxaNames[i] << ":" << _taxaMap[i].size() <<  "\t" << _taxaNames[j]
                     << ":" << _taxaMap[j].size() << "\t" << _taxaNames[k] << ":"
                     << _taxaMap[k].size() << "\t" << _outgroupName << ":" << _taxaMap[_outgroup].size()
                     << "\t" << _taxaMap[i].size() * _taxaMap[j].size()
                             *  _taxaMap[k].size() * _taxaMap[_outgroup].size() * _nSites
-                            << "\t" << _avgNumObs << std::endl;
+                            << "\t" << _avgNumObs << std::endl;*/
           if(_zVals[0] != -99999.9)
-            _printOut(_taxaNames[i], _taxaNames[j], _taxaNames[k], _zVals[0], _pVals[0], _counts1, _outStream);
+            _printOut(_taxaNames[i], _taxaNames[j], _taxaNames[k], _zVals[0], _pVals[0], _counts1, _numObs[0], _outStream);
           if(_zVals[1] != -99999.9)
-            _printOut(_taxaNames[j], _taxaNames[i], _taxaNames[k], _zVals[1], _pVals[1], _counts2, _outStream);
+            _printOut(_taxaNames[j], _taxaNames[i], _taxaNames[k], _zVals[1], _pVals[1], _counts2, _numObs[1], _outStream);
           if(_zVals[2] != -99999.9)
-            _printOut(_taxaNames[i], _taxaNames[k], _taxaNames[j], _zVals[2], _pVals[2], _counts3, _outStream);
+            _printOut(_taxaNames[i], _taxaNames[k], _taxaNames[j], _zVals[2], _pVals[2], _counts3, _numObs[2], _outStream);
         }
       }
     }
@@ -431,7 +431,7 @@ double HyDe::_calcGH(const double cp[16][16], const double& nObs,
   }
 }
 
-/* Calculate p-value for GH test statistic. */
+/* Calculate p-value for GH test statistic. Original version by LSK. */
 double HyDe::_calcPvalue(const double& myZ){
   double a1 = 0.278393;
   double a2 = 0.230389;
@@ -455,14 +455,13 @@ double HyDe::_calcPvalueTwo(const double& myZ){
   const double a4 = -1.453152027;
   const double a5 =  1.061405429;
   const double p  =  0.3275911;
-
   int sign = 1;
   if (myZ < 0) sign = -1;
   double z = fabs(myZ) / sqrt(2.0);
   double t = 1.0 / (1.0 + p * z);
   double y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * exp(-z * z);
 
-  if(myZ < 0){
+  if(myZ < 0){ /* Return two-sided p-value based on Z after check for being positive or negative. */
     return 2.0 * (0.5 * (1.0 + sign * y));
   } else {
     return 2.0 * (1.0 - (0.5 * (1.0 + sign * y)));
@@ -526,7 +525,8 @@ double HyDe::_resolveAmbiguity(const int& out, const int& p1, const int& hyb, co
 }
 
 void HyDe::_printOut(const std::string& p1, const std::string& hyb, const std::string& p2,
-                     const double& z, const double& p, const double cp[16][16], std::ofstream& out){
+                     const double& z, const double& p, const double cp[16][16],
+                     const double& nObs, std::ofstream& out){
   /* These values are now calculated by the program twice. Not sure what the computational cost is. */
   double pxxxx = cp[0][0] + cp[5][5] + cp[10][10] + cp[15][15];
   double pxxxy = cp[0][1] + cp[0][2] + cp[0][3] + cp[5][4]
@@ -592,7 +592,11 @@ void HyDe::_printOut(const std::string& p1, const std::string& hyb, const std::s
                + cp[8][7] + cp[8][13] + cp[9][3] + cp[9][12]
                + cp[11][1] + cp[11][4] + cp[12][6] + cp[12][9]
                + cp[13][2] + cp[13][8] + cp[14][1] + cp[14][4];
-  out << p1 << "\t" << hyb << "\t" << p2 << "\t" << z << "\t" << p << "\t"
+
+  double p7 = (double) (pxyxy + 0.05) / nObs;
+  double p4 = (double) (pxxyy + 0.05) / nObs;
+  double gamma = p4 - p7;
+  out << p1 << "\t" << hyb << "\t" << p2 << "\t" << z << "\t" << p << "\t" << gamma << "\t"
       << pxxxx << "\t" << pxxxy << "\t" << pxxyx << "\t" << pxxyy << "\t"
       << pxxyz << "\t" << pxyxx << "\t" << pxyxy << "\t" << pxyxz << "\t"
       << pxyyx << "\t" << pyxxx << "\t" << pxyyz << "\t" << pzxyz << "\t"
