@@ -40,17 +40,17 @@ int main(int argc, char* argv[]){
 }
 
 void usage(){
-  std::cerr << "\nUsage: hyde -i <infile> -n <num-individuals> -s <num-sites> -m <taxon-map> -o <outgroup> [additional options]" << std::endl
+  std::cerr << "\nUsage: hyde -i <infile> -m <taxon-map> -o <outgroup> -n <num-individuals> -t <num-taxa> -s <num-sites>  [additional options]" << std::endl
             << "\nInformation options:" << std::endl
             << "  -h [--help]          Prints this help message" << std::endl
             << "  -v [--version]       Prints version information" << std::endl
             << "\nProgram options:" << std::endl
             << "  -i [--infile]        Name of the data input file" << std::endl
-            << "  -n [--num-ind]       Number of individuals in data matrix" << std::endl
-            << "  -s [--num-sites]     Number of sites in the data matrix" << std::endl
-            << "  -t [--num-taxa]      Number of taxa (species, OTUs)" << std::endl
             << "  -m [--map]           Map of individuals to taxa" << std::endl
             << "  -o [--outgroup]      Name of the outgroup (only one accepted)" << std::endl
+            << "  -n [--num-ind]       Number of individuals in data matrix" << std::endl
+            << "  -t [--num-taxa]      Number of taxa (species, OTUs)" << std::endl
+            << "  -s [--num-sites]     Number of sites in the data matrix" << std::endl
             << "\nAdditional options:" << std::endl
             << "  -p [--p-value]       P-value cutoff for test of significance (default=0.05)" << std::endl
             << "  --threads            Number of threads to use for parallelization (default=1)" << std::endl

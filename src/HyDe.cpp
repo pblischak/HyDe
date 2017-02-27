@@ -19,7 +19,8 @@ double _counts1[16][16] = {{0.0}},
        _counts3[16][16] = {{0.0}},
        _pVals[3] = {0.0},
        _zVals[3] = {0.0};
-int _numObs[3] = {0}, _outgroup = -999;
+double _numObs[3] = {0.0}, _missing = 0.0;
+int _outgroup = -999;
 std::vector<int> _dnaMatrix;
 //std::unordered_map<std::string, std::vector<int> > _taxaMap;
 std::vector<std::vector<int> > _taxaMap;
@@ -71,9 +72,10 @@ void HyDe::run(){
   std::clog << "\nNumber of individuals:   " << _nInd << std::endl
             << "Number of taxa:          " << _nTaxa << std::endl
             << "Outgroup:                " << _outgroupName << std::endl
-            << "Number of sites:         " << _nSites << std::endl;
+            << "Number of sites:         " << _nSites << std::endl
+            << "Percent missing data:    " << _missing / (double) (_nInd * _nSites) * 100.0 << std::endl;
   std::clog << "\nBonferroni corrected p-value for significance test at \u03b1-level = "
-            << _pValue << " : " << _bonferroniCorrect() << ".\n" << std::endl;
+            << _pValue << ": " << _bonferroniCorrect() << ".\n" << std::endl;
 
   std::string _outfile = _prefix + "-out.txt";
   std::ofstream _outStream;
@@ -104,7 +106,7 @@ void HyDe::run(){
         //std::cerr << _numObs[0] << "\t" << _numObs[1] << "\t" << _numObs[2] << std::endl;
 
         /* Calculate the GH statistic. */
-        _avgNumObs = _numObs[0] / (_taxaMap[_outgroup].size() * _taxaMap[i].size() * _taxaMap[j].size() * _taxaMap[k].size());
+        _avgNumObs = _numObs[0] / (double) (_taxaMap[_outgroup].size() * _taxaMap[i].size() * _taxaMap[j].size() * _taxaMap[k].size());
         _zVals[0] = _calcGH(_counts1, _numObs[0], _avgNumObs, i, j, k);
         _zVals[1] = _calcGH(_counts2, _numObs[1], _avgNumObs, j, i, k);
         _zVals[2] = _calcGH(_counts3, _numObs[2], _avgNumObs, i, k, j);
@@ -116,8 +118,12 @@ void HyDe::run(){
 
         #pragma omp critical
         {
-          //std::cout << _taxaMap[i].size() << "\t" << _taxaMap[j].size() << "\t" << _taxaMap[k].size() << "\t" << _taxaMap[_outgroup].size()
-          //          << "\t" << _taxaMap[i].size() * _taxaMap[j].size() * _taxaMap[k].size() * _taxaMap[_outgroup].size() * _nSites << "\t" << _avgNumObs << std::endl;
+          std::cout << _taxaNames[i] << ":" << _taxaMap[i].size() <<  "\t" << _taxaNames[j]
+                    << ":" << _taxaMap[j].size() << "\t" << _taxaNames[k] << ":"
+                    << _taxaMap[k].size() << "\t" << _outgroupName << ":" << _taxaMap[_outgroup].size()
+                    << "\t" << _taxaMap[i].size() * _taxaMap[j].size()
+                            *  _taxaMap[k].size() * _taxaMap[_outgroup].size() * _nSites
+                            << "\t" << _avgNumObs << std::endl;
           if(_zVals[0] != -99999.9)
             _printOut(_taxaNames[i], _taxaNames[j], _taxaNames[k], _zVals[0], _pVals[0], _counts1, _outStream);
           if(_zVals[1] != -99999.9)
@@ -300,6 +306,7 @@ void HyDe::_readInfile(){
 
       for(unsigned s = 0; s < _str2.length(); s++){
         _dnaMatrix[_indIndex * _nSites + s] = _convert(_str2[s]);
+        if(_dnaMatrix[_indIndex * _nSites + s] == 15) _missing += 1.0; /* Keep track of missing data precentage. */
       }
       _indIndex++;
     }
@@ -310,8 +317,8 @@ void HyDe::_readInfile(){
 }
 
 /* Calculate the GH test statistic using counts for current quartet. */
-double HyDe::_calcGH(const double cp[16][16], const int& nObs, const int& avgObs,
-                     const int& p1, const int& hyb, const int& p2){
+double HyDe::_calcGH(const double cp[16][16], const double& nObs,
+                     const double& avgObs, const int& p1, const int& hyb, const int& p2){
   double pxxxx = cp[0][0] + cp[5][5] + cp[10][10] + cp[15][15];
   double pxxxy = cp[0][1] + cp[0][2] + cp[0][3] + cp[5][4]
                + cp[5][6] + cp[5][7] + cp[10][8] + cp[10][9]
@@ -379,10 +386,12 @@ double HyDe::_calcGH(const double cp[16][16], const int& nObs, const int& avgObs
 
   if(fabs((1.0 / nObs) * (pxxxx + pxxxy + pxxyx + pxxyy + pxxyz + pxyxx + pxyxy + pxyxz
                        +  pxyyx + pyxxx + pxyyz + pzxyz + pyxzx + pyzxx + pxyzw) - 1.0) > 0.005){
-    std::cerr << "\n** ERROR: There was a problem counting site patterns... exiting. **\n" << std::endl;
+    std::cerr << "\n** WARNING: There was a problem counting site patterns... exiting. **\n" << std::endl;
     std::cerr << "  Failed for comparison between " << _taxaNames[p1] << "\t" << _taxaNames[hyb]
-              << "\t" << _taxaNames[p2] << std::endl << std::endl;
-    exit(EXIT_FAILURE);
+              << "\t" << _taxaNames[p2] << "\t" << fabs((1.0 / nObs) * (pxxxx + pxxxy + pxxyx + pxxyy + pxxyz + pxyxx + pxyxy + pxyxz
+                                   +  pxyyx + pyxxx + pxyyz + pzxyz + pyxzx + pyzxx + pxyzw) - 1.0) << std::endl << std::endl;
+    //exit(EXIT_FAILURE);
+    return(-99999.9);
   }
 
   double p9 = (double) (pxyyx + 0.05) / nObs;
@@ -438,7 +447,7 @@ double HyDe::_calcPvalue(const double& myZ){
   return myP;
 }
 
-/* Code from John D. Cook: https://www.johndcook.com/blog/cpp_phi/. Many thanks! */
+/* Code from John D. Cook: https://www.johndcook.com/blog/cpp_phi/. */
 double HyDe::_calcPvalueTwo(const double& myZ){
   const double a1 =  0.254829592;
   const double a2 = -0.284496736;
@@ -453,11 +462,15 @@ double HyDe::_calcPvalueTwo(const double& myZ){
   double t = 1.0 / (1.0 + p * z);
   double y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * exp(-z * z);
 
-  return 1.0 - (0.5 * (1.0 + sign * y));
+  if(myZ < 0){
+    return 2.0 * (0.5 * (1.0 + sign * y));
+  } else {
+    return 2.0 * (1.0 - (0.5 * (1.0 + sign * y)));
+  }
 }
 
-int HyDe::_getCountMatrix(const int& p1, const int& hyb, const int& p2, double cp[16][16]){
-  int nn = 0, resolved = 0;
+double HyDe::_getCountMatrix(const int& p1, const int& hyb, const int& p2, double cp[16][16]){
+  double nn = 0.0, resolved = 0.0;
   for(unsigned i = 0; i < _taxaMap[_outgroup].size(); i++){
     for(unsigned j = 0; j < _taxaMap[p1].size(); j++){
       for(unsigned k = 0; k < _taxaMap[hyb].size(); k++){
@@ -467,7 +480,7 @@ int HyDe::_getCountMatrix(const int& p1, const int& hyb, const int& p2, double c
                _dnaMatrix[_taxaMap[p1][j] * _nSites + s]  < 4 &&
                _dnaMatrix[_taxaMap[hyb][k] * _nSites + s] < 4 &&
                _dnaMatrix[_taxaMap[p2][r] * _nSites + s]  < 4){
-              nn++;
+              nn += 1.0;
               cp[_dnaMatrix[_taxaMap[_outgroup][i] * _nSites + s] * 4 + _dnaMatrix[_taxaMap[p1][j] * _nSites + s]]
                 [_dnaMatrix[_taxaMap[hyb][k] * _nSites + s] * 4 + _dnaMatrix[_taxaMap[p2][r] * _nSites + s]] += 1.0;
             } else {
@@ -486,16 +499,16 @@ int HyDe::_getCountMatrix(const int& p1, const int& hyb, const int& p2, double c
   return nn;
 }
 
-int HyDe::_resolveAmbiguity(const int& out, const int& p1, const int& hyb, const int& p2, double cp[16][16]){
+double HyDe::_resolveAmbiguity(const int& out, const int& p1, const int& hyb, const int& p2, double cp[16][16]){
   /* Check to see if any combination of three of the four taxa are ambiguous. */
   double denom = 0.0;
   if((out >= 4 && p1  >= 4 && hyb >= 4) ||
      (out >= 4 && p1  >= 4 && p2  >= 4) ||
      (out >= 4 && hyb >= 4 && p2  >= 4) ||
      (p1  >= 4 && hyb >= 4 && p2  >= 4)){
-    return 0;
+    return 0.0;
   } else if(out == 4 || p1 == 4 || hyb == 4 || p2 == 4){ /* Don't allow gaps. */
-    return 0;
+    return 0.0;
   } else {
     denom = _baseLookup[out].size() * _baseLookup[p1].size() * _baseLookup[hyb].size() * _baseLookup[p2].size();
     for(unsigned i = 0; i < _baseLookup[out].size(); i++){
@@ -508,7 +521,7 @@ int HyDe::_resolveAmbiguity(const int& out, const int& p1, const int& hyb, const
         }
       }
     }
-    return 1;
+    return 1.0;
   }
 }
 
