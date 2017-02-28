@@ -8,7 +8,7 @@
 const std::string Version = "0.1.0-alpha";
 const std::string Date    = "February 2017";
 
-void usage();
+void usage(); /* Print usage/helo information. */
 
 int main(int argc, char* argv[]){
   /* Initial parsing of command line options to look for -h / --help,

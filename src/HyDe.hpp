@@ -6,7 +6,7 @@
  * and populates class member variables with input values. */
 
 /* Include these here so that they available in main.cpp as well. */
- #include <vector>
+#include <vector>
 
 class HyDe {
 public:
@@ -29,16 +29,16 @@ private:
                  std::ofstream& out);
 
   /* Functions for calculating stuff.*/
-  inline int _convert(char str);                                                 /* Convert DNA bases form characters to ints.      */
-  double _resolveAmbiguity(const int& out, const int& p1,                        /* Randomly resolves ambiguity codes.              */
+  inline int _convert(char str);                                                 /* Convert DNA bases from characters to ints.      */
+  double _resolveAmbiguity(const int& out, const int& p1,                        /* Resolves ambiguity codes.                       */
                            const int& hyb, const int& p2,
                            double cp[16][16]);
-  double _calcGH(const double cp[16][16], const double& nObs,
+  double _calcGH(const double cp[16][16], const double& nObs,                    /* Calculates GH test statistic.                   */
                  const double& avgObs, const int& p1,
-                 const int& hyb, const int& p2);                                 /* Calculates GH test statistic.                   */
-  double _calcPvalue(const double& myZ);                                         /* Calculate p-value with bonferroni correction.   */
+                 const int& hyb, const int& p2);
+  double _calcPvalue(const double& myZ);                                         /* Calculate p-value for GH test statistic.        */
   double _calcPvalueTwo(const double& myZ);
-  inline long int _nCk(long int& n, long int& k);                                /* Calculates binomial coefficient: n choose k.    */
+  inline long int _nCk(const long int& n, long int& k);                          /* Calculates binomial coefficient: n choose k.    */
   double _bonferroniCorrect();                                                   /* Bonferroni correction based on number of taxa.  */
   double _getCountMatrix(const int& p1,                                          /* Populates count matrix from given triplet.      */
                          const int& hyb,
@@ -52,6 +52,7 @@ private:
   std::vector<std::string> _indNames;
 };
 
+/* Convert DNA bases to ints as they are read in. */
 inline int HyDe::_convert(char str){
   int _baseCode = 999;
   switch (str) {
@@ -79,7 +80,8 @@ inline int HyDe::_convert(char str){
   return _baseCode;
 }
 
-inline long int HyDe::_nCk(long int& n, long int& k){
+/* Calculate binomial coefficient. */
+inline long int HyDe::_nCk(const long int& n, long int& k){
   long int res = 1;
   if(k > n - k)
     k = n - k;

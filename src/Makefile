@@ -25,10 +25,10 @@ clean :
 	@rm $(OBJ) $(EXE)
 
 install :
-	@printf "\nCopying executable to /usr/local/bin...\n\n"
+	@printf "\n Copying executable to /usr/local/bin...\n\n"
 	@cp $(EXE) /usr/local/bin
-	@printf "\nTo uninstall, type: sudo make uninstall\n\n"
+	@printf " To uninstall, type: sudo make uninstall\n\n"
 
 uninstall :
-	@printf "\nRemoving executable from /usr/local/bin...\n\n"
+	@printf "\n Removing executable from /usr/local/bin...\n\n"
 	@rm -i /usr/local/bin/$(EXE)

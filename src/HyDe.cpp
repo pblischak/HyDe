@@ -283,8 +283,8 @@ void HyDe::_parseSpeciesMap(){
   }
 }
 
-/* Read in DNA matrix in sequential Phylip format w/o header info.        */
-/* Converts DNA bases to integer codes using inlined _convert function.   */
+/* Read in DNA matrix in sequential Phylip format w/o header info.
+ * Converts DNA bases to integer codes using inlined _convert function.   */
 void HyDe::_readInfile(){
   std::ifstream _infileStream(_infile);
   std::string _str1, _str2;
@@ -447,7 +447,8 @@ double HyDe::_calcPvalue(const double& myZ){
   return myP;
 }
 
-/* Code from John D. Cook: https://www.johndcook.com/blog/cpp_phi/. */
+/* Calculate p-value for GH test statistic.
+ * Code from John D. Cook: https://www.johndcook.com/blog/cpp_phi/. */
 double HyDe::_calcPvalueTwo(const double& myZ){
   const double a1 =  0.254829592;
   const double a2 = -0.284496736;
@@ -461,13 +462,10 @@ double HyDe::_calcPvalueTwo(const double& myZ){
   double t = 1.0 / (1.0 + p * z);
   double y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * exp(-z * z);
 
-  if(myZ < 0){ /* Return two-sided p-value based on Z after check for being positive or negative. */
-    return 2.0 * (0.5 * (1.0 + sign * y));
-  } else {
-    return 2.0 * (1.0 - (0.5 * (1.0 + sign * y)));
-  }
+  return 1.0 - (0.5 * (1.0 + sign * y));
 }
 
+/* Populate 16 x 16 count pattern matrix for the given triplet + outgroup. */
 double HyDe::_getCountMatrix(const int& p1, const int& hyb, const int& p2, double cp[16][16]){
   double nn = 0.0, resolved = 0.0;
   for(unsigned i = 0; i < _taxaMap[_outgroup].size(); i++){
@@ -498,6 +496,7 @@ double HyDe::_getCountMatrix(const int& p1, const int& hyb, const int& p2, doubl
   return nn;
 }
 
+/* Resolve missing or ambiguous bases if one or two have them. */
 double HyDe::_resolveAmbiguity(const int& out, const int& p1, const int& hyb, const int& p2, double cp[16][16]){
   /* Check to see if any combination of three of the four taxa are ambiguous. */
   double denom = 0.0;
@@ -524,6 +523,7 @@ double HyDe::_resolveAmbiguity(const int& out, const int& p1, const int& hyb, co
   }
 }
 
+/* Prints all information for the given hypothesis test to outfile. */
 void HyDe::_printOut(const std::string& p1, const std::string& hyb, const std::string& p2,
                      const double& z, const double& p, const double cp[16][16],
                      const double& nObs, std::ofstream& out){
@@ -603,6 +603,8 @@ void HyDe::_printOut(const std::string& p1, const std::string& hyb, const std::s
       << pyxzx << "\t" << pyzxx << "\t" << pxyzw << std::endl;
 }
 
+/* Simple fxn for calculating Bonferroni corrected p-value
+ * based on the number of taxa. */
 double HyDe::_bonferroniCorrect(){
   long int n = _nTaxa - 1, k = 3;
   return (double) _pValue / (_nCk(n, k) * 2.0);
