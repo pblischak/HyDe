@@ -3,10 +3,12 @@
 #include <cmath>
 #include <string>
 #include <cstring>
+#include <unistd.h>
 #ifdef _OPENMP
   #include <omp.h>
 #endif
 #include "HyDe.hpp"
+#include "MbRandom.hpp"
 
 /* Declaring "global" variables to be passed to threads.
  * They're not really global though because they are
@@ -14,6 +16,13 @@
  * all of these variables were members of the HyDe class, which required
  * copying them before passing to threads. I think that this prevents
  * needing to copy things. */
+struct triplet {
+  double _counts[16][16] = {{0.0}},
+         _numObs         = 0.0,
+         _pVal           = 0.0,
+         _zVal           = 0.0;
+} _triplets[3];
+
 double _counts1[16][16] = {{0.0}},
        _counts2[16][16] = {{0.0}},
        _counts3[16][16] = {{0.0}},
@@ -46,6 +55,9 @@ static std::vector<std::vector<int> > _baseLookup = { /* {A,G,C,T} == {0,1,2,3} 
   {0, 1, 2, 3}  /* N == A or G or C or T */
 };
 
+// Random number generation for bootstrapping
+MbRandom *r = new MbRandom;
+
 /*************************************************/
 /* Public member functions accessed from main(). */
 /*************************************************/
@@ -70,10 +82,10 @@ void HyDe::run(){
     std::clog << "Multithreading with OpenMP not enabled. Running analysis serially." << std::endl;
   #endif
   std::clog << "\nNumber of individuals:   " << _nInd << std::endl
-            << "Number of taxa:          " << _nTaxa << std::endl
-            << "Outgroup:                " << _outgroupName << std::endl
-            << "Number of sites:         " << _nSites << std::endl
-            << "Percent missing data:    " << _missing / (double) (_nInd * _nSites) * 100.0 << std::endl;
+            << "Number of taxa:          "   << _nTaxa << std::endl
+            << "Outgroup:                "   << _outgroupName << std::endl
+            << "Number of sites:         "   << _nSites << std::endl
+            << "Percent missing data:    "   << _missing / (double) (_nInd * _nSites) * 100.0 << " %" << std::endl;
   std::clog << "\nBonferroni corrected p-value for significance test at \u03b1-level = "
             << _pValue << ": " << _bonferroniCorrect() << ".\n" << std::endl;
 
@@ -134,6 +146,11 @@ void HyDe::run(){
       }
     }
   }
+  if(_bootReps > 0){
+    std::cerr << "** ERROR: Bootstrapping not yet implemented... (sorry!) **\n" << std::endl;
+    /*std::clog << "Starting bootstrapping (" << _bootReps << " replicates)\n" << std::endl;
+    _bootstrap();*/
+  }
 }
 
 /*************************************************************/
@@ -159,7 +176,9 @@ void HyDe::_parseCommandLine(int ac, char* av[]){
       _outgroupName = av[i + 1];
     } else if(strcmp(av[i], "-p") == 0 || strcmp(av[i], "--pvalue") == 0){
       _pValue = atof(av[i + 1]);
-    } else if(strcmp(av[i], "--threads") == 0){
+    } else if (strcmp(av[i], "-b") == 0 || strcmp(av[i], "--bootstrap") == 0){
+      _bootReps = atoi(av[i + 1]);
+    } else if(strcmp(av[i], "-j") == 0 || strcmp(av[i], "--threads") == 0){
       #ifdef _OPENMP
         _threads = atoi(av[i + 1]);
         int _maxThreads = omp_get_max_threads();
@@ -463,6 +482,40 @@ double HyDe::_calcPvalueTwo(const double& myZ){
   double y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * exp(-z * z);
 
   return 1.0 - (0.5 * (1.0 + sign * y));
+}
+
+void HyDe::_bootstrap(){
+  std::string _bootfile = _prefix + "-boot.txt";
+  std::ofstream _bootStream;
+  _bootStream.open(_bootfile, std::ios::out | std::ios::app);
+  if(!_bootStream.is_open()){
+    std::cerr << "** ERROR: Could not open bootstrap outfile: " << _bootfile << ". **\n" << std::endl;
+    exit(EXIT_FAILURE);
+  } else {
+    _bootStream << "P1\tHybrid\tP2\tZscore\tPvalue\tgamma\tX1\tX2\tX3\tX4\tX5\tX6\tX7\tX8\tX9\tX10\tX11\tX12\tX13\tX14\tX15" << std::endl;
+  }
+
+  double progress = 0.0;
+  int barWidth = 100;
+  for(int b = 1; b <= _bootReps; b++){
+    sleep(1); /* Do stuff here. */
+
+    /*
+    Progress bar:
+    http://stackoverflow.com/questions/14539867/how-to-display-a-progress-indicator-in-pure-c-c-cout-printf
+    */
+    progress += 1.0 / _bootReps;
+    std::clog << "[";
+    int pos = barWidth * progress;
+    for (int i = 0; i < barWidth; ++i) {
+        if (i < pos) std::clog << "=";
+        else if (i == pos) std::clog << ">";
+        else std::clog << " ";
+    }
+    std::clog << "] " << int(progress * 100.0) << " %\r";
+    std::clog.flush();
+  }
+  std::clog << std::endl << std::endl;
 }
 
 /* Populate 16 x 16 count pattern matrix for the given triplet + outgroup. */
