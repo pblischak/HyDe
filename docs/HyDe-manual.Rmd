@@ -23,10 +23,10 @@ li {
 The program HyDe implements the method for hybrid detection described in:
 
  - Laura S. Kubatko and Julia Chifman. An Invariants-based Method for Efficient Identification of Hybrid Species From Large-scale Genomic Data. *bioRxiv* **doi**: <a href="https://doi.org/10.1101/034348" target="_blank">https://doi.org/10.1101/034348</a>.
- 
+
 # Installation
 
-HyDe is written in C++ and can be compiled into an executable (`hyde`) using the `Makefile` provided in the `src/` folder. 
+HyDe is written in C++ with a Python wrapper (`hyde.py`) and can be compiled into an executable (`hyde`) using the `Makefile` provided in the `src/` folder.
 Some of the features in HyDe use the C++11 standard, so a compatible compiler is required. There are a few different options for compiling the executable, but the simplest way is to download the HyDe source code, change into the `src/` directory and type `make`:
 
 ```bash
@@ -36,7 +36,8 @@ make
 sudo make install
 ```
 
-The last command will copy `hyde` to `/usr/local/bin` so that it is available for execution from anywhere on your computer. 
+The last command will copy `hyde` and `hyde.py` to `/usr/local/bin` so that they are
+available for execution from anywhere on your computer.
 If you want to remove it, simply type `sudo make uninstall`.
 
 ### Multithreading using OpenMP
@@ -44,7 +45,7 @@ If you want to remove it, simply type `sudo make uninstall`.
 HyDe was written with the option to allow multithreading using the OpenMP library. OpenMP is included with the GNU g++ compilers by default, but Apple based C++ compilers no longer support OpenMP. One of the easiest ways to get GNU g++ on a Mac is to install it using Homebrew. The steps for compiling with OpenMP multithreading are almost the same as before but with one slight modification to the `make` command:
 
 ```bash
-# Compiling with OpenMP, add OPENMP=yes to make step
+# Compiling with OpenMP, add 'OPENMP=yes' to make step
 cd HyDe/src
 make OPENMP=yes
 sudo make install
@@ -56,40 +57,34 @@ If at any point you need to start the compilation process from scratch (e.g., yo
 
 # Command line interface
 
-HyDe has a simple command line interface that allows users to run the program on their data by passing the relevant files and information using flags. 
+HyDe has a simple command line interface that allows users to run the program on their data by passing the relevant files and information using flags.
 
 ### Getting help
 
 ```bash
-hyde --help
+hyde.py --help
 
-## Usage: hyde -i <infile> -n <num-individuals> -s <num-sites> 
-##        -m <species-map> -o <outgroup> [additional options]
+## usage: hyde.py [-h] -i -m -o -n -t -s [-p] [-b] [-j]
+##                [--prefix]
 ##
-## Information options:
-##   -h [--help]          Prints this help message
-##   -v [--version]       Prints version information
+## Options for hyde.py
 ##
-## Program options:
-##   -i [--infile]        Name of the data input file
-##   -n [--num-ind]       Number of individuals in data matrix
-##   -s [--num-sites]     Number of sites in the data matrix
-##   -t [--num-taxa]      Number of taxa (species, OTUs)
-##   -m [--map]           Map of individuals to taxa
-##   -o [--outgroup]      Name of the outgroup (only one accepted)
+## optional arguments:
+##   -h, --help           show this help message and exit
 ##
-## Additional options:
-##   -p [--p-value]       P-value cutoff for test of significance (default=0.05)
-##   --threads            Number of threads to use for parallelization (default=1)
-##   --prefix             Append a prefix to the beginning of outfile
-```
-
-### Version information
-
-```bash
-hyde --version
-
-## This is HyDe version 0.1.0-alpha (February 2017).
+## required arguments:
+##   -i, --infile     name of the data input file
+##   -m, --map        map of individuals to taxa
+##   -o, --outgroup   name of the outgroup (only one accepted)
+##   -n, --num_ind    number of individuals in data matrix
+##   -t, --num_taxa   number of taxa (species, OTUs)
+##   -s, --num_sites  number of sites in the data matrix
+##
+## additional arguments:
+##   -p, --pvalue     p-value cutoff for test of significance [default=0.05]
+##   -b, --bootstrap  number of bootstrap replicates [default=0]
+##   -j, --threads    number of threads [default=1]
+##   --prefix         prefix appended to output files [default=hyde]
 ```
 
 # Getting started
@@ -122,13 +117,13 @@ IndividualN TaxonM
 
 ```bash
 cd HyDe/examples
-hyde --infile snake-data.txt \
-     --map snake-map.txt \
-     --num-ind 52 \
-     --num-taxa 7 \
-     --num-sites 8466 \
-     --outgroup out \
-     --prefix snake
+hyde.py --infile snake-data.txt \
+        --map snake-map.txt \
+        --num-ind 52 \
+        --num-taxa 7 \
+        --num-sites 8466 \
+        --outgroup out \
+        --prefix snake
 ```
 
 For more details on the analysis carried out by HyDe, see the <a href="http://pblischak.github.io/HyDe/HyDe-notes.html" target="_blank">program notes</a>.
