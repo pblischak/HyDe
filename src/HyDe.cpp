@@ -33,6 +33,7 @@ int _outgroup = -999;
 std::vector<int> _dnaMatrix;
 //std::unordered_map<std::string, std::vector<int> > _taxaMap;
 std::vector<std::vector<int> > _taxaMap;
+std::vector<std::vector<int> > _resampledMap;
 //std::vector<int> _taxaIndex, _taxaCounts;
 std::vector<std::string> _taxaNames;
 std::string _outgroupName = "none";
@@ -497,8 +498,48 @@ void HyDe::_bootstrap(){
 
   double progress = 0.0;
   int barWidth = 100;
+  #pragma omp parallel for num_threads(_threads) schedule(dynamic) firstprivate(_counts1, _counts2, _counts3, _taxaMap, _taxaNames, _dnaMatrix, _baseLookup, _outgroup, _numObs, _zVals, _pVals)
+  for(unsigned i = 0; i < _taxaNames.size() - 2; i++){
+    for(unsigned j = i + 1; j < _taxaNames.size() - 1; j++){
+      for(unsigned k = j + 1; k < _taxaNames.size(); k++){
+        double _avgNumObs = 0.0;
+        /* Re-initialize count matrices to 0. */
+        for(int a = 0; a < 16; a++){
+          for(int b = 0; b < 16; b++){
+            _counts1[a][b] = 0.0;
+            _counts2[a][b] = 0.0;
+            _counts3[a][b] = 0.0;
+          }
+        }
+        _numObs[0] = _getCountMatrix(i, j, k, _counts1);
+        _numObs[1] = _getCountMatrix(j, i, k, _counts2);
+        _numObs[2] = _getCountMatrix(i, k, j, _counts3);
+        //std::cerr << _numObs[0] << "\t" << _numObs[1] << "\t" << _numObs[2] << std::endl;
+
+        /* Calculate the GH statistic. */
+        _avgNumObs = _numObs[0] / (double) (_taxaMap[_outgroup].size() * _taxaMap[i].size() * _taxaMap[j].size() * _taxaMap[k].size());
+        _zVals[0] = _calcGH(_counts1, _numObs[0], _avgNumObs, i, j, k);
+        _zVals[1] = _calcGH(_counts2, _numObs[1], _avgNumObs, j, i, k);
+        _zVals[2] = _calcGH(_counts3, _numObs[2], _avgNumObs, i, k, j);
+
+        /* Get p-values. */
+        _pVals[0] = _calcPvalueTwo(_zVals[0]);
+        _pVals[1] = _calcPvalueTwo(_zVals[1]);
+        _pVals[2] = _calcPvalueTwo(_zVals[2]);
+
+        #pragma omp critical
+        {
+          if(_zVals[0] != -99999.9)
+            _printOut(_taxaNames[i], _taxaNames[j], _taxaNames[k], _zVals[0], _pVals[0], _counts1, _numObs[0], _bootStream);
+          if(_zVals[1] != -99999.9)
+            _printOut(_taxaNames[j], _taxaNames[i], _taxaNames[k], _zVals[1], _pVals[1], _counts2, _numObs[1], _bootStream);
+          if(_zVals[2] != -99999.9)
+            _printOut(_taxaNames[i], _taxaNames[k], _taxaNames[j], _zVals[2], _pVals[2], _counts3, _numObs[2], _bootStream);
+        }
+      }
+    }
+  }
   for(int b = 1; b <= _bootReps; b++){
-    sleep(1); /* Do stuff here. */
 
     /*
     Progress bar:
@@ -512,7 +553,7 @@ void HyDe::_bootstrap(){
         else if (i == pos) std::clog << ">";
         else std::clog << " ";
     }
-    std::clog << "] " << int(progress * 100.0) << " %\r";
+    std::clog << "] " << int(progress * 100.0) << " %\n\r";
     std::clog.flush();
   }
   std::clog << std::endl << std::endl;

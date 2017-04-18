@@ -50,8 +50,9 @@ def run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue, bootReps, t
 
 def make_cf_table(df, prefix, outgroup):
     """
-    Process HyDe output to make a concordance factor table for input to SNaQ.
+    Process HyDe output.
     """
+    #print("TESTING: Making concordance factor table...", end='')
     cf_file = open(prefix+"-cf-table.txt", 'w')
     #print("\"Taxon1\"", "\"Taxon2\"", "\"Taxon3\"", "\"Taxon4\"", "\"CF12_34\"", "\"CF13_24\"", "\"CF14_23\"", sep=',', file=cf_file)
     print("t1", "t2", "t3", "t4", "CF12_34", "CF13_24", "CF14_23", sep=',', file=cf_file)
@@ -68,6 +69,8 @@ def make_cf_table(df, prefix, outgroup):
             print(df2.iloc[r][0], df2.iloc[r][1], df2.iloc[r][2], \
                   outgroup, abs(df2.iloc[r][3]), 0.0, 1.0-abs(df2.iloc[r][3]), sep=',', file=cf_file)
             prev_triplet = [df2.iloc[r][0],df2.iloc[r][1],df2.iloc[r][2]]
+
+    #print("Done.\n")
 
 def main():
     """
@@ -120,8 +123,8 @@ def main():
         pass
 
     run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue, bootReps, threads, prefix)
-    hyde_out = pd.read_csv(prefix+"-out.txt", sep='\t')
-    make_cf_table(hyde_out, prefix, outgroup)
+    #hyde_out = pd.read_csv(prefix+"-out.txt", sep='\t')
+    #make_cf_table(hyde_out, prefix, outgroup)
 
 if __name__ == "__main__":
     """

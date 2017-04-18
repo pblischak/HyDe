@@ -2,6 +2,9 @@
 .*~
 .DS_Store
 scripts
-examples
 traces
 tests
+*.txt
+!examples/snake-data.txt
+!examples/snake-map.txt
+sims
