@@ -14,10 +14,18 @@ import os
 import argparse
 from collections import Counter
 
-def run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue, bootReps, threads, prefix):
+def run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue=0.05, bootReps=0, threads=1, prefix="hyde"):
     """
     Wrapper for running HyDe C++ executable.
     """
+
+    if os.path.exists(prefix+"-out.txt"):
+        print("\n**  Warning: File '"+prefix+"-out.txt' already exists.")
+        print("**  Renaming to 'old-"+prefix+"-out.txt'.\n")
+        os.rename(prefix+"-out.txt", "old-"+prefix+"-out.txt")
+    else:
+        pass
+
     # Check that hyde executable works
     test_hyde = sps.Popen(['hyde'], stdout=sps.PIPE, stderr=sps.PIPE, shell=True)
     (out, err) = test_hyde.communicate()
@@ -48,33 +56,30 @@ def run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue, bootReps, t
 #    Read in bootstrap replicates file from HyDe.
 #    """
 
-def make_cf_table(df, prefix, outgroup):
+def make_cf_table(hyde_out, prefix="hyde", outgroup):
     """
     Process HyDe output.
     """
     #print("TESTING: Making concordance factor table...", end='')
+    df = pd.read_csv(prefix+"-out.txt", sep='\t')
     cf_file = open(prefix+"-cf-table.txt", 'w')
-    #print("\"Taxon1\"", "\"Taxon2\"", "\"Taxon3\"", "\"Taxon4\"", "\"CF12_34\"", "\"CF13_24\"", "\"CF14_23\"", sep=',', file=cf_file)
     print("t1", "t2", "t3", "t4", "CF12_34", "CF13_24", "CF14_23", sep=',', file=cf_file)
     df2 = df[['P1', 'Hybrid', 'P2', 'gamma']]
     unique_taxa = np.union1d(df2.P1.unique(), df2.Hybrid.unique())
     prev_triplet = []
     for r in range(df2.shape[0]):
-        #if is_permutation([df2.iloc[r][0],df2.iloc[r][1],df2.iloc[r][2]], prev_triplet):
         if Counter([df2.iloc[r][0],df2.iloc[r][1],df2.iloc[r][2]]) == Counter(prev_triplet):
             pass
         else:
-            #print('"'+str(df2.iloc[r][0])+'",', '"'+str(df2.iloc[r][1])+'",', '"'+str(df2.iloc[r][2])+'",', \
-            #      '"'+str(outgroup)+'",', '"'+str(abs(df2.iloc[r][3]))+'",', '"0.0",', '"'+str(1.0-abs(df2.iloc[r][3]))+'"', sep='', file=cf_file)
             print(df2.iloc[r][0], df2.iloc[r][1], df2.iloc[r][2], \
                   outgroup, abs(df2.iloc[r][3]), 0.0, 1.0-abs(df2.iloc[r][3]), sep=',', file=cf_file)
             prev_triplet = [df2.iloc[r][0],df2.iloc[r][1],df2.iloc[r][2]]
 
     #print("Done.\n")
 
-def main():
+if __name__ == "__main__":
     """
-    Main function for running HyDe and converting output to a CF table.
+    Run the main script.
     """
     parser = argparse.ArgumentParser(description="Options for hyde.py",
                                      add_help=True)
@@ -115,19 +120,5 @@ def main():
     threads  = args.threads
     prefix   = args.prefix
 
-    if os.path.exists(prefix+"-out.txt"):
-        print("\n**  Warning: File '"+prefix+"-out.txt' already exists.")
-        print("**  Renaming to 'old-"+prefix+"-out.txt'.\n")
-        os.rename(prefix+"-out.txt", "old-"+prefix+"-out.txt")
-    else:
-        pass
-
     run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue, bootReps, threads, prefix)
-    #hyde_out = pd.read_csv(prefix+"-out.txt", sep='\t')
-    #make_cf_table(hyde_out, prefix, outgroup)
-
-if __name__ == "__main__":
-    """
-    Run the main script.
-    """
-    main()
+    make_cf_table(prefix+"-out.txt", prefix, outgroup)
