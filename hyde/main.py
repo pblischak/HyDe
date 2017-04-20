@@ -24,7 +24,7 @@ def run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue=0.05, bootRe
         pass
 
     # Check that hyde executable works
-    test_hyde = sps.Popen(['hyde_cpp'], stdout=sps.PIPE, stderr=sps.PIPE, shell=True)
+    test_hyde = sps.Popen(['bin/hyde_cpp'], stdout=sps.PIPE, stderr=sps.PIPE, shell=True)
     (out, err) = test_hyde.communicate()
     #print(repr(str(err)))
     if not str(err).startswith('\n** ERROR'):
@@ -33,7 +33,7 @@ def run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue=0.05, bootRe
         pass
 
     hyde_cmd = [
-        "hyde_cpp",
+        "bin/hyde_cpp",
         "-n", str(nInd),
         "-t", str(nTaxa),
         "-s", str(nSites),
