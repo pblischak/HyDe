@@ -1,4 +1,6 @@
 
+|Build Status|
+
 HyDe: hybridization detection using phylogenetic invariants
 -----------------------------------------------------------
 
@@ -57,3 +59,5 @@ Running HyDe in Python
     # Run a hyde analysis
     hd.run_hyde(...)
 
+.. |Build Status| image:: https://travis-ci.org/pblischak/HyDe.svg?branch=master
+   :target: https://travis-ci.org/pblischak/HyDe
