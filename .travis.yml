@@ -1,0 +1,13 @@
+language: python
+python:
+  - "2.7"
+
+before_install:
+  make
+
+install:
+  pip install -r requirements.txt
+
+script:
+  hyde_cpp -h
+  run_hyde.py -h
