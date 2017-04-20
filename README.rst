@@ -1,6 +1,6 @@
 
 HyDe: hybridization detection using phylogenetic invariants
-===========================================================
+-----------------------------------------------------------
 
 Installation
 ------------
@@ -11,13 +11,12 @@ Requirements:
 -  Numpy
 -  Pandas
 
-``HyDe`` is written as a Python package that wraps the primary C++
-program for running the hybridization detection analysis. We have
-provided a ``Makefile`` that will compile the C++ executable
-(``hyde_cpp``) and will then install the HyDe Python package using
-``pip``. To ensure that the necessary dependencies are available, we
-suggest using a Python distribution such as
-`Miniconda <https://conda.io/miniconda.html>`__.
+HyDe is a Python package that wraps a primary C++ program for running a
+hybridization detection analysis. We have provided a ``Makefile`` that
+will compile the C++ executable (``hyde_cpp``) and will then install the
+HyDe Python package using ``pip``. To ensure that the necessary
+dependencies are available, we suggest using a Python distribution such
+as `Miniconda <https://conda.io/miniconda.html>`__.
 
 .. code:: bash
 
@@ -42,7 +41,7 @@ Running HyDe from the Command Line
 
 Type ``run_hyde.py -h`` for options.
 
-::
+.. code:: bash
 
     run_hyde.py -i <infile> -m <map-file> -o <outgroup> \
                 -n <num-ind> -t <num-taxa> -s <num-sites> \
