@@ -2,7 +2,7 @@ EXE = hyde_cpp
 OBJ = MbRandom.o HyDe.o main.o
 
 CXX = g++
-CXXFLAGS = -Wall -O3 -g -std=c++11
+CXXFLAGS = -Wall -O3 -g -std=c++0x
 
 # Set this to `yes` if you have OpenMP.
 OPENMP ?= no

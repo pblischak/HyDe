@@ -3,11 +3,9 @@ python:
   - "2.7"
 
 before_install:
-  make
+  make OPENMP=yes
 
 install:
-  pip install -r requirements.txt
+  pip install .
 
-script:
-  hyde_cpp -h
-  run_hyde.py -h
+script: make test
