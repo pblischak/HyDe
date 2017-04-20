@@ -1,12 +1,9 @@
-all : src/hyde hyde
+all : src/hyde_cpp
 
 .PHONY : install clean
 
-src/hyde : src/main.cpp src/HyDe.cpp src/MbRandom.cpp src/Makefile
+src/hyde_cpp : src/main.cpp src/HyDe.cpp src/MbRandom.cpp src/Makefile
 	@cd src; make
-
-hyde : hyde/hyde.py hyde/__init__.py setup.py
-	pip install .
 
 clean :
 	@cd src; make clean

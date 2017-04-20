@@ -3,7 +3,7 @@ from setuptools import setup
 setup(name="HyDe",
       version="0.1.0a",
       description="Hybrid detection using phylogenetic invariants",
-      long_description=open('README.md').read(),
+      long_description=open('README.rst').read(),
       url="https://github.com/pblischak/HyDe",
       author="Paul Blischak & Laura Kubatko",
       author_email="blischak.4@osu.edu",
