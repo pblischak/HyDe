@@ -38,6 +38,12 @@ as `Miniconda <https://conda.io/miniconda.html>`__.
     # Set the OPENMP flag to 'yes'
     make OPENMP=yes
 
+    # Now install HyDe Python package
+    pip install .
+
+    # Test the installation
+    make test
+
 Running HyDe from the Command Line
 ----------------------------------
 
@@ -61,3 +67,4 @@ Running HyDe in Python
 
 .. |Build Status| image:: https://travis-ci.org/pblischak/HyDe.svg?branch=master
    :target: https://travis-ci.org/pblischak/HyDe
+
