@@ -10,7 +10,6 @@ setup(name="HyDe",
       license="GPL",
       packages=['hyde'],
       scripts=['scripts/run_hyde.py'],
-      data_files=[('./bin', ['src/hyde_cpp'])],
       install_requires = ['numpy', 'pandas'],
       zip_safe=False
 )

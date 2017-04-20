@@ -9,7 +9,7 @@ clean :
 	@cd src; make clean
 
 install :
-	@cp ./src/hyde
+	@cd src; make install
 
 test :
 	hyde_cpp -h
