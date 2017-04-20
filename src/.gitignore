@@ -1,5 +1,5 @@
 *.o
-hyde
+hyde_cpp
 *.dSYM
 *.txt
 test

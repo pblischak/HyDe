@@ -9,3 +9,6 @@ tests
 !examples/snake-data.txt
 !examples/snake-map.txt
 sims
+build
+dist
+*.egg-info

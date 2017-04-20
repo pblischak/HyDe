@@ -1,5 +1,4 @@
-EXE = hyde
-PY_EXE = hyde.py
+EXE = hyde_cpp
 OBJ = MbRandom.o HyDe.o main.o
 
 CXX = g++
@@ -27,9 +26,9 @@ clean :
 
 install :
 	@printf "\n Copying executable to /usr/local/bin...\n\n"
-	@cp $(EXE) ../$(PY_EXE) /usr/local/bin
+	@cp $(EXE) /usr/local/bin
 	@printf " To uninstall, type: sudo make uninstall\n\n"
 
 uninstall :
 	@printf "\n Removing executable from /usr/local/bin...\n\n"
-	@rm -i /usr/local/bin/$(EXE) /usr/local/bin/$(PY_EXE)
+	@rm -i /usr/local/bin/$(EXE)
