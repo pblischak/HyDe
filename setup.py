@@ -9,7 +9,8 @@ setup(name="HyDe",
       author_email="blischak.4@osu.edu",
       license="GPL",
       packages=['hyde'],
-      scripts=['src/hyde_cpp', 'scripts/run_hyde.py'],#, 'scripts/hyde'],
+      scripts=['scripts/run_hyde.py'],
+      data_files=[('', './src/hyde_cpp')]
       install_requires = ['numpy', 'pandas'],
       zip_safe=False
 )

@@ -87,7 +87,7 @@ void HyDe::run(){
             << "Outgroup:                "   << _outgroupName << std::endl
             << "Number of sites:         "   << _nSites << std::endl
             << "Percent missing data:    "   << _missing / (double) (_nInd * _nSites) * 100.0 << " %" << std::endl;
-  std::clog << "\nBonferroni corrected p-value for significance test at alpha-level = "
+  std::clog << "\nBonferroni corrected p-value for significance test at \u03B1-level = "
             << _pValue << ": " << _bonferroniCorrect() << ".\n" << std::endl;
 
   std::string _outfile = _prefix + "-out.txt";
