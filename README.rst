@@ -1,5 +1,5 @@
 
-|Build Status|
+|Build Status| |Documentation|
 
 HyDe: hybridization detection using phylogenetic invariants
 -----------------------------------------------------------
@@ -13,6 +13,7 @@ Requirements:
 -  Python 2.7
 -  Numpy
 -  Pandas
+-  C++ compiler (g++ >= v4.8 preferred)
 
 HyDe is a Python package that wraps a primary C++ program for running a
 hybridization detection analysis. We have provided a ``Makefile`` that
@@ -65,3 +66,6 @@ Running HyDe in Python
 .. |Build Status| image:: https://travis-ci.org/pblischak/HyDe.svg?branch=master
    :target: https://travis-ci.org/pblischak/HyDe
 
+.. |Documentation| image:: https://readthedocs.org/projects/hybridization-detection/badge/?version=latest
+   :target: http://hybridization-detection.readthedocs.io/en/latest/?badge=latest
+   
