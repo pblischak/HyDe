@@ -1,2 +1,7 @@
 .Rhistory
 *.ipynb
+old
+_build
+_static
+_templates
+make.bat
