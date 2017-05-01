@@ -39,6 +39,7 @@ private:
   double _calcPvalue(const double& myZ);                                         /* Calculate p-value for GH test statistic.        */
   double _calcPvalueTwo(const double& myZ);
   void   _bootstrap();                                                           /* Bootstrap individuals within taxa.              */
+  void   _resampleTaxonMap();                                                    /* Resample individuals within taxon map.          */
   inline long int _nCk(const long int& n, long int& k);                          /* Calculates binomial coefficient: n choose k.    */
   double _bonferroniCorrect();                                                   /* Bonferroni correction based on number of taxa.  */
   double _getCountMatrix(const int& p1,                                          /* Populates count matrix from given triplet.      */

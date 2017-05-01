@@ -3,6 +3,7 @@
 #include <cmath>
 #include <string>
 #include <cstring>
+#include <ctime>
 #include <unistd.h>
 #ifdef _OPENMP
   #include <omp.h>
@@ -16,13 +17,6 @@
  * all of these variables were members of the HyDe class, which required
  * copying them before passing to threads. I think that this prevents
  * needing to copy things. */
-struct triplet {
-  double _counts[16][16] = {{0.0}},
-         _numObs         = 0.0,
-         _pVal           = 0.0,
-         _zVal           = 0.0;
-} _triplets[3];
-
 double _counts1[16][16] = {{0.0}},
        _counts2[16][16] = {{0.0}},
        _counts3[16][16] = {{0.0}},
@@ -32,8 +26,7 @@ double _numObs[3] = {0.0}, _missing = 0.0;
 int _outgroup = -999;
 std::vector<int> _dnaMatrix;
 //std::unordered_map<std::string, std::vector<int> > _taxaMap;
-std::vector<std::vector<int> > _taxaMap;
-std::vector<std::vector<int> > _resampledMap;
+std::vector<std::vector<int> > _taxaMap, _taxaMapCopy;
 //std::vector<int> _taxaIndex, _taxaCounts;
 std::vector<std::string> _taxaNames;
 std::string _outgroupName = "none";
@@ -76,6 +69,7 @@ HyDe::HyDe(int c, char* v[]){
 /* Runs HyDe analysis. */
 void HyDe::run(){
   /* Open outfile and logfile (if specified). */
+  clock_t start_time = clock(); // Begin timing...
   std::clog << "\nHyDe: hybrid detection using phylogenetic invariants\n" << std::endl;
   #ifdef _OPENMP
     std::clog << "Multithreading with OpenMP enabled. Currently using " << _threads << " threads." << std::endl;
@@ -148,10 +142,17 @@ void HyDe::run(){
     }
   }
   if(_bootReps > 0){
-    std::cerr << "** ERROR: Bootstrapping not yet implemented... (sorry!) **\n" << std::endl;
-    /*std::clog << "Starting bootstrapping (" << _bootReps << " replicates)\n" << std::endl;
-    _bootstrap();*/
+    //std::cerr << "** ERROR: Bootstrapping not yet implemented... (sorry!) **\n" << std::endl;
+    std::clog << "Starting bootstrapping (" << _bootReps << " replicates):\n" << std::endl;
+    _bootstrap();
   }
+  clock_t end_time = clock(); // End timing...
+  double elapsed_time    = double(end_time - start_time) / CLOCKS_PER_SEC;
+  int elapsed_hours   = elapsed_time / 3600;
+  int elapsed_minutes = (elapsed_time - elapsed_hours * 3600) / 60;
+  double elapsed_seconds = (elapsed_time - elapsed_hours * 3600.0 - elapsed_minutes * 60.0) / 60.0;
+  std::clog << "Elapsed time: " << elapsed_hours << " hour(s) "
+            << elapsed_minutes << " minute(s) " << elapsed_seconds << " seconds.\n" << std::endl;
 }
 
 /*************************************************************/
@@ -301,6 +302,7 @@ void HyDe::_parseSpeciesMap(){
     }
     exit(EXIT_FAILURE);
   }
+  _taxaMapCopy = _taxaMap;
 }
 
 /* Read in DNA matrix in sequential Phylip format w/o header info.
@@ -498,65 +500,86 @@ void HyDe::_bootstrap(){
 
   double progress = 0.0;
   int barWidth = 100;
-  #pragma omp parallel for num_threads(_threads) schedule(dynamic) firstprivate(_counts1, _counts2, _counts3, _taxaMap, _taxaNames, _dnaMatrix, _baseLookup, _outgroup, _numObs, _zVals, _pVals)
-  for(unsigned i = 0; i < _taxaNames.size() - 2; i++){
-    for(unsigned j = i + 1; j < _taxaNames.size() - 1; j++){
-      for(unsigned k = j + 1; k < _taxaNames.size(); k++){
-        double _avgNumObs = 0.0;
-        /* Re-initialize count matrices to 0. */
-        for(int a = 0; a < 16; a++){
-          for(int b = 0; b < 16; b++){
-            _counts1[a][b] = 0.0;
-            _counts2[a][b] = 0.0;
-            _counts3[a][b] = 0.0;
+  for(int b = 1; b <= _bootReps; b++){
+    _bootStream << "P1\tHybrid\tP2\tZscore\tPvalue\tgamma\tX1\tX2\tX3\tX4\tX5\tX6\tX7\tX8\tX9\tX10\tX11\tX12\tX13\tX14\tX15" << std::endl;
+    _resampleTaxonMap();
+
+    /*for(unsigned i = 0; i < _taxaMap.size(); i++){
+      for(unsigned j = 0; j < _taxaMap[i].size(); j++){
+        std::cerr << _taxaMap[i][j] << " ";
+      }
+      std::cerr << std::endl << std::endl;
+    }*/
+
+    #pragma omp parallel for num_threads(_threads) schedule(dynamic) firstprivate(_counts1, _counts2, _counts3, _taxaMap, _taxaNames, _dnaMatrix, _baseLookup, _outgroup, _numObs, _zVals, _pVals)
+    for(unsigned i = 0; i < _taxaNames.size() - 2; i++){
+      for(unsigned j = i + 1; j < _taxaNames.size() - 1; j++){
+        for(unsigned k = j + 1; k < _taxaNames.size(); k++){
+          double _avgNumObs = 0.0;
+          /* Re-initialize count matrices to 0. */
+          for(int a = 0; a < 16; a++){
+            for(int b = 0; b < 16; b++){
+              _counts1[a][b] = 0.0;
+              _counts2[a][b] = 0.0;
+              _counts3[a][b] = 0.0;
+            }
           }
-        }
-        _numObs[0] = _getCountMatrix(i, j, k, _counts1);
-        _numObs[1] = _getCountMatrix(j, i, k, _counts2);
-        _numObs[2] = _getCountMatrix(i, k, j, _counts3);
-        //std::cerr << _numObs[0] << "\t" << _numObs[1] << "\t" << _numObs[2] << std::endl;
+          _numObs[0] = _getCountMatrix(i, j, k, _counts1);
+          _numObs[1] = _getCountMatrix(j, i, k, _counts2);
+          _numObs[2] = _getCountMatrix(i, k, j, _counts3);
+          //std::cerr << _numObs[0] << "\t" << _numObs[1] << "\t" << _numObs[2] << std::endl;
 
-        /* Calculate the GH statistic. */
-        _avgNumObs = _numObs[0] / (double) (_taxaMap[_outgroup].size() * _taxaMap[i].size() * _taxaMap[j].size() * _taxaMap[k].size());
-        _zVals[0] = _calcGH(_counts1, _numObs[0], _avgNumObs, i, j, k);
-        _zVals[1] = _calcGH(_counts2, _numObs[1], _avgNumObs, j, i, k);
-        _zVals[2] = _calcGH(_counts3, _numObs[2], _avgNumObs, i, k, j);
+          /* Calculate the GH statistic. */
+          _avgNumObs = _numObs[0] / (double) (_taxaMap[_outgroup].size() * _taxaMap[i].size() * _taxaMap[j].size() * _taxaMap[k].size());
+          _zVals[0] = _calcGH(_counts1, _numObs[0], _avgNumObs, i, j, k);
+          _zVals[1] = _calcGH(_counts2, _numObs[1], _avgNumObs, j, i, k);
+          _zVals[2] = _calcGH(_counts3, _numObs[2], _avgNumObs, i, k, j);
 
-        /* Get p-values. */
-        _pVals[0] = _calcPvalueTwo(_zVals[0]);
-        _pVals[1] = _calcPvalueTwo(_zVals[1]);
-        _pVals[2] = _calcPvalueTwo(_zVals[2]);
+          /* Get p-values. */
+          _pVals[0] = _calcPvalueTwo(_zVals[0]);
+          _pVals[1] = _calcPvalueTwo(_zVals[1]);
+          _pVals[2] = _calcPvalueTwo(_zVals[2]);
 
-        #pragma omp critical
-        {
-          if(_zVals[0] != -99999.9)
-            _printOut(_taxaNames[i], _taxaNames[j], _taxaNames[k], _zVals[0], _pVals[0], _counts1, _numObs[0], _bootStream);
-          if(_zVals[1] != -99999.9)
-            _printOut(_taxaNames[j], _taxaNames[i], _taxaNames[k], _zVals[1], _pVals[1], _counts2, _numObs[1], _bootStream);
-          if(_zVals[2] != -99999.9)
-            _printOut(_taxaNames[i], _taxaNames[k], _taxaNames[j], _zVals[2], _pVals[2], _counts3, _numObs[2], _bootStream);
+          #pragma omp critical
+          {
+            if(_zVals[0] != -99999.9)
+              _printOut(_taxaNames[i], _taxaNames[j], _taxaNames[k], _zVals[0], _pVals[0], _counts1, _numObs[0], _bootStream);
+            if(_zVals[1] != -99999.9)
+              _printOut(_taxaNames[j], _taxaNames[i], _taxaNames[k], _zVals[1], _pVals[1], _counts2, _numObs[1], _bootStream);
+            if(_zVals[2] != -99999.9)
+              _printOut(_taxaNames[i], _taxaNames[k], _taxaNames[j], _zVals[2], _pVals[2], _counts3, _numObs[2], _bootStream);
+          }
         }
       }
     }
-  }
-  for(int b = 1; b <= _bootReps; b++){
-
     /*
     Progress bar:
     http://stackoverflow.com/questions/14539867/how-to-display-a-progress-indicator-in-pure-c-c-cout-printf
     */
+    _bootStream << "####" << std::endl;
     progress += 1.0 / _bootReps;
     std::clog << "[";
     int pos = barWidth * progress;
     for (int i = 0; i < barWidth; ++i) {
-        if (i < pos) std::clog << "=";
-        else if (i == pos) std::clog << ">";
-        else std::clog << " ";
+      if (i < pos) std::clog << "=";
+      else if (i == pos) std::clog << ">";
+      else std::clog << " ";
     }
-    std::clog << "] " << int(progress * 100.0) << " %\n\r";
+    std::clog << "] " << int(progress * 100.0) << " %\r";
     std::clog.flush();
   }
   std::clog << std::endl << std::endl;
+}
+
+void HyDe::_resampleTaxonMap(){
+  unsigned size = 0, newIndex = 0;
+  for(unsigned i = 0; i < _taxaMap.size(); i++){
+    size = _taxaMap[i].size();
+    for(unsigned j = 0; j < _taxaMap[i].size(); j++){
+      newIndex = r->sampleInteger(0, size-1);
+      _taxaMap[i][j] = _taxaMapCopy[i][newIndex];
+    }
+  }
 }
 
 /* Populate 16 x 16 count pattern matrix for the given triplet + outgroup. */
