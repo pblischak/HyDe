@@ -150,7 +150,7 @@ void HyDe::run(){
   double elapsed_time    = double(end_time - start_time) / CLOCKS_PER_SEC;
   int elapsed_hours   = elapsed_time / 3600;
   int elapsed_minutes = (elapsed_time - elapsed_hours * 3600) / 60;
-  double elapsed_seconds = (elapsed_time - elapsed_hours * 3600.0 - elapsed_minutes * 60.0) / 60.0;
+  double elapsed_seconds = elapsed_time - elapsed_hours * 3600.0 - elapsed_minutes * 60.0;
   std::clog << "Elapsed time: " << elapsed_hours << " hour(s) "
             << elapsed_minutes << " minute(s) " << elapsed_seconds << " seconds.\n" << std::endl;
 }
@@ -494,8 +494,6 @@ void HyDe::_bootstrap(){
   if(!_bootStream.is_open()){
     std::cerr << "** ERROR: Could not open bootstrap outfile: " << _bootfile << ". **\n" << std::endl;
     exit(EXIT_FAILURE);
-  } else {
-    _bootStream << "P1\tHybrid\tP2\tZscore\tPvalue\tgamma\tX1\tX2\tX3\tX4\tX5\tX6\tX7\tX8\tX9\tX10\tX11\tX12\tX13\tX14\tX15" << std::endl;
   }
 
   double progress = 0.0;
