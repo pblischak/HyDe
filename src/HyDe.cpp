@@ -554,7 +554,7 @@ void HyDe::_bootstrap(){
     Progress bar:
     http://stackoverflow.com/questions/14539867/how-to-display-a-progress-indicator-in-pure-c-c-cout-printf
     */
-    _bootStream << "####" << std::endl;
+    if(b != _bootReps) _bootStream << "####" << std::endl;
     progress += 1.0 / _bootReps;
     std::clog << "[";
     int pos = barWidth * progress;
