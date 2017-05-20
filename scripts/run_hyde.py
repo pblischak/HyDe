@@ -51,4 +51,4 @@ if __name__ == "__main__":
     prefix   = args.prefix
 
     hyde.run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue, bootReps, threads, prefix)
-    hyde.make_cf_table(prefix+"-out.txt", outgroup, prefix)
+#    hyde.make_cf_table(prefix+"-out.txt", outgroup, prefix)

@@ -6,7 +6,10 @@
 from __future__ import print_function
 import numpy as np
 import pandas as pd
-import subprocess as sps
+try:
+    import subprocess32 as sps
+except ImportError:
+    import subprocess32 as sps
 import sys
 import os
 from collections import Counter
@@ -53,23 +56,23 @@ def run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue=0.05, bootRe
 #    Read in bootstrap replicates file from HyDe.
 #    """
 
-def make_cf_table(hyde_out, outgroup, prefix="hyde"):
-    """
-    Process HyDe output.
-    """
-    #print("TESTING: Making concordance factor table...", end='')
-    df = pd.read_csv(prefix+"-out.txt", sep='\t')
-    cf_file = open(prefix+"-cf-table.txt", 'w')
-    print("t1", "t2", "t3", "t4", "CF12_34", "CF13_24", "CF14_23", sep=',', file=cf_file)
-    df2 = df[['P1', 'Hybrid', 'P2', 'gamma']]
-    unique_taxa = np.union1d(df2.P1.unique(), df2.Hybrid.unique())
-    prev_triplet = []
-    for r in range(df2.shape[0]):
-        if Counter([df2.iloc[r][0],df2.iloc[r][1],df2.iloc[r][2]]) == Counter(prev_triplet):
-            pass
-        else:
-            print(df2.iloc[r][0], df2.iloc[r][1], df2.iloc[r][2], \
-                  outgroup, abs(df2.iloc[r][3]), 0.0, 1.0-abs(df2.iloc[r][3]), sep=',', file=cf_file)
-            prev_triplet = [df2.iloc[r][0],df2.iloc[r][1],df2.iloc[r][2]]
-
-    #print("Done.\n")
+#def make_cf_table(hyde_out, outgroup, prefix="hyde"):
+#    """
+#    Process HyDe output.
+#    """
+#    #print("TESTING: Making concordance factor table...", end='')
+#    df = pd.read_csv(prefix+"-out.txt", sep='\t')
+#    cf_file = open(prefix+"-cf-table.txt", 'w')
+#    print("t1", "t2", "t3", "t4", "CF12_34", "CF13_24", "CF14_23", sep=',', file=cf_file)
+#    df2 = df[['P1', 'Hybrid', 'P2', 'gamma']]
+#    unique_taxa = np.union1d(df2.P1.unique(), df2.Hybrid.unique())
+#    prev_triplet = []
+#    for r in range(df2.shape[0]):
+#        if Counter([df2.iloc[r][0],df2.iloc[r][1],df2.iloc[r][2]]) == Counter(prev_triplet):
+#            pass
+#        else:
+#            print(df2.iloc[r][0], df2.iloc[r][1], df2.iloc[r][2], \
+#                  outgroup, abs(df2.iloc[r][3]), 0.0, 1.0-abs(df2.iloc[r][3]), sep=',', file=cf_file)
+#            prev_triplet = [df2.iloc[r][0],df2.iloc[r][1],df2.iloc[r][2]]
+#
+#    #print("Done.\n")
