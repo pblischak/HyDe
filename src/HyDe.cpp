@@ -24,7 +24,7 @@ double _counts1[16][16] = {{0.0}},
        _zVals[3] = {0.0};
 double _numObs[3] = {0.0}, _missing = 0.0;
 int _outgroup = -999;
-std::vector<int> _dnaMatrix;
+std::vector<std::vector<int> > _dnaMatrix;
 //std::unordered_map<std::string, std::vector<int> > _taxaMap;
 std::vector<std::vector<int> > _taxaMap, _taxaMapCopy;
 //std::vector<int> _taxaIndex, _taxaCounts;
@@ -62,7 +62,8 @@ HyDe::HyDe(int c, char* v[]){
   _checkCommandLineInput();
   _taxaMap.resize(_nTaxa);
   _parseSpeciesMap();
-  _dnaMatrix.resize(_nInd * _nSites);
+  _dnaMatrix.resize(_nInd);
+  for(int i = 0; i < _nInd; i++) _dnaMatrix[i].resize(_nSites);
   _readInfile();
 }
 
@@ -327,8 +328,8 @@ void HyDe::_readInfile(){
       }
 
       for(unsigned s = 0; s < _str2.length(); s++){
-        _dnaMatrix[_indIndex * _nSites + s] = _convert(_str2[s]);
-        if(_dnaMatrix[_indIndex * _nSites + s] == 15) _missing += 1.0; /* Keep track of missing data precentage. */
+        _dnaMatrix[_indIndex][s] = _convert(_str2[s]);
+        if(_dnaMatrix[_indIndex][s] == 15) _missing += 1.0; /* Keep track of missing data precentage. */
       }
       _indIndex++;
     }
@@ -588,18 +589,18 @@ double HyDe::_getCountMatrix(const int& p1, const int& hyb, const int& p2, doubl
       for(unsigned k = 0; k < _taxaMap[hyb].size(); k++){
         for(unsigned r = 0; r < _taxaMap[p2].size(); r++){
           for(int s = 0; s < _nSites; s++){
-            if(_dnaMatrix[_taxaMap[_outgroup][i] * _nSites + s] < 4 &&
-               _dnaMatrix[_taxaMap[p1][j] * _nSites + s]  < 4 &&
-               _dnaMatrix[_taxaMap[hyb][k] * _nSites + s] < 4 &&
-               _dnaMatrix[_taxaMap[p2][r] * _nSites + s]  < 4){
+            if(_dnaMatrix[_taxaMap[_outgroup][i]][s] < 4 &&
+               _dnaMatrix[_taxaMap[p1][j]][s]  < 4 &&
+               _dnaMatrix[_taxaMap[hyb][k]][s] < 4 &&
+               _dnaMatrix[_taxaMap[p2][r]][s]  < 4){
               nn += 1.0;
-              cp[_dnaMatrix[_taxaMap[_outgroup][i] * _nSites + s] * 4 + _dnaMatrix[_taxaMap[p1][j] * _nSites + s]]
-                [_dnaMatrix[_taxaMap[hyb][k] * _nSites + s] * 4 + _dnaMatrix[_taxaMap[p2][r] * _nSites + s]] += 1.0;
+              cp[_dnaMatrix[_taxaMap[_outgroup][i]][s] * 4 + _dnaMatrix[_taxaMap[p1][j]][s]]
+                [_dnaMatrix[_taxaMap[hyb][k]][s] * 4 + _dnaMatrix[_taxaMap[p2][r]][s]] += 1.0;
             } else {
-              resolved = _resolveAmbiguity(_dnaMatrix[_taxaMap[_outgroup][i] * _nSites + s],
-                                           _dnaMatrix[_taxaMap[p1][j] * _nSites + s],
-                                           _dnaMatrix[_taxaMap[hyb][k] * _nSites + s],
-                                           _dnaMatrix[_taxaMap[p2][r] * _nSites + s], cp);
+              resolved = _resolveAmbiguity(_dnaMatrix[_taxaMap[_outgroup][i]][s],
+                                           _dnaMatrix[_taxaMap[p1][j]][s],
+                                           _dnaMatrix[_taxaMap[hyb][k]][s],
+                                           _dnaMatrix[_taxaMap[p2][r]][s], cp);
               nn += resolved; /* resolved is 0 or 1. If the site is resolvable it adds to the count, otherwise it doesn't. */
             }
           }
