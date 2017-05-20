@@ -11,18 +11,23 @@ Requirements:
 ~~~~~~~~~~~~~
 
 -  Python 2.7
+-  Cython
 -  Numpy
 -  Pandas
+-  Matplotlib
 -  C++ compiler (g++ >= v4.8 preferred)
 
 HyDe is a Python package that wraps a primary C++ program for running a
 hybridization detection analysis. We have provided a ``Makefile`` that
 will compile the C++ executable (``hyde_cpp``) and will then install the
-HyDe Python package using ``pip``. To ensure that the necessary
+HyDe Python package using the ``setup.py`` file. To ensure that the necessary
 dependencies are available, we suggest using a Python distribution such
 as `Miniconda <https://conda.io/miniconda.html>`__.
 
 .. code:: bash
+
+    # To install dependencies
+    pip install cython numpy pandas matplotlib
 
     # Clone HyDe repository from GitHub
     git clone https://github.com/pblischak/HyDe.git
@@ -53,7 +58,7 @@ Running HyDe in Python
 
 .. code:: py
 
-    import hyde.main as hd
+    import hyde as hd
 
     # Run a hyde analysis
     hd.run_hyde(...)

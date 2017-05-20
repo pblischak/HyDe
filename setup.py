@@ -14,6 +14,5 @@ setup(name="HyDe",
       ext_modules=cythonize("hyde/**/*.pyx"),
       include_dirs=[numpy.get_include()],
       scripts=['scripts/run_hyde.py', 'src/hyde_cpp'],
-      install_requires = ['numpy', 'pandas', 'Cython', 'matplotlib'],
       zip_safe=False
 )
