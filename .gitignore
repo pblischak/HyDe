@@ -5,6 +5,9 @@ traces
 tests
 *.txt
 *.pyc
+*.so
+*old*
+*Old*
 !examples/snake-data.txt
 !examples/snake-map.txt
 sims
