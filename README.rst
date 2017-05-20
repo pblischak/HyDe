@@ -28,16 +28,11 @@ as `Miniconda <https://conda.io/miniconda.html>`__.
     git clone https://github.com/pblischak/HyDe.git
     cd HyDe
 
-    # If you don't have OpenMP for multithreading,
-    # simply compile using `make`
+    # Compile hyde_cpp using `make`
     make
 
-    # If you do have OpenMP for multithreading,
-    # Set the OPENMP flag to 'yes'
-    make OPENMP=yes
-
     # Now install HyDe Python package
-    pip install .
+    python setup.py install
 
     # Test the installation
     make test
@@ -68,4 +63,3 @@ Running HyDe in Python
 
 .. |Documentation| image:: https://readthedocs.org/projects/hybridization-detection/badge/?version=latest
    :target: http://hybridization-detection.readthedocs.io/en/latest/?badge=latest
-   
