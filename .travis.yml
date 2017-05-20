@@ -8,6 +8,7 @@ before_install:
   - sudo apt-get update -qq
   - sudo apt-get install g++-4.8 -y -qq
   - make CXX=g++-4.8 OPENMP=yes
+  - pip install Cython
 
 install:
   - python setup.py install
