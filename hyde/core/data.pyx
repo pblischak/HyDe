@@ -9,6 +9,7 @@ from __future__ import print_function
 import numpy as np
 cimport numpy as np
 cimport cython
+import sys
 
 from libc.math cimport fabs, sqrt, pow, exp
 from libcpp.vector cimport vector
@@ -69,7 +70,7 @@ cdef class HydeData:
     cdef double ind_nucl_probs[4][15]
     cdef bytes outgroup
 
-    def __init__(self, infile, mapfile, outgroup, int nind, int nsites, int ntaxa, partition=None):
+    def __init__(self, infile, mapfile, outgroup, int nind, int ntaxa, int nsites, partition=None):
         """
         Constructor:
             Read infile with DNA characters. Parse mapfile and partition
@@ -128,9 +129,19 @@ cdef class HydeData:
                     bases = line.split()[1]
                 except IndexError:
                     break
+                if len(bases) != self.nsites:
+                    print("\nERROR:")
+                    print("  Number of sites specified (", self.nsites, ") is not equal", sep='')
+                    print("  to the number of sites in the data file (", len(bases), ").\n", sep='')
+                    sys.exit()
                 self._convert(counter, bases)
                 print(".", end='')
                 counter += 1
+                if counter > self.nind:
+                  print("\nERROR:")
+                  print("  Number of individuals specified (", self.nind, ") is not equal", sep='')
+                  print("  to the number of individuals in the data file (>= ", counter, ").\n", sep='')
+                  sys.exit()
 
     def _read_mapfile(self, mapfile):
         with open(mapfile) as f:
@@ -269,8 +280,8 @@ cdef class HydeData:
         gamma = _c / (1 + _c)
 
         return {
-            "GH_statistic": z_val,
-            "P_value": p_val,
+            "Zscore": z_val,
+            "Pvalue": p_val,
             "Gamma": gamma
         }
 

@@ -71,7 +71,7 @@ HyDe::HyDe(int c, char* v[]){
 void HyDe::run(){
   /* Open outfile and logfile (if specified). */
   clock_t start_time = clock(); // Begin timing...
-  std::clog << "\nHyDe: hybrid detection using phylogenetic invariants\n" << std::endl;
+  std::clog << "\nHyDe: hybridization detection using phylogenetic invariants\n" << std::endl;
   #ifdef _OPENMP
     std::clog << "Multithreading with OpenMP enabled. Currently using " << _threads << " threads." << std::endl;
   #else

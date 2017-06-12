@@ -33,8 +33,6 @@ if __name__ == "__main__":
                             metavar='\b', help="p-value cutoff for test of significance [default=0.05]")
     additional.add_argument('-b', '--bootstrap', action="store", type=int, default=0,
                             metavar='\b', help="number of bootstrap replicates [default=0]")
-    additional.add_argument('-j', '--threads', action="store", type=int, default=1,
-                            metavar='\b', help="number of threads [default=1]")
     additional.add_argument('--prefix', action="store", type=str, default="hyde",
                             metavar='\b', help="prefix appended to output files [default=hyde]")
 
@@ -47,8 +45,7 @@ if __name__ == "__main__":
     nSites   = args.num_sites
     pValue   = args.pvalue
     bootReps = args.bootstrap
-    threads  = args.threads
     prefix   = args.prefix
 
-    hyde.run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue, bootReps, threads, prefix)
+    hyde.run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue, bootReps, prefix)
 #    hyde.make_cf_table(prefix+"-out.txt", outgroup, prefix)

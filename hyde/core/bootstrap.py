@@ -14,12 +14,13 @@ class Bootstrap:
     def __init__(self, bootfile):
         self.bootfile = bootfile
         self.brs = {}
-        self.tps = []
+        self.tps    = []
         self._read_bootstraps(bootfile)
 
     def _read_bootstraps(self, bootfile):
         with open(bootfile) as b:
-            boot_reps = b.read().split("####\n")
+            boot_reps = b.read()[:-1].split("####\n")
+            print("Number of boot reps:", len(boot_reps))
             split_bootreps = [r.splitlines() for r in boot_reps]
             for s in split_bootreps:
                 lines = [line.split('\t') for line in s[1:]]
@@ -34,7 +35,7 @@ class Bootstrap:
 
     def _boot_info(self, b):
         if len(b) != 18:
-            print(len(b), "** Warning: length of bootrep entry is incorrect. **")
+            raise ValueError("** Warning: length of bootrep entry is incorrect. **")
         else:
             pass
         boot_info = {
@@ -59,17 +60,55 @@ class Bootstrap:
         }
         return boot_info
 
-    def summarize(self, tripl):
+    def summarize(self):
         """
 
         """
-        summary = {
-            "Zscore" : [],
-            "Pvalue" : [],
-            "Gamma"  : []
+        summaries = {}
+        for t in self.tps:
+            summaries[t] = {}
+            summaries[t]["Zscore"] = [np.mean(self.zscore(t)), np.std(self.zscore(t))]
+            summaries[t]["Pvalue"] = [np.mean(self.pvalue(t)), np.std(self.pvalue(t))]
+            summaries[t]["Gamma"]  = [np.mean(self.gamma(t)), np.std(self.gamma(t))]
+        return summaries
+
+    def gamma(self, tripl):
+        return [t['Gamma'] for t in self.brs[tripl]]
+
+    def zscore(self, tripl):
+        return [t['Zscore'] for t in self.brs[tripl]]
+
+    def pvalue(self, tripl):
+        return [t['Pvalue'] for t in self.brs[tripl]]
+
+    def site_patterns(self, tripl):
+        return {
+            "AAAA" : [t['AAAA'] for t in self.brs[tripl]],
+            "AAAB" : [t['AAAB'] for t in self.brs[tripl]],
+            "AABA" : [t['AABA'] for t in self.brs[tripl]],
+            "AABB" : [t['AABB'] for t in self.brs[tripl]],
+            "AABC" : [t['AABC'] for t in self.brs[tripl]],
+            "ABAA" : [t['ABAA'] for t in self.brs[tripl]],
+            "ABAB" : [t['ABAB'] for t in self.brs[tripl]],
+            "ABAC" : [t['ABAC'] for t in self.brs[tripl]],
+            "ABBA" : [t['ABBA'] for t in self.brs[tripl]],
+            "BAAA" : [t['BAAA'] for t in self.brs[tripl]],
+            "ABBC" : [t['ABBC'] for t in self.brs[tripl]],
+            "CABC" : [t['CABC'] for t in self.brs[tripl]],
+            "BACA" : [t['BACA'] for t in self.brs[tripl]],
+            "BCAA" : [t['BCAA'] for t in self.brs[tripl]],
+            "ABCD" : [t['ABCD'] for t in self.brs[tripl]],
         }
-        for t in self.brs[tripl]:
-            summary['Zscore'].append(t['Zscore'])
-            summary['Pvalue'].append(t['Pvalue'])
-            summary['Gamma'].append(t['Gamma'])
-        return summary
+
+    def write_summary(self, summary_file):
+        print("Writing summary to file:", summary_file)
+        summ = self.summarize()
+        with open(summary_file, 'w') as f:
+            print("P1","Hybrid","P2","Zscore_Mean","Zscore_StdDev",
+                  "Pvalue_Mean","Pvalue_StdDev","Gamma_Mean","Gamma_StdDev", sep='\t', file=f)
+            for k in summ.keys():
+                for i in list(k):
+                    print(i,"\t", sep='', end='', file=f)
+                print(summ[k]['Zscore'][0], summ[k]['Zscore'][1], summ[k]['Pvalue'][0],
+                      summ[k]['Pvalue'][1], summ[k]['Gamma'][0], summ[k]['Gamma'][1],
+                      sep='\t', file=f)

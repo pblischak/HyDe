@@ -14,7 +14,7 @@ import sys
 import os
 from collections import Counter
 
-def run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue=0.05, bootReps=0, threads=1, prefix="hyde"):
+def run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue=0.05, bootReps=0, prefix="hyde"):
     """
     Wrapper for running HyDe C++ executable.
     """
@@ -23,6 +23,13 @@ def run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue=0.05, bootRe
         print("\n**  Warning: File '"+prefix+"-out.txt' already exists.")
         print("**  Renaming to 'old-"+prefix+"-out.txt'.\n")
         os.rename(prefix+"-out.txt", "old-"+prefix+"-out.txt")
+    else:
+        pass
+
+    if os.path.exists(prefix+"-boot.txt"):
+        print("\n**  Warning: File '"+prefix+"-out.txt' already exists.")
+        print("**  Renaming to 'old-"+prefix+"-out.txt'.\n")
+        os.rename(prefix+"-boot.txt", "old-"+prefix+"-boot.txt")
     else:
         pass
 
@@ -43,7 +50,6 @@ def run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue=0.05, bootRe
         "-i", infile,
         "-m", mapfile,
         "-o", outgroup,
-        "-j", str(threads),
         "-p", str(pValue),
         "-b", str(bootReps),
         "--prefix", prefix
