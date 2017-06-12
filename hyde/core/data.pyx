@@ -1,12 +1,17 @@
-# cython: profile=True
-# cython: line_profile:True
+# cython: profile = True
+# cython: lineprofile = True
+# cython: boundscheck = False
+# cython: wraparound = False
+# cython: cdivision = True
+# distutils: language = c++
 
-from __future__ import print_function, division
+from __future__ import print_function
 import numpy as np
 cimport numpy as np
 cimport cython
 
 from libc.math cimport fabs, sqrt, pow, exp
+from libcpp.vector cimport vector
 
 # types and typedefs for DNA bases and indices
 ctypedef np.uint8_t DNA_t
@@ -28,15 +33,37 @@ cdef dict _BASE_LOOKUP = {
     15: [1,2,3,4]
 }
 
+
+cdef vector[vector[int]] _baseLookup = [ #/* {A,G,C,T} == {0,1,2,3} */
+  [0],
+  [1],
+  [2],
+  [3],
+  [4],          #/* - == ignore */
+  [0, 2],       #/* M == A or C */
+  [0, 1],       #/* R == A or G */
+  [0, 3],       #/* W == A ot T */
+  [1, 2],       #/* S == G or C */
+  [2, 3],       #/* Y == C or T */
+  [1, 3],       #/* K == G or T */
+  [1, 2, 3],    #/* B == C or G or T */
+  [0, 1, 3],    #/* D == A or G or T */
+  [0, 2, 3],    #/* H == A or C or T */
+  [0, 1, 2],    #/* V == A or G or C */
+  [0, 1, 2, 3]  #/* N == A or G or C or T */
+]
+
 cdef class HydeData:
     """
     Class for storing (1) a matrix of DNA bases as unsigned, 8-bit
     integers; (2) mapping of individuals to taxa (optional); and (3)
     partition information for multilocus data (optional).
     """
-    cdef np.ndarray dnaMat
-    cdef np.ndarray outIndex # outgroup sequence indices
+    cdef DNA_t[:, ::1] dnaMat
+    cdef INDEX_t[::1] outIndex # outgroup sequence indices
+    cdef int nind, nsites
     cdef dict taxonMap
+    cdef dict taxonMap_cp
     cdef double counts[16][16]
     cdef double site_pattern_probs[15]
     cdef double ind_nucl_probs[4][15]
@@ -56,20 +83,18 @@ cdef class HydeData:
         =========
 
             - infile <str>: name of the input file
-
             - mapfile <str>: name of the individual-to-OTU map
-
             - outgroup <str>: name of the outgroup (can be
               reset using the `resetOutgroup()` method)
-
             - nind <int>: total number of individuals sampled
-
             - nsites <int>: number of sites
-
             - ntaxa <int>: number of taxa
         """
-        self.dnaMat = np.zeros((nind, nsites), dtype=DNA)
+        self.nind = nind
+        self.nsites = nsites
+        self.dnaMat = np.zeros((self.nind, self.nsites), dtype=DNA)
         self.taxonMap = {}
+        self.taxonMap_cp = {}
         self.outgroup = outgroup
         if partition is not None:
             self.partitions = {}
@@ -115,7 +140,9 @@ cdef class HydeData:
                 if l.split()[1] not in taxa:
                     taxa.append(l.split()[1])
                     self.taxonMap[l.split()[1]] = []
+                    self.taxonMap_cp[l.split()[1]] = []
                 self.taxonMap[l.split()[1]].append((i, l.split()[0]))
+                self.taxonMap_cp[l.split()[1]].append((i, l.split()[0]))
                 print(".", end='')
 
     def _read_partfile(self, partfile):
@@ -130,8 +157,6 @@ cdef class HydeData:
         self.outgroup = newOut
         self.outIndex = np.array([i[0] for i in self.taxonMap[newOut]], dtype=INDEX)
 
-    @cython.boundscheck(False)
-    @cython.wraparound(False)
     cdef void _convert(self, int row, bytes d):
         cdef unsigned long s
         for s in range(len(d)):
@@ -165,7 +190,7 @@ cdef class HydeData:
         cdef np.ndarray[INDEX_t, ndim=1] p1_rows  = np.array([i[0] for i in self.taxonMap[p1]], dtype=INDEX)
         cdef np.ndarray[INDEX_t, ndim=1] hyb_rows = np.array([i[0] for i in self.taxonMap[hyb]],  dtype=INDEX)
         cdef np.ndarray[INDEX_t, ndim=1] p2_rows  = np.array([i[0] for i in self.taxonMap[p2]],  dtype=INDEX)
-        cdef dict res = {}
+        cdef dict res
         if fast:
             res = self._test_triple_c_fast(p1_rows, hyb_rows, p2_rows)
         elif not fast:
@@ -174,51 +199,91 @@ cdef class HydeData:
             pass
 
         return res
-    #def test_triple_py(self, p1, hyb, p2):
-    #    for i in self.outIndex:
-    #        for j in [i[0] for i in self.taxonMap[p1]]:
-    #            for k in [i[0] for i in self.taxonMap[hyb]]:
-    #                for l in [i[0] for i in self.taxonMap[p2]]:
-    #                    for s in range(self.dnaMat.shape[1]):
-    #                        i * j * k * l * s
 
-    @cython.boundscheck(False)
-    @cython.wraparound(False)
+    cpdef dict test_individuals(self, bytes p1, bytes hyb, bytes p2):
+        """
+
+        """
+        cdef:
+            np.ndarray[INDEX_t, ndim=1] p1_rows  = np.array([i[0] for i in self.taxonMap[p1]], dtype=INDEX)
+            np.ndarray[INDEX_t, ndim=1] hyb_rows = np.array([i[0] for i in self.taxonMap[hyb]],  dtype=INDEX)
+            np.ndarray[INDEX_t, ndim=1] p2_rows  = np.array([i[0] for i in self.taxonMap[p2]],  dtype=INDEX)
+            np.ndarray[INDEX_t, ndim=1] curr_ind = np.array([0], dtype=INDEX)
+            int n_hyb = hyb_rows.shape[0], t
+            dict res = {}
+
+        for t in range(n_hyb):
+            curr_ind[0] = hyb_rows[t]
+            res[self.taxonMap[hyb][t][1]] = {}
+            res[self.taxonMap[hyb][t][1]] = self._test_triple_c(p1_rows, curr_ind, p2_rows)
+            #tmp_res = self._test_triple_c(p1_rows, hyb_rows[t], p2_rows)
+            #res[self.taxonMap[hyb][t]] = tmp_res
+        return res
+
+    cpdef list list_triples(self):
+        """
+
+        """
+        res = []
+        ks = self.taxonMap.keys()
+        for a in range(len(ks)):
+            if ks[a] == self.outgroup:
+                del ks[a]
+        for i in range(len(ks)-2):
+            for j in range(i+1, len(ks)-1):
+                for k in range(j+1, len(ks)):
+                    res.append((ks[i],ks[j], ks[k]))
+                    res.append((ks[i],ks[k], ks[j]))
+                    res.append((ks[j],ks[i], ks[k]))
+        return res
+
     cdef dict _test_triple_c(self, np.ndarray[INDEX_t, ndim=1] p1,
                              np.ndarray[INDEX_t, ndim=1] hyb,
                              np.ndarray[INDEX_t, ndim=1] p2):
         """
 
         """
-        cdef int i, j, k, l, s, sites = self.dnaMat.shape[1]
-        cdef double num_obs = 0.0, avg_obs = 0.0, z_val = 0.0, p_val = 0.0, gamma = 0.0
-        for i in self.outIndex:
-            for j in p1:
-                for k in hyb:
-                    for l in p2:
-                        num_obs += self._get_counts(i, j, k, l)
+        cdef:
+            int i, j, k, l, c1, c2
+            int n_out = self.outIndex.shape[0], n_p1 = p1.shape[0]
+            int n_hyb = hyb.shape[0], n_p2 = p2.shape[0]
+            double num_obs = 0.0, avg_obs = 0.0, z_val = 0.0, p_val = 0.0
+            double _c_num = 0.0, _c_denom = 0.0, _c = 0.0, gamma = 0.0
 
-        avg_obs = num_obs / (self.outIndex.shape[0] * p1.shape[0] * hyb.shape[0] * p2.shape[0])
-        z_val   = self._calc_gh(num_obs, avg_obs)
-        p_val   = self._calc_p_value(z_val)
+        for c1 in range(16):
+            for c2 in range(16):
+                self.counts[c1][c2] = 0.0
+
+        for i in range(n_out):
+            for j in range(n_p1):
+                for k in range(n_hyb):
+                    for l in range(n_p2):
+                        num_obs += self._get_counts(self.outIndex[i], p1[j], hyb[k], p2[l])
+
+        avg_obs  = num_obs / (self.outIndex.shape[0] * p1.shape[0] * hyb.shape[0] * p2.shape[0])
+        z_val    = self._calc_gh(num_obs, avg_obs)
+        p_val    = self._calc_p_value(z_val)
+        _c_num   = avg_obs * (self.site_pattern_probs[8] - self.site_pattern_probs[6])
+        _c_denom = avg_obs * (self.site_pattern_probs[3] - self.site_pattern_probs[6])
+        _c       = _c_num / _c_denom
+        gamma = _c / (1 + _c)
 
         return {
             "GH_statistic": z_val,
             "P_value": p_val,
-            "Gamma": self.site_pattern_probs[3] - self.site_pattern_probs[6]
+            "Gamma": gamma
         }
 
-
-    @cython.boundscheck(False)
-    @cython.wraparound(False)
     cdef dict _test_triple_c_fast(self,  np.ndarray[INDEX_t, ndim=1] p1,
                                   np.ndarray[INDEX_t, ndim=1] hyb,
                                   np.ndarray[INDEX_t, ndim=1] p2):
         """
 
         """
-        cdef int i, j, k, l
-        cdef int s, sites = self.dnaMat.shape[1]
+        cdef:
+            INDEX_t i, j, k, l, s
+            int sites = self.dnaMat.shape[1]
+            double res[3]
         for i in self.outIndex:
             for j in p1:
                 for k in hyb:
@@ -226,19 +291,25 @@ cdef class HydeData:
                         for s in range(sites):
                             i * j * k * l * s
 
-    cdef double _get_counts(self, int i, int j, int k, int l):
+    @cython.nonecheck(False)
+    cdef double _get_counts(self, int out, int p1, int hyb, int p2):
         """
 
         """
-        cdef double nn = 0.0, resolved = 0.0
-        cdef int s, sites = self.dnaMat.shape[1]
+        cdef:
+            double nn = 0.0, resolved = 0.0
+            DNA_t i, j, k, l
+            int s, sites = self.dnaMat.shape[1]
         for s in range(sites):
-            if self.dnaMat[i][s] < 4 and self.dnaMat[j][s] < 4 and self.dnaMat[k][s] < 4 and self.dnaMat[l][s] < 4:
+            i = self.dnaMat[out,s]
+            j = self.dnaMat[p1,s]
+            k = self.dnaMat[hyb,s]
+            l = self.dnaMat[p2,s]
+            if i < 4 and j < 4 and k < 4 and l < 4:
                 nn += 1.0
-                self.counts[self.dnaMat[i][s] * 4 + self.dnaMat[j][s]][self.dnaMat[k][s] * 4 + self.dnaMat[l][s]] += 1.0
+                self.counts[i * 4 + j][k * 4 + l] += 1.0
             else:
-                resolved = self._resolve_ambiguity(self.dnaMat[i][s], self.dnaMat[j][s],
-                                              self.dnaMat[k][s], self.dnaMat[l][s])
+                resolved = self._resolve_ambiguity_cpp(i, j, k, l)
                 nn += resolved
 
         return nn
@@ -328,25 +399,27 @@ cdef class HydeData:
                                      + self.counts[13][2] + self.counts[13][8] + self.counts[14][1] + self.counts[14][4])
 
         if (fabs((1.0 / nobs) * (self.site_pattern_probs[0] + self.site_pattern_probs[1] + self.site_pattern_probs[2] + self.site_pattern_probs[3]
-                              + self.site_pattern_probs[4] + self.site_pattern_probs[5] + self.site_pattern_probs[6] + self.site_pattern_probs[7]
-                              + self.site_pattern_probs[8] + self.site_pattern_probs[9] + self.site_pattern_probs[10] + self.site_pattern_probs[11]
+                              + self.site_pattern_probs[4]  + self.site_pattern_probs[5] + self.site_pattern_probs[6] + self.site_pattern_probs[7]
+                              + self.site_pattern_probs[8]  + self.site_pattern_probs[9] + self.site_pattern_probs[10] + self.site_pattern_probs[11]
                               + self.site_pattern_probs[12] + self.site_pattern_probs[13] + self.site_pattern_probs[14]) - 1.0) > 0.05):
             print("** WARNING: There was a problem counting site patterns. **")
             return -99999.9
 
-        cdef double p9 = (self.site_pattern_probs[8] + 0.05) / nobs
-        cdef double p7 = (self.site_pattern_probs[6] + 0.05) / nobs
-        cdef double p4 = (self.site_pattern_probs[3] + 0.05) / nobs
-        cdef double obs_invp1 = avobs * (p9 - p7)
-        cdef double obs_invp2 = avobs * (p4 - p7)
+        cdef:
+            double p9 = (self.site_pattern_probs[8] + 0.05) / nobs
+            double p7 = (self.site_pattern_probs[6] + 0.05) / nobs
+            double p4 = (self.site_pattern_probs[3] + 0.05) / nobs
+            double obs_invp1 = avobs * (p9 - p7)
+            double obs_invp2 = avobs * (p4 - p7)
         if obs_invp1 == 0:
             obs_invp1 += 1.0
             obs_invp2 += 1.0
-        cdef double obs_var_invp1 = avobs * p9 * (1 - p9) + avobs * p7 * (1 - p7) + 2 * avobs * p9 * p7
-        cdef double obs_var_invp2 = avobs * p4 * (1 - p4) + avobs * p7 * (1 - p7) + 2 * avobs * p4 * p7
-        cdef double obs_cov_invp1_invp2 = -1 * avobs * p9 * p4 + avobs * p9 * p7 + avobs * p7 * p4 + avobs * p7 * (1 - p7)
-        cdef double ratio = obs_invp2 / obs_invp1;
-        cdef double GH_ts = ((obs_invp1) * (ratio) / sqrt(obs_var_invp1 * (pow(ratio, 2.0)) - 2.0
+        cdef:
+            double obs_var_invp1 = avobs * p9 * (1 - p9) + avobs * p7 * (1 - p7) + 2 * avobs * p9 * p7
+            double obs_var_invp2 = avobs * p4 * (1 - p4) + avobs * p7 * (1 - p7) + 2 * avobs * p4 * p7
+            double obs_cov_invp1_invp2 = -1 * avobs * p9 * p4 + avobs * p9 * p7 + avobs * p7 * p4 + avobs * p7 * (1 - p7)
+            double ratio = obs_invp2 / obs_invp1;
+            double GH_ts = ((obs_invp1) * (ratio) / sqrt(obs_var_invp1 * (pow(ratio, 2.0)) - 2.0
                             * obs_cov_invp1_invp2 * ratio + obs_var_invp2))
 
         cdef double temp = -99999.9
@@ -361,18 +434,20 @@ cdef class HydeData:
         """
 
         """
-        cdef double a1 =  0.254829592;
-        cdef double a2 = -0.284496736;
-        cdef double a3 =  1.421413741;
-        cdef double a4 = -1.453152027;
-        cdef double a5 =  1.061405429;
-        cdef double p  =  0.3275911;
-        cdef int sign = 1;
+        cdef:
+            double a1 =  0.254829592;
+            double a2 = -0.284496736;
+            double a3 =  1.421413741;
+            double a4 = -1.453152027;
+            double a5 =  1.061405429;
+            double p  =  0.3275911;
+            int sign = 1;
         if my_z < 0:
             sign = -1;
-        cdef double z = fabs(my_z) / sqrt(2.0);
-        cdef double t = 1.0 / (1.0 + p * z);
-        cdef double y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * exp(-z * z);
+        cdef:
+            double z = fabs(my_z) / sqrt(2.0);
+            double t = 1.0 / (1.0 + p * z);
+            double y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * exp(-z * z);
 
         return 1.0 - (0.5 * (1.0 + sign * y))
 
@@ -381,7 +456,7 @@ cdef class HydeData:
 
         """
         cdef double denom = 0.0
-        cdef int i, j, k, l
+        cdef unsigned i, j, k, l
         if (out >= 4 and p1 >= 4 and hyb >= 4 or
             out >= 4 and hyb >= 4 and p2 >= 4 or
             out >= 4 and hyb >= 4 and p2 >= 4 or
@@ -390,10 +465,32 @@ cdef class HydeData:
         elif (out == 4 or p1 == 4 or hyb ==4 or p2 == 4):
             return 0.0
         else:
-            denom = len(_BASE_LOOKUP[out]) * len(_BASE_LOOKUP[p1]) * len(_BASE_LOOKUP[hyb]) * len(_BASE_LOOKUP[p1])
+            denom = len(_BASE_LOOKUP[out]) * len(_BASE_LOOKUP[p1]) * len(_BASE_LOOKUP[hyb]) * len(_BASE_LOOKUP[p2])
             for i in range(len(_BASE_LOOKUP[out])):
                 for j in range(len(_BASE_LOOKUP[p1])):
                     for k in range(len(_BASE_LOOKUP[hyb])):
                         for l in range(len(_BASE_LOOKUP[p2])):
                             self.counts[_BASE_LOOKUP[out][i] * 4 + _BASE_LOOKUP[p1][j]][_BASE_LOOKUP[hyb][k] * 4 + _BASE_LOOKUP[p2][l]] += 1.0 / denom
+            return 1.0
+
+    cdef double _resolve_ambiguity_cpp(self, int out, int p1, int hyb, int p2):
+        """
+
+        """
+        cdef double denom = 0.0
+        cdef unsigned i, j, k, l
+        if (out >= 4 and p1 >= 4 and hyb >= 4 or
+            out >= 4 and hyb >= 4 and p2 >= 4 or
+            out >= 4 and hyb >= 4 and p2 >= 4 or
+            p1 >= 4 and hyb >= 4 and p2 >= 4):
+            return 0.0
+        elif (out == 4 or p1 == 4 or hyb ==4 or p2 == 4):
+            return 0.0
+        else:
+            denom = _baseLookup[out].size() * _baseLookup[p1].size() * _baseLookup[hyb].size() * _baseLookup[p2].size()
+            for i in range(_baseLookup[out].size()):
+                for j in range(_baseLookup[p1].size()):
+                    for k in range(_baseLookup[hyb].size()):
+                        for l in range(_baseLookup[p2].size()):
+                            self.counts[_baseLookup[out][i] * 4 + _baseLookup[p1][j]][_baseLookup[hyb][k] * 4 + _baseLookup[p2][l]] += (1.0 / denom)
             return 1.0
