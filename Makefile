@@ -16,4 +16,5 @@ install :
 
 test :
 	hyde_cpp -h
-	run_hyde.py -i examples/snake-data.txt -m examples/snake-map.txt -n 52 -t 7 -s 8466 -o out
+	run_hyde.py -i examples/snake-data.txt -m examples/snake-map.txt -n 52 -t 7 -s 8466 -o out -b 10
+	python test.py

@@ -51,7 +51,7 @@ Type ``run_hyde.py -h`` for options.
 
     run_hyde.py -i <infile> -m <map-file> -o <outgroup> \
                 -n <num-ind> -t <num-taxa> -s <num-sites> \
-                -j <num-threads> --prefix <prefix>
+                --prefix <prefix>
 
 Running HyDe in Python
 ----------------------
@@ -62,6 +62,9 @@ Running HyDe in Python
 
     # Run a hyde analysis
     hd.run_hyde(...)
+
+    # import a data set for testing particular triples
+    data = hd.HydeData("data.txt", "map.txt", "out", 16, 4, 250000)
 
 .. |Build Status| image:: https://travis-ci.org/pblischak/HyDe.svg?branch=master
    :target: https://travis-ci.org/pblischak/HyDe

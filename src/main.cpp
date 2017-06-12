@@ -54,6 +54,5 @@ void usage(){
             << "\nAdditional options:" << std::endl
             << "  -p [--pvalue]        P-value cutoff for test of significance (default=0.05)" << std::endl
             << "  -b [--bootstrap]     Number of bootstrap replicates to perform (default=0)" << std::endl
-            << "  -j [--threads]       Number of threads to use for parallelization (default=1)" << std::endl
             << "  --prefix             Append a prefix to the beginning of outfile and logfile\n" << std::endl;
 }
