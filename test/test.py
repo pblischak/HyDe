@@ -3,11 +3,11 @@ import hyde as hd
 import sys
 
 print("**** Test 1: Data import...", end='')
-data = hd.HydeData("./examples/snake-data.txt", "./examples/snake-map.txt", "out", 52, 7, 8466)
+data = hd.HydeData("data.txt", "map.txt", "out", 16, 4, 50000)
 print("Good. ****")
 
 print("**** Test 2: Running test_triple()...", end='')
-data.test_triple('sms', 'smc', 'smi')
+data.test_triple('sp1', 'sp2', 'sp3')
 print("Good. ****")
 
 print("**** Test 3: Reading in bootstrap reps...", end='')

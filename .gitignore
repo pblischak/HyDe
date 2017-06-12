@@ -10,6 +10,8 @@ tests
 *Old*
 !examples/snake-data.txt
 !examples/snake-map.txt
+!test/data.txt
+!test/map.txt
 sims
 build
 dist
