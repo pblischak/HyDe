@@ -25,7 +25,9 @@ private:
                  const std::string& hyb,
                  const std::string& p2,
                  const double& z, const double& p,
-                 const double cp[16][16], const double& nObs,
+                 const double cp[16][16],
+                 const double& avgObs,
+                 const double& nObs,
                  std::ofstream& out);
 
   /* Functions for calculating stuff.*/

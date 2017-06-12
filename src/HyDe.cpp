@@ -75,13 +75,13 @@ void HyDe::run(){
   #ifdef _OPENMP
     std::clog << "Multithreading with OpenMP enabled. Currently using " << _threads << " threads." << std::endl;
   #else
-    std::clog << "Multithreading with OpenMP not enabled. Running analysis serially." << std::endl;
+    //std::clog << "Multithreading with OpenMP not enabled. Running analysis serially." << std::endl;
   #endif
   std::clog << "\nNumber of individuals:   " << _nInd << std::endl
             << "Number of taxa:          "   << _nTaxa << std::endl
             << "Outgroup:                "   << _outgroupName << std::endl
             << "Number of sites:         "   << _nSites << std::endl
-            << "Percent missing data:    "   << (_missing / (double) _nInd * _nSites) * 100.0 << " %" << std::endl;
+            << "Percent missing data:    "   << (_missing / ((double) _nInd * _nSites)) * 100.0 << " %" << std::endl;
   std::clog << "\nBonferroni corrected p-value for significance test at \u03B1-level = "
             << _pValue << ": " << _bonferroniCorrect() << ".\n" << std::endl;
 
@@ -92,7 +92,7 @@ void HyDe::run(){
     std::cerr << "** ERROR: Could not open outfile: " << _outfile << ". **\n" << std::endl;
     exit(EXIT_FAILURE);
   } else {
-    _outStream << "P1\tHybrid\tP2\tZscore\tPvalue\tgamma\tX1\tX2\tX3\tX4\tX5\tX6\tX7\tX8\tX9\tX10\tX11\tX12\tX13\tX14\tX15" << std::endl;
+    _outStream << "P1\tHybrid\tP2\tZscore\tPvalue\tGamma\tX1\tX2\tX3\tX4\tX5\tX6\tX7\tX8\tX9\tX10\tX11\tX12\tX13\tX14\tX15" << std::endl;
   }
 
   #pragma omp parallel for num_threads(_threads) schedule(dynamic) firstprivate(_counts1, _counts2, _counts3, _taxaMap, _taxaNames, _dnaMatrix, _baseLookup, _outgroup, _numObs, _zVals, _pVals)
@@ -133,11 +133,11 @@ void HyDe::run(){
                             *  _taxaMap[k].size() * _taxaMap[_outgroup].size() * _nSites
                             << "\t" << _avgNumObs << std::endl;*/
           if(_zVals[0] != -99999.9)
-            _printOut(_taxaNames[i], _taxaNames[j], _taxaNames[k], _zVals[0], _pVals[0], _counts1, _numObs[0], _outStream);
+            _printOut(_taxaNames[i], _taxaNames[j], _taxaNames[k], _zVals[0], _pVals[0], _counts1, _avgNumObs, _numObs[0], _outStream);
           if(_zVals[1] != -99999.9)
-            _printOut(_taxaNames[j], _taxaNames[i], _taxaNames[k], _zVals[1], _pVals[1], _counts2, _numObs[1], _outStream);
+            _printOut(_taxaNames[j], _taxaNames[i], _taxaNames[k], _zVals[1], _pVals[1], _counts2, _avgNumObs, _numObs[1], _outStream);
           if(_zVals[2] != -99999.9)
-            _printOut(_taxaNames[i], _taxaNames[k], _taxaNames[j], _zVals[2], _pVals[2], _counts3, _numObs[2], _outStream);
+            _printOut(_taxaNames[i], _taxaNames[k], _taxaNames[j], _zVals[2], _pVals[2], _counts3, _avgNumObs, _numObs[2], _outStream);
         }
       }
     }
@@ -408,7 +408,7 @@ double HyDe::_calcGH(const double cp[16][16], const double& nObs,
                + cp[13][2] + cp[13][8] + cp[14][1] + cp[14][4];
 
   if(fabs((1.0 / nObs) * (pxxxx + pxxxy + pxxyx + pxxyy + pxxyz + pxyxx + pxyxy + pxyxz
-                       +  pxyyx + pyxxx + pxyyz + pzxyz + pyxzx + pyzxx + pxyzw) - 1.0) > 0.005){
+                       +  pxyyx + pyxxx + pxyyz + pzxyz + pyxzx + pyzxx + pxyzw) - 1.0) > 0.0001){
     std::cerr << "\n** WARNING: There was a problem counting site patterns... exiting. **\n" << std::endl;
     std::cerr << "  Failed for comparison between " << _taxaNames[p1] << "\t" << _taxaNames[hyb]
               << "\t" << _taxaNames[p2] << "\t" << fabs((1.0 / nObs) * (pxxxx + pxxxy + pxxyx + pxxyy + pxxyz + pxyxx + pxyxy + pxyxz
@@ -500,7 +500,7 @@ void HyDe::_bootstrap(){
   double progress = 0.0;
   int barWidth = 100;
   for(int b = 1; b <= _bootReps; b++){
-    _bootStream << "P1\tHybrid\tP2\tZscore\tPvalue\tgamma\tX1\tX2\tX3\tX4\tX5\tX6\tX7\tX8\tX9\tX10\tX11\tX12\tX13\tX14\tX15" << std::endl;
+    _bootStream << "P1\tHybrid\tP2\tZscore\tPvalue\tGamma\tX1\tX2\tX3\tX4\tX5\tX6\tX7\tX8\tX9\tX10\tX11\tX12\tX13\tX14\tX15" << std::endl;
     _resampleTaxonMap();
 
     /*for(unsigned i = 0; i < _taxaMap.size(); i++){
@@ -542,11 +542,11 @@ void HyDe::_bootstrap(){
           #pragma omp critical
           {
             if(_zVals[0] != -99999.9)
-              _printOut(_taxaNames[i], _taxaNames[j], _taxaNames[k], _zVals[0], _pVals[0], _counts1, _numObs[0], _bootStream);
+              _printOut(_taxaNames[i], _taxaNames[j], _taxaNames[k], _zVals[0], _pVals[0], _counts1, _avgNumObs, _numObs[0], _bootStream);
             if(_zVals[1] != -99999.9)
-              _printOut(_taxaNames[j], _taxaNames[i], _taxaNames[k], _zVals[1], _pVals[1], _counts2, _numObs[1], _bootStream);
+              _printOut(_taxaNames[j], _taxaNames[i], _taxaNames[k], _zVals[1], _pVals[1], _counts2, _avgNumObs, _numObs[1], _bootStream);
             if(_zVals[2] != -99999.9)
-              _printOut(_taxaNames[i], _taxaNames[k], _taxaNames[j], _zVals[2], _pVals[2], _counts3, _numObs[2], _bootStream);
+              _printOut(_taxaNames[i], _taxaNames[k], _taxaNames[j], _zVals[2], _pVals[2], _counts3, _avgNumObs, _numObs[2], _bootStream);
           }
         }
       }
@@ -641,7 +641,7 @@ double HyDe::_resolveAmbiguity(const int& out, const int& p1, const int& hyb, co
 
 /* Prints all information for the given hypothesis test to outfile. */
 void HyDe::_printOut(const std::string& p1, const std::string& hyb, const std::string& p2,
-                     const double& z, const double& p, const double cp[16][16],
+                     const double& z, const double& p, const double cp[16][16], const double& avgObs,
                      const double& nObs, std::ofstream& out){
   /* These values are now calculated by the program twice. Not sure what the computational cost is. */
   double pxxxx = cp[0][0] + cp[5][5] + cp[10][10] + cp[15][15];
@@ -709,9 +709,14 @@ void HyDe::_printOut(const std::string& p1, const std::string& hyb, const std::s
                + cp[11][1] + cp[11][4] + cp[12][6] + cp[12][9]
                + cp[13][2] + cp[13][8] + cp[14][1] + cp[14][4];
 
+  //double p7 = (double) (pxyxy + 0.05) / nObs;
+  //double p4 = (double) (pxxyy + 0.05) / nObs;
+  double p9 = (double) (pxyyx + 0.05) / nObs;
   double p7 = (double) (pxyxy + 0.05) / nObs;
   double p4 = (double) (pxxyy + 0.05) / nObs;
-  double gamma = p4 - p7;
+  double obs_invp1 = avgObs * (p9 - p7);
+  double obs_invp2 = avgObs * (p4 - p7);
+  double gamma = (obs_invp1 / obs_invp2) / (1.0 + (obs_invp1 / obs_invp2));
   out << p1 << "\t" << hyb << "\t" << p2 << "\t" << z << "\t" << p << "\t" << gamma << "\t"
       << pxxxx << "\t" << pxxxy << "\t" << pxxyx << "\t" << pxxyy << "\t"
       << pxxyz << "\t" << pxyxx << "\t" << pxyxy << "\t" << pxyxz << "\t"

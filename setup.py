@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 from Cython.Build import cythonize
 import numpy
 
-setup(name="HyDe",
+setup(name="hyde",
       version="0.1.0",
       description="Hybrid detection using phylogenetic invariants",
       long_description=open('README.rst').read(),
