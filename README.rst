@@ -4,6 +4,9 @@
 HyDe: hybridization detection using phylogenetic invariants
 -----------------------------------------------------------
 
+`Read the Docs <http://hybridization-detection.rtfd.io/>`__
+-----------------------------------------------------------
+
 Installation
 ------------
 
