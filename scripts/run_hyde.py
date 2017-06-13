@@ -47,5 +47,8 @@ if __name__ == "__main__":
     bootReps = args.bootstrap
     prefix   = args.prefix
 
-    hyde.run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue, bootReps, prefix)
+    if bootReps > 0:
+        res, boot = hyde.run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue, bootReps, prefix)
+    else:
+        res = hyde.run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue, bootReps, prefix)
 #    hyde.make_cf_table(prefix+"-out.txt", outgroup, prefix)

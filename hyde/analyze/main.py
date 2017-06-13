@@ -9,10 +9,12 @@ import pandas as pd
 try:
     import subprocess32 as sps
 except ImportError:
-    import subprocess32 as sps
+    import subprocess as sps
 import sys
 import os
 from collections import Counter
+from ..core.result import HydeResult
+from ..core.bootstrap import Bootstrap
 
 def run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue=0.05, bootReps=0, prefix="hyde"):
     """
@@ -20,15 +22,15 @@ def run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue=0.05, bootRe
     """
 
     if os.path.exists(prefix+"-out.txt"):
-        print("\n**  Warning: File '"+prefix+"-out.txt' already exists.")
-        print("**  Renaming to 'old-"+prefix+"-out.txt'.\n")
+        print("\n**  Warning: File '"+prefix+"-out.txt' already exists. **")
+        print("**  Renaming to 'old-"+prefix+"-out.txt'. **\n")
         os.rename(prefix+"-out.txt", "old-"+prefix+"-out.txt")
     else:
         pass
 
     if os.path.exists(prefix+"-boot.txt"):
-        print("\n**  Warning: File '"+prefix+"-out.txt' already exists.")
-        print("**  Renaming to 'old-"+prefix+"-out.txt'.\n")
+        print("\n**  Warning: File '"+prefix+"-boot.txt' already exists. **")
+        print("**  Renaming to 'old-"+prefix+"-boot.txt'. **\n")
         os.rename(prefix+"-boot.txt", "old-"+prefix+"-boot.txt")
     else:
         pass
@@ -56,6 +58,14 @@ def run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue=0.05, bootRe
     ]
 
     proc = sps.call(hyde_cmd)
+
+    if bootReps > 0:
+        res  = HydeResult(prefix+"-out.txt")
+        boot = Bootstrap(prefix+"-boot.txt")
+        return (res, boot)
+    else:
+        res = HydeResult(prefix+"-out.txt")
+        return res
 
 #def read_hyde_boot():
 #    """

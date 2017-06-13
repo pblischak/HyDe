@@ -2,7 +2,7 @@
 .*~
 .DS_Store
 traces
-tests
+notebooks
 *.txt
 *.pyc
 *.so
