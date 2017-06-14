@@ -8,12 +8,8 @@ HyDe: hybridization detection using phylogenetic invariants
 
 |Build Status| |Documentation|
 
-HyDe is a Python package that wraps a primary C++ program for running a
-hybridization detection analysis. We have provided a ``Makefile`` that
-will compile the C++ executable (``hyde_cpp``) and will then install the
-HyDe Python package using the ``setup.py`` file. To ensure that the necessary
-dependencies are available, we suggest using a Python distribution such
-as `Miniconda <https://conda.io/miniconda.html>`__.
+HyDe is a Python package for the detection of hybrid taxa in phylogenomic data sets
+using phylogenetic invariants. 
 
 Documentation
 =============
@@ -27,6 +23,7 @@ Documentation
    explore.rst
    analyze.rst
    visualization.rst
+   api.rst
 
 
 Indices and tables
