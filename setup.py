@@ -1,7 +1,10 @@
 from __future__ import print_function
 from setuptools import setup, find_packages
 import sys
-
+try:
+    import subprocess32 as sps
+except ImportError:
+    import subprocess as sps
 missing_modules = []
 INSTALL_ERROR   = False
 
@@ -36,6 +39,18 @@ try:
     import seaborn
 except ImportError:
     missing_modules.append('seaborn')
+
+# Check that hyde executable works
+print("Testing hyde_cpp compilation...")
+test_hyde = sps.Popen(['src/hyde_cpp'], stdout=sps.PIPE, stderr=sps.PIPE, shell=True)
+(out, err) = test_hyde.communicate()
+if not str(err).startswith('\n** ERROR'):
+    try:
+        sps.call(['make'])
+    except:
+        INSTALL_ERROR=True
+else:
+    pass
 
 if len(missing_modules) > 0:
     INSTALL_ERROR = True

@@ -20,12 +20,16 @@ Requirements:
 -  Pandas
 -  Matplotlib
 -  Seaborn
--  C++ compiler (g++ >= v4.8 preferred)
+-  C++ compiler (g++ >= v4.8)
 
-HyDe is a Python package that wraps a primary C++ program for running a
-hybridization detection analysis. We have provided a ``Makefile`` that
-will compile the C++ executable (``hyde_cpp``) and will then install the
-HyDe Python package using the ``setup.py`` file. To ensure that the necessary
+HyDe is a software package that detects a signal for hybridization in phylogenomic
+data sets using phylogenetic invariants. The primary interface for HyDe is a Python
+module called ``phyde`` (**P**ythonic **Hy**bridization **De**tection).
+``phyde`` provides a suite of tools for performing hypothesis tests on triples of taxa
+to detect hybridization. It also has built in functions to wrap calls to the pure C++ version
+of HyDe, ``hyde_cpp``. We have provided a ``Makefile`` that
+will compile the ``hyde_cpp`` C++ executable and will then install the
+``phyde`` Python package using the ``setup.py`` file. To ensure that the necessary
 dependencies are available, we suggest using a Python distribution such
 as `Miniconda <https://conda.io/miniconda.html>`__.
 
@@ -41,7 +45,7 @@ as `Miniconda <https://conda.io/miniconda.html>`__.
     # Compile hyde_cpp using `make`
     make
 
-    # Now install HyDe Python package
+    # Now install phyde module
     python setup.py install
 
     # Test the installation
@@ -63,7 +67,7 @@ Running HyDe in Python
 
 .. code:: py
 
-    import hyde as hd
+    import phyde as hd
 
     # Run a hyde analysis
     hd.run_hyde(...)

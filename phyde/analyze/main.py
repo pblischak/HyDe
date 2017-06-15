@@ -40,7 +40,7 @@ def run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue=0.05, bootRe
     (out, err) = test_hyde.communicate()
     #print(repr(str(err)))
     if not str(err).startswith('\n** ERROR'):
-        sys.exit("\n\n** ERROR: could not execute hyde **\n\n")
+        sys.exit("\n\n** ERROR: could not execute hyde_cpp **\n\n")
     else:
         pass
 

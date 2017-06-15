@@ -9,7 +9,7 @@ Basic plotting
 --------------
 .. code:: py
 
-  import hyde as hd
+  import phyde as hd
 
   # Read in bootstrap replicates for plotting
   boot = hd.Bootstrap("hyde-boot.txt")
@@ -22,4 +22,4 @@ Advanced plotting
 -----------------
 
 For plotting that goes beyond the basic methods implemented in the ``HydeViz`` class,
-direct interaction with the `Seaborn <https://seaborn.pydata.org/>`_ package is required. 
+direct interaction with the `Seaborn <https://seaborn.pydata.org/>`_ package is required.

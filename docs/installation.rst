@@ -39,7 +39,7 @@ We'll install the HyDe module by cloning it from GitHub using the commands below
     # Compiles hyde_cpp
     make
 
-    # Builds and installs HyDe module
+    # Builds and installs phyde module
     python setup.py install
 
     # Tests installation
