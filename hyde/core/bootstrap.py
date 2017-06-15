@@ -16,6 +16,9 @@ class Bootstrap:
         self.triples    = []
         self._read_bootstraps(bootfile)
 
+    def __call__(self, attr, p1, hyb, p2):
+        return [t[attr] for t in self.breps[(p1, hyb, p2)]]
+
     def _read_bootstraps(self, bootfile):
         with open(bootfile) as b:
             boot_reps = b.read()[:-1].split("####\n")
@@ -71,32 +74,32 @@ class Bootstrap:
             summaries[t]["Gamma"]  = [np.mean(self.gamma(t)), np.std(self.gamma(t))]
         return summaries
 
-    def gamma(self, tripl):
-        return [t['Gamma'] for t in self.breps[tripl]]
+    def gamma(self, p1, hyb, p2):
+        return [t['Gamma'] for t in self.breps[(p1, hyb, p2)]]
 
-    def zscore(self, tripl):
-        return [t['Zscore'] for t in self.breps[tripl]]
+    def zscore(self, p1, hyb, p2):
+        return [t['Zscore'] for t in self.breps[(p1, hyb, p2)]]
 
-    def pvalue(self, tripl):
-        return [t['Pvalue'] for t in self.breps[tripl]]
+    def pvalue(self, p1, hyb, p2):
+        return [t['Pvalue'] for t in self.breps[(p1, hyb, p2)]]
 
-    def site_patterns(self, tripl):
+    def site_patterns(self, p1, hyb, p2):
         return {
-            "AAAA" : [t['AAAA'] for t in self.breps[tripl]],
-            "AAAB" : [t['AAAB'] for t in self.breps[tripl]],
-            "AABA" : [t['AABA'] for t in self.breps[tripl]],
-            "AABB" : [t['AABB'] for t in self.breps[tripl]],
-            "AABC" : [t['AABC'] for t in self.breps[tripl]],
-            "ABAA" : [t['ABAA'] for t in self.breps[tripl]],
-            "ABAB" : [t['ABAB'] for t in self.breps[tripl]],
-            "ABAC" : [t['ABAC'] for t in self.breps[tripl]],
-            "ABBA" : [t['ABBA'] for t in self.breps[tripl]],
-            "BAAA" : [t['BAAA'] for t in self.breps[tripl]],
-            "ABBC" : [t['ABBC'] for t in self.breps[tripl]],
-            "CABC" : [t['CABC'] for t in self.breps[tripl]],
-            "BACA" : [t['BACA'] for t in self.breps[tripl]],
-            "BCAA" : [t['BCAA'] for t in self.breps[tripl]],
-            "ABCD" : [t['ABCD'] for t in self.breps[tripl]],
+            "AAAA" : [t['AAAA'] for t in self.breps[(p1, hyb, p2)]],
+            "AAAB" : [t['AAAB'] for t in self.breps[(p1, hyb, p2)]],
+            "AABA" : [t['AABA'] for t in self.breps[(p1, hyb, p2)]],
+            "AABB" : [t['AABB'] for t in self.breps[(p1, hyb, p2)]],
+            "AABC" : [t['AABC'] for t in self.breps[(p1, hyb, p2)]],
+            "ABAA" : [t['ABAA'] for t in self.breps[(p1, hyb, p2)]],
+            "ABAB" : [t['ABAB'] for t in self.breps[(p1, hyb, p2)]],
+            "ABAC" : [t['ABAC'] for t in self.breps[(p1, hyb, p2)]],
+            "ABBA" : [t['ABBA'] for t in self.breps[(p1, hyb, p2)]],
+            "BAAA" : [t['BAAA'] for t in self.breps[(p1, hyb, p2)]],
+            "ABBC" : [t['ABBC'] for t in self.breps[(p1, hyb, p2)]],
+            "CABC" : [t['CABC'] for t in self.breps[(p1, hyb, p2)]],
+            "BACA" : [t['BACA'] for t in self.breps[(p1, hyb, p2)]],
+            "BCAA" : [t['BCAA'] for t in self.breps[(p1, hyb, p2)]],
+            "ABCD" : [t['ABCD'] for t in self.breps[(p1, hyb, p2)]],
         }
 
     def write_summary(self, summary_file):

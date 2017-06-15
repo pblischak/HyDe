@@ -1,10 +1,6 @@
 from __future__ import print_function
 from setuptools import setup, find_packages
 import sys
-try:
-    import subprocess32 as sps
-except ImportError:
-    import subprocess as sps
 
 missing_modules = []
 INSTALL_ERROR   = False
@@ -15,10 +11,16 @@ try:
     from Cython.Build import cythonize
 except ImportError:
     missing_modules.append('cython')
+
 try:
     import numpy
 except ImportError:
     missing_modules.append('numpy')
+
+try:
+    import scipy
+except ImportError:
+    missing_modules.append('scipy')
 
 try:
     import pandas
@@ -29,6 +31,11 @@ try:
     import matplotlib
 except ImportError:
     missing_modules.append('matplotlib')
+
+try:
+    import seaborn
+except ImportError:
+    missing_modules.append('seaborn')
 
 if len(missing_modules) > 0:
     INSTALL_ERROR = True

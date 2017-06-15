@@ -29,6 +29,15 @@ boots = hd.Bootstrap("hyde-boot.txt")
 print("**** Good. ****")
 
 print("\n**** Test 8: Getting gamma values from each boot rep. ****")
-g = boots.gamma(('sp1', 'sp2', 'sp3'))
+g = boots.gamma('sp1', 'sp2', 'sp3')
 print(g)
+print("**** Good. ****")
+
+print("\n**** Test 9: Testing callable Bootstrap method. ****")
+aaaa = boots('AAAA', 'sp1', 'sp2', 'sp3')
+print(aaaa)
+print("**** Good. ****")
+
+print("\n**** Test 10: Testing visualization. ****")
+hd.viz.hist(boots, 'Gamma')
 print("**** Good. ****")

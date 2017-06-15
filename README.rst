@@ -16,8 +16,10 @@ Requirements:
 -  Python 2.7
 -  Cython
 -  Numpy
+-  Scipy
 -  Pandas
 -  Matplotlib
+-  Seaborn
 -  C++ compiler (g++ >= v4.8 preferred)
 
 HyDe is a Python package that wraps a primary C++ program for running a
@@ -30,7 +32,7 @@ as `Miniconda <https://conda.io/miniconda.html>`__.
 .. code:: bash
 
     # To install dependencies
-    pip install cython numpy pandas matplotlib
+    pip install cython numpy scipy pandas matplotlib seaborn
 
     # Clone HyDe repository from GitHub
     git clone https://github.com/pblischak/HyDe.git

@@ -6,3 +6,4 @@ from hyde.analyze.main import run_hyde
 from hyde.core.bootstrap import Bootstrap
 from hyde.core.data import HydeData
 from hyde.core.result import HydeResult
+from hyde.visualize import viz
