@@ -7,7 +7,7 @@ HyDe Workflow
 
 .. code:: py
 
-  import hyde as hd
+  import phyde as hd
 
   # Analyze the data in the `test/` folder within the main HyDe directory
   res, boot = hd.run_hyde("data.txt", "map.txt", "out", 16, 4, 50000, bootReps=100)

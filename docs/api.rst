@@ -1,4 +1,4 @@
-.. include:: links.rst
+import phyde.. include:: links.rst
 
 .. _API:
 
@@ -32,7 +32,7 @@ file and is compiled into a shared library that can be called from Python.
 
     .. code:: py
 
-      import hyde as hd
+      import phyde as hd
       data = hd.HydeData("data.txt", "map.txt", "out", 16, 4, 50000)
 
   **Method**: ``test_triple(p1, hyb, p2)``
@@ -43,7 +43,7 @@ file and is compiled into a shared library that can be called from Python.
 
     .. code:: py
 
-      import hyde as hd
+      import phyde as hd
       data = hd.HydeData("data.txt", "map.txt", "out", 16, 4, 50000)
       res = data.test_triple("sp1", "sp2", "sp3")
 
@@ -56,7 +56,7 @@ file and is compiled into a shared library that can be called from Python.
 
     .. code:: py
 
-      import hyde as hd
+      import phyde as hd
       data = hd.HydeData("data.txt", "map.txt", "out", 16, 4, 50000)
       res = data.test_individual("sp1", "sp2", "sp3")
 
@@ -71,7 +71,7 @@ file and is compiled into a shared library that can be called from Python.
 
     .. code:: py
 
-      import hyde as hd
+      import phyde as hd
       res = hd.HydeResult("hyde-out.txt")
 
 **File**: ``bootstrap.py``
@@ -87,7 +87,7 @@ file and is compiled into a shared library that can be called from Python.
 
     .. code:: py
 
-      import hyde as hd
+      import phyde as hd
       boot = hd.Bootstrap("hyde-boot.txt")
 
   **Method**: ``gamma(tripl)``
@@ -100,7 +100,7 @@ file and is compiled into a shared library that can be called from Python.
 
     .. code:: py
 
-      import hyde as hd
+      import phyde as hd
       boot = hd.Bootstrap("hyde-boot.txt")
       boot.gamma(("sp1", "sp2", "sp3"))
 
@@ -138,7 +138,7 @@ libraries.
 
     .. code:: py
 
-      import hyde as hd
+      import phyde as hd
       boot = hd.Bootstrap("hyde-boot.txt")
       vz   = hd.HydeViz(boot)
 

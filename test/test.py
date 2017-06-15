@@ -1,5 +1,5 @@
 from __future__ import print_function
-import hyde as hd
+import phyde as hd
 
 print("\n**** Test 1: Data import. ****")
 data = hd.HydeData("data.txt", "map.txt", "out", 16, 4, 50000)

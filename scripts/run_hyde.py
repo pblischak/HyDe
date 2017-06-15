@@ -4,7 +4,7 @@
 # hyde.py
 # Written by PD Blischak
 
-import hyde
+import phyde
 import argparse
 
 if __name__ == "__main__":
@@ -48,7 +48,7 @@ if __name__ == "__main__":
     prefix   = args.prefix
 
     if bootReps > 0:
-        res, boot = hyde.run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue, bootReps, prefix)
+        res, boot = phyde.run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue, bootReps, prefix)
     else:
-        res = hyde.run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue, bootReps, prefix)
+        res = phyde.run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue, bootReps, prefix)
 #    hyde.make_cf_table(prefix+"-out.txt", outgroup, prefix)
