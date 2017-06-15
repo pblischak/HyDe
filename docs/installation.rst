@@ -22,8 +22,8 @@ Required Python packages
 .. code:: bash
 
   # Install packages with conda or pip command
-  conda install numpy pandas biopython
-  # pip install numpy pandas biopython
+  conda install cython numpy pandas scipy matplotlib seaborn
+  # pip install cython numpy pandas scipy matplotlib seaborn
 
 Installing HyDe
 ---------------

@@ -9,7 +9,7 @@ HyDe: hybridization detection using phylogenetic invariants
 |Build Status| |Documentation|
 
 HyDe is a Python package for the detection of hybrid taxa in phylogenomic data sets
-using phylogenetic invariants. 
+using phylogenetic invariants.
 
 Documentation
 =============
@@ -20,7 +20,6 @@ Documentation
    installation.rst
    input_files.rst
    workflow.rst
-   explore.rst
    analyze.rst
    visualization.rst
    api.rst

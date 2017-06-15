@@ -5,30 +5,35 @@
 API Reference
 =============
 
-``core`` module
----------------
+**Submodule**: ``core``
+-----------------------
 
-The ``core`` module provides the Python interface for hybridization detection analyses
-and data exploration through the use implemented classes.
+The ``core`` submodule provides the main Python interface for hybridization detection analyses
+and data exploration through the use of implemented classes.
 
-``data.pyx``
-^^^^^^^^^^^^
+**File**: ``data.pyx``
+^^^^^^^^^^^^^^^^^^^^^^
+
+The ``data.pyx`` source file is written in Cython, a superset of the Python language
+that allows the use of C/C++ code to speed up computationally intensive tasks
+(and many other things). This file is automatically translated into a C++ source
+file and is compiled into a shared library that can be called from Python.
 
 **Class**: ``HydeData``
 
-  The ``HydeData`` class implements methods for reading in DNA sequence data and
-  taxon maps for hybridization detection analyses.
+  The ``HydeData`` class is an extension type that implements methods for reading
+  in DNA sequence data and taxon maps for hybridization detection analyses.
 
   **Constructor**: ``HydeData(data, map, outgroup, num_ind, num_taxa, num_sites)``
 
-    The constructor for the ``HydeData`` class
+    The constructor for the ``HydeData`` class.
 
-      **Example**
+    **Example**
 
-      .. code:: py
+    .. code:: py
 
-        import hyde as hd
-        data = hd.HydeData("data.txt", "map.txt", "out", 16, 4, 50000)
+      import hyde as hd
+      data = hd.HydeData("data.txt", "map.txt", "out", 16, 4, 50000)
 
   **Method**: ``test_triple(p1, hyb, p2)``
 
@@ -55,37 +60,88 @@ and data exploration through the use implemented classes.
       data = hd.HydeData("data.txt", "map.txt", "out", 16, 4, 50000)
       res = data.test_individual("sp1", "sp2", "sp3")
 
-``result.py``
-^^^^^^^^^^^^^
+**File**: ``result.py``
+^^^^^^^^^^^^^^^^^^^^^^^
 
 **Class**: ``HydeResult``
 
   **Constructor**: ``HydeResult(infile)``
 
-    **Example**:
+    **Example**
 
     .. code:: py
 
       import hyde as hd
       res = hd.HydeResult("hyde-out.txt")
 
-``bootstrap.py``
-^^^^^^^^^^^^^^^^
+**File**: ``bootstrap.py``
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-  ``Bootstrap`` class
+**Class**: ``Bootstrap``
 
-``analyze`` module
-------------------
+  **Constructor**: ``Bootstrap(bootfile)``
 
-``main.py``
-^^^^^^^^^^^
+    Read in bootstrap replicates from a HyDe analysis.
+
+    **Example**
+
+    .. code:: py
+
+      import hyde as hd
+      boot = hd.Bootstrap("hyde-boot.txt")
+
+  **Method**: ``gamma(tripl)``
+
+    Return the gamma values for all bootstrap replicates for a triplet of taxa. Triples
+    are passed to the function as a tuple with the names of the three taxa for that
+    particular hypothesis test.
+
+    **Example**
+
+    .. code:: py
+
+      import hyde as hd
+      boot = hd.Bootstrap("hyde-boot.txt")
+      boot.gamma(("sp1", "sp2", "sp3"))
+
+**Submodule**: ``analyze``
+--------------------------
+
+The ``analyze`` submodule provides wrapper functions for running a full HyDe
+analysis on all possible triples using the ``hyde_cpp`` executable. It also reads
+the results back into Python using the classes from the ``core`` submodule so that
+they are available from within Python.
+
+**File**: ``main.py``
+^^^^^^^^^^^^^^^^^^^^^
 
   **Function**: ``run_hyde(data, map, outgroup, num_ind, num_taxa, num_sites, boot_reps=0)``
 
-``visualize`` module
---------------------
+**Submodule**: ``visualize``
+----------------------------
 
-``viz.py``
-^^^^^^^^^^
+The ``visualize`` submodule uses the ``matplotlib`` package to provide basic
+plotting of results.
 
-  **Function**: ``plt()``
+**File**: ``viz.py``
+^^^^^^^^^^^^^^^^^^^^
+
+**Class**: ``HydeViz``
+
+The HydeViz class provides a simplified interface for plotting different distributions
+of bootstrap replicate variables. It uses the ``matplotlib`` and ``seaborn`` plotting
+libraries.
+
+  **Constructor**: ``HydeViz(boot_obj)``
+
+    **Example**
+
+    .. code:: py
+
+      import hyde as hd
+      boot = hd.Bootstrap("hyde-boot.txt")
+      vz   = hd.HydeViz(boot)
+
+
+
+  **Function**: ``density(arr, **kwargs)``
