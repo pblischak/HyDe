@@ -24,7 +24,7 @@ Requirements:
 
 HyDe is a software package that detects a signal for hybridization in phylogenomic
 data sets using phylogenetic invariants. The primary interface for HyDe is a Python
-module called ``phyde`` (**P**ythonic **Hy**bridization **De**tection).
+module called ``phyde`` (**P**\ ythonic **Hy**\ bridization **De**\ tection).
 ``phyde`` provides a suite of tools for performing hypothesis tests on triples of taxa
 to detect hybridization. It also has built in functions to wrap calls to the pure C++ version
 of HyDe, ``hyde_cpp``. We have provided a ``Makefile`` that
