@@ -1,5 +1,5 @@
 
-|Build Status| |Documentation|
+|Build Status| |Documentation|  |PyPI Badge|  |Gitter|
 
 HyDe: hybridization detection using phylogenetic invariants
 -----------------------------------------------------------
@@ -80,3 +80,9 @@ Running HyDe in Python
 
 .. |Documentation| image:: https://readthedocs.org/projects/hybridization-detection/badge/?version=latest
    :target: http://hybridization-detection.readthedocs.io/en/latest/?badge=latest
+
+.. |PyPI Badge| image:: https://badge.fury.io/py/phyde.svg
+   :target: https://pypi.python.org/pypi/phyde
+
+.. |Gitter| image:: https://badges.gitter.im/Join%20Chat.svg
+   :target: https://gitter.im/pblischak-HyDe/Lobby
