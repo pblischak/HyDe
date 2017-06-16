@@ -1,0 +1,9 @@
+include test/data.txt
+include test/map.txt
+include examples/snake-data.txt
+include examples/snake-map.txt
+include src/*.cpp
+include src/*.hpp
+include src/Makefile
+include Makefile
+include phyde/core/data.pyx
