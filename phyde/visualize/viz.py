@@ -7,7 +7,7 @@ import seaborn as sns
 
 """ Simple plotting functions wrapping the Seaborn library. """
 
-def density(boot_obj, attr, p1, hyb, p2, title=None, xlab=None, ylab=None, shade=True, color='b'):
+def density(boot_obj, attr, p1, hyb, p2, title="", xlab="", ylab="", shade=True, color='b'):
     """
     Make a Seaborn density plot.
     """

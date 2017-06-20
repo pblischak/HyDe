@@ -39,5 +39,5 @@ print(aaaa)
 print("**** Good. ****")
 
 print("\n**** Test 10: Testing visualization. ****")
-hd.viz.hist(boots, 'Gamma')
+p = hd.viz.density(boots, "Gamma", "sp1", "sp2", "sp3")
 print("**** Good. ****")
