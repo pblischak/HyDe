@@ -36,7 +36,7 @@ def violinplot(boot_obj, attr, p1, hyb, p2, title="", xlab="", ylab="", color='b
     """
     plt.figure(figsize=(14, 11))
     sns.set_style("white")
-    ax = sns.distplot(np.array(boot_obj(attr, p1, hyb, p2)), color=color)
+    ax = sns.violinplot(np.array(boot_obj(attr, p1, hyb, p2)), color=color)
     ax.set(ylabel=ylab, xlabel=xlab)
     sns.plt.title(title)
     return ax
