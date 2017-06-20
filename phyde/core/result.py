@@ -27,7 +27,6 @@ class HydeResult:
             results = f.read().splitlines()[1:-1]
             for r in results:
                 rs    = r.split('\t')
-                print(rs)
                 tripl = (rs[0], rs[1], rs[2])
                 if tripl not in self.triples:
                     self.triples.append(tripl)

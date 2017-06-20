@@ -73,7 +73,7 @@ Running HyDe in Python
     hd.run_hyde(...)
 
     # import a data set for testing particular triples
-    data = hd.HydeData("data.txt", "map.txt", "out", 16, 4, 250000)
+    data = hd.HydeData("data.txt", "map.txt", "out", 16, 4, 50000)
 
 .. |Build Status| image:: https://travis-ci.org/pblischak/HyDe.svg?branch=master
    :target: https://travis-ci.org/pblischak/HyDe

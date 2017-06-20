@@ -5,20 +5,38 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-def density(boot_obj, triples, attr, shade=True, color='b'):
-    """
+""" Simple plotting functions wrapping the Seaborn library. """
 
+def density(boot_obj, attr, p1, hyb, p2, title=None, xlab=None, ylab=None, shade=True, color='b'):
     """
-    sns.kdeplot(np.array(boot_obj(attr, triples, shade=shade, color=color)))
+    Make a Seaborn density plot.
+    """
+    plt.figure(figsize=(14, 11))
+    sns.set_style("white")
+    ax = sns.kdeplot(np.array(boot_obj(attr, p1, hyb, p2)), shade=shade, color=color)
+    ax.set(ylabel=ylab, xlabel=xlab)
+    sns.plt.title(title)
+    return ax
 
-def hist(boot_obj, attr):
+def dist(boot_obj, attr, p1, hyb, p2, title="", xlab="", ylab="", hist=True, color='b'):
     """
+    Make a Seaborn distplot plot (density plot with histogram). Can turn histogram off
+    by setting ``hist=False``.
+    """
+    plt.figure(figsize=(14, 11))
+    sns.set_style("white")
+    ax = sns.distplot(np.array(boot_obj(attr, p1, hyb, p2)), hist=hist, color=color)
+    ax.set(ylabel=ylab, xlabel=xlab)
+    sns.plt.title(title)
+    return ax
 
+def violinplot(boot_obj, attr, p1, hyb, p2, title="", xlab="", ylab="", color='b'):
     """
-    print("Can't make histograms yet.")
-
-def violinplot(boot_obj, attr, triples, order=True):
+    Make a Seaborn violinplot.
     """
-
-    """
-    print("Can't make violins yet.")
+    plt.figure(figsize=(14, 11))
+    sns.set_style("white")
+    ax = sns.distplot(np.array(boot_obj(attr, p1, hyb, p2)), color=color)
+    ax.set(ylabel=ylab, xlabel=xlab)
+    sns.plt.title(title)
+    return ax
