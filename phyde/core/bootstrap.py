@@ -11,12 +11,19 @@ class Bootstrap:
     containing parameter values.
     """
     def __init__(self, bootfile):
+        """
+        Constructor.
+        """
         self.bootfile = bootfile
         self.breps = {}
         self.triples    = []
         self._read_bootstraps(bootfile)
 
     def __call__(self, attr, p1, hyb, p2):
+        """
+        A callable method to access attributes rom a bootstrapped
+        HyDe analysis. Returned as a list.
+        """
         return [t[attr] for t in self.breps[(p1, hyb, p2)]]
 
     def _read_bootstraps(self, bootfile):
@@ -64,7 +71,7 @@ class Bootstrap:
 
     def summarize(self):
         """
-
+        Summarizes the results of a bootsrapped HyDe analysis.
         """
         summaries = {}
         for t in self.triples:
@@ -75,15 +82,28 @@ class Bootstrap:
         return summaries
 
     def gamma(self, p1, hyb, p2):
+        """
+        Return the values of gamma for the triple (p1, hyb, p2).
+        """
         return [t['Gamma'] for t in self.breps[(p1, hyb, p2)]]
 
     def zscore(self, p1, hyb, p2):
+        """
+        Return the values of the test statistic for the triple (p1, hyb, p2).
+        """
         return [t['Zscore'] for t in self.breps[(p1, hyb, p2)]]
 
     def pvalue(self, p1, hyb, p2):
+        """
+        Return the p-values for the triple (p1, hyb, p2).
+        """
         return [t['Pvalue'] for t in self.breps[(p1, hyb, p2)]]
 
     def abba_baba(self, p1, hyb, p2):
+        """
+        Calculate Patterson's D-Statistic for all bootstrap replicates
+        for the triple (p1, hyb, p2). Uses vectorization with numpy arrays.
+        """
         return ((np.array([t['ABBA'] for t in self.breps[(p1, hyb, p2)]]) - np.array([t['ABAB'] for t in self.breps[(p1, hyb, p2)]])) /
                 (np.array([t['ABBA'] for t in self.breps[(p1, hyb, p2)]]) + np.array([t['ABAB'] for t in self.breps[(p1, hyb, p2)]])))
 

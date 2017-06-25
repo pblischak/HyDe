@@ -22,7 +22,7 @@ Requirements:
 -  Seaborn
 -  C++ compiler (g++ >= v4.8)
 
-HyDe is a software package that detects a signal for hybridization in phylogenomic
+HyDe is a software package that detects hybridization in phylogenomic
 data sets using phylogenetic invariants. The primary interface for HyDe is a Python
 module called ``phyde`` (**P**\ ythonic **Hy**\ bridization **De**\ tection).
 ``phyde`` provides a suite of tools for performing hypothesis tests on triples of taxa
@@ -51,6 +51,14 @@ as `Miniconda <https://conda.io/miniconda.html>`__.
     # Test the installation
     make test
 
+The ``phyde`` module is also hosted on the Python Package Index (PyPI), and can be installed directly using
+``pip``.
+
+.. code:: py
+
+  # Install from PyPI with pip
+  pip install phyde
+
 Running HyDe from the Command Line
 ----------------------------------
 
@@ -70,7 +78,7 @@ Running HyDe in Python
     import phyde as hd
 
     # Run a hyde analysis
-    hd.run_hyde(...)
+    res = hd.run_hyde("data.txt", "map.txt", "out", 16, 4, 50000, bootReps=100)
 
     # import a data set for testing particular triples
     data = hd.HydeData("data.txt", "map.txt", "out", 16, 4, 50000)

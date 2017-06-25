@@ -12,7 +12,7 @@ class HydeResult:
     """
     def __init__(self, infile):
         """
-
+        Constructor.
         """
         self.infile = infile
         self.res = {}
@@ -20,11 +20,14 @@ class HydeResult:
         self._read_hyde_results(infile)
 
     def __call__(self, attr, p1, hyb, p2):
+        """
+        Callable method for accessing information in a HydeResult object.
+        """
         return self.res[(p1, hyb, p2)][attr]
 
     def _read_hyde_results(self, file):
         """
-
+        Fxn for reading in results file from a hyde_cpp analysis.
         """
         with open(file) as f:
             results = f.read().splitlines()[1:-1]
@@ -40,7 +43,7 @@ class HydeResult:
 
     def _hyde_info(self, b):
         """
-
+        Store information for HyDe hypothesis test.
         """
         if len(b) != 18:
             raise ValueError("** Warning: length of hyde entry is incorrect. **")
@@ -69,5 +72,8 @@ class HydeResult:
         return hyde_info
 
     def abba_baba(self, p1, hyb, p2):
+        """
+        Calculate Patterson's D-Statistic for the triple (p1, hyb, p2).
+        """
         return ((np.array(self.res[(p1,hyb,p2)]['ABBA']) - np.array(self.res[(p1,hyb,p2)]['ABAB'])) /
                 (np.array(self.res[(p1,hyb,p2)]['ABBA']) + np.array(self.res[(p1,hyb,p2)]['ABAB'])))

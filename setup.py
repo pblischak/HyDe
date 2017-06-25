@@ -66,17 +66,23 @@ if INSTALL_ERROR:
     print("  Please see the documentation at http://hybridization-detection.rtfd.io/.\n")
     sys.exit()
 else:
-    setup(name="phyde",
-        version="0.1.1",
+    setup(
+        name="phyde",
+        version="0.2.0",
         description="Hybridization detection using phylogenetic invariants",
         long_description=open('README.rst').read(),
         url="https://github.com/pblischak/HyDe",
         author="Paul Blischak & Laura Kubatko",
         author_email="blischak.4@osu.edu",
-        license="GPL",
         packages=find_packages(),
         ext_modules=cythonize("phyde/**/*.pyx", compiler_directives={'--cplus': True}),
         include_dirs=[numpy.get_include()],
         scripts=['scripts/run_hyde.py', 'src/hyde_cpp'],
+        license="GPL",
+        classifiers=[
+            'Programming Language :: Python',
+            'Programming Language :: Python :: 2',
+            'Programming Language :: Python :: 2.7',
+        ],
         zip_safe=False
     )
