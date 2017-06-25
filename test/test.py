@@ -38,6 +38,14 @@ aaaa = boots('AAAA', 'sp1', 'sp2', 'sp3')
 print(aaaa)
 print("**** Good. ****")
 
+print("\n**** Test 10: Testing ABBA-BABA on Bootstrap object. ****")
+print(boots.abba_baba("sp1", "sp2", "sp3"))
+print("**** Good. ****")
+
+print("\n**** Test 11: Testing ABBA-BABA on HydeResult object. ****")
+print(res.abba_baba("sp1", "sp2", "sp3"))
+print("**** Good. ****")
+
 #print("\n**** Test 10: Testing visualization. ****")
 #p = hd.viz.density(boots, "Gamma", "sp1", "sp2", "sp3")
 #print("**** Good. ****")

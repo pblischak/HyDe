@@ -83,6 +83,10 @@ class Bootstrap:
     def pvalue(self, p1, hyb, p2):
         return [t['Pvalue'] for t in self.breps[(p1, hyb, p2)]]
 
+    def abba_baba(self, p1, hyb, p2):
+        return ((np.array([t['ABBA'] for t in self.breps[(p1, hyb, p2)]]) - np.array([t['ABAB'] for t in self.breps[(p1, hyb, p2)]])) /
+                (np.array([t['ABBA'] for t in self.breps[(p1, hyb, p2)]]) + np.array([t['ABAB'] for t in self.breps[(p1, hyb, p2)]])))
+
     def site_patterns(self, p1, hyb, p2):
         return {
             "AAAA" : [t['AAAA'] for t in self.breps[(p1, hyb, p2)]],

@@ -282,7 +282,23 @@ cdef class HydeData:
         return {
             "Zscore": z_val,
             "Pvalue": p_val,
-            "Gamma": gamma
+            "Gamma" : gamma,
+            "AAAA"  : self.site_pattern_probs[0],
+            "AAAA"  : self.site_pattern_probs[1],
+            "AAAB"  : self.site_pattern_probs[2],
+            "AABA"  : self.site_pattern_probs[3],
+            "AABB"  : self.site_pattern_probs[4],
+            "AABC"  : self.site_pattern_probs[5],
+            "ABAA"  : self.site_pattern_probs[6],
+            "ABAB"  : self.site_pattern_probs[7],
+            "ABAC"  : self.site_pattern_probs[8],
+            "ABBA"  : self.site_pattern_probs[9],
+            "BAAA"  : self.site_pattern_probs[10],
+            "ABBC"  : self.site_pattern_probs[11],
+            "CABC"  : self.site_pattern_probs[12],
+            "BACA"  : self.site_pattern_probs[13],
+            "BCAA"  : self.site_pattern_probs[14],
+            "ABCD"  : self.site_pattern_probs[15]
         }
 
     cdef dict _test_triple_c_fast(self,  np.ndarray[INDEX_t, ndim=1] p1,

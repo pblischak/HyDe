@@ -19,6 +19,9 @@ class HydeResult:
         self.triples = []
         self._read_hyde_results(infile)
 
+    def __call__(self, attr, p1, hyb, p2):
+        return self.res[(p1, hyb, p2)][attr]
+
     def _read_hyde_results(self, file):
         """
 
@@ -64,3 +67,7 @@ class HydeResult:
             "ABCD"   : float(b[17])
         }
         return hyde_info
+
+    def abba_baba(self, p1, hyb, p2):
+        return ((np.array(self.res[(p1,hyb,p2)]['ABBA']) - np.array(self.res[(p1,hyb,p2)]['ABAB'])) /
+                (np.array(self.res[(p1,hyb,p2)]['ABBA']) + np.array(self.res[(p1,hyb,p2)]['ABAB'])))
