@@ -6,9 +6,9 @@
 HyDe: hybridization detection using phylogenetic invariants
 ===========================================================
 
-|Build Status| |Documentation|
+|Build Status| |Documentation| |PyPI Badge| |Gitter|
 
-HyDe is a software package that detects a signal for hybridization in phylogenomic
+HyDe is a software package that detects hybridization in phylogenomic
 data sets using phylogenetic invariants. The primary interface for HyDe is a Python
 module called ``phyde`` (**P**\ ythonic **Hy**\ bridization **De**\ tection).
 ``phyde`` provides a suite of tools for performing hypothesis tests on triples of taxa
@@ -27,7 +27,6 @@ Documentation
 
    installation.rst
    input_files.rst
-   workflow.rst
    analyze.rst
    visualization.rst
    api.rst
@@ -45,3 +44,9 @@ Indices and tables
 
 .. |Documentation| image:: https://readthedocs.org/projects/hybridization-detection/badge/?version=latest
    :target: http://hybridization-detection.readthedocs.io/en/latest/?badge=latest
+
+.. |PyPI Badge| image:: https://badge.fury.io/py/phyde.svg
+   :target: https://pypi.python.org/pypi/phyde
+
+.. |Gitter| image:: https://badges.gitter.im/Join%20Chat.svg
+   :target: https://gitter.im/pblischak-HyDe/Lobby

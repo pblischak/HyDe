@@ -5,8 +5,13 @@
 Installation
 ============
 
+HyDe requires Python v2.7, a C++ compiler, and several Python modules (listed below).
+
 Miniconda
 ---------
+
+We recommend using a Python distribution such as Miniconda to make it easier
+to manage modules and environments.
 
 .. code:: bash
 
@@ -19,6 +24,9 @@ Miniconda
 Required Python packages
 ------------------------
 
+With Miniconda installed,we can use ``pip`` or ``conda`` to install all of the Python
+modules that it requires.
+
 .. code:: bash
 
   # Install packages with conda or pip command
@@ -28,7 +36,7 @@ Required Python packages
 Installing HyDe
 ---------------
 
-We'll install the HyDe module by cloning it from GitHub using the commands below:
+Next, we'll install the HyDe module by cloning it from GitHub using the commands below:
 
 .. code:: bash
 

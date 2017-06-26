@@ -1,9 +1,11 @@
-import phyde.. include:: links.rst
+.. include:: links.rst
 
 .. _API:
 
 API Reference
 =============
+
+**This page is still in the works. Sorry!**
 
 **Submodule**: ``core``
 -----------------------

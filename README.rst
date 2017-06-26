@@ -54,7 +54,7 @@ as `Miniconda <https://conda.io/miniconda.html>`__.
 The ``phyde`` module is also hosted on the Python Package Index (PyPI), and can be installed directly using
 ``pip``.
 
-.. code:: py
+.. code:: bash
 
   # Install from PyPI with pip
   pip install phyde

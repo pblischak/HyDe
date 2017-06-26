@@ -5,6 +5,8 @@
 Visualization
 =============
 
+**This page is still in the works. Sorry!**
+
 Basic plotting
 --------------
 .. code:: py
@@ -14,12 +16,11 @@ Basic plotting
   # Read in bootstrap replicates for plotting
   boot = hd.Bootstrap("hyde-boot.txt")
 
-
-  vz = hd.HydeViz(boot)
-  hd.viz.density(boot('Gamma', 'sp1', 'sp2', 'sp3'))
+  # Make a density plot of the bootstrap reps for Gamma
+  hd.viz.density(boot, 'Gamma', 'sp1', 'sp2', 'sp3', title)
 
 Advanced plotting
 -----------------
 
-For plotting that goes beyond the basic methods implemented in the ``HydeViz`` class,
+For plotting that goes beyond the basic methods implemented in ``phyde``,
 direct interaction with the `Seaborn <https://seaborn.pydata.org/>`_ package is required.
