@@ -17,7 +17,7 @@ Basic plotting
   boot = hd.Bootstrap("hyde-boot.txt")
 
   # Make a density plot of the bootstrap reps for Gamma
-  hd.viz.density(boot, 'Gamma', 'sp1', 'sp2', 'sp3', title)
+  hd.viz.density(boot, 'Gamma', 'sp1', 'sp2', 'sp3', title="Bootstrap Dist. of Gamma")
 
 Advanced plotting
 -----------------

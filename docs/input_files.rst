@@ -8,7 +8,8 @@ HyDe Data Files
 The main data files for running HyDe are (1) the DNA sequences and (2) the
 map of sampled individuals to their respective taxa/OTUs. Examples of these files
 can be found in the ``test/`` and ``examples/`` directories within the main HyDe
-folder. Below we describe each file in more detail.
+folder. Below we describe each file in more detail. If you installed HyDe from PyPI
+and do not have a clone of the GitHub repository, these files can be viewed `here <https://github.com/pblischak/HyDe>`__.
 
 Sequence Data
 -------------

@@ -5,5 +5,7 @@ include examples/snake-map.txt
 include src/*.cpp
 include src/*.hpp
 include src/Makefile
+exclude src/*.o
+exclude src/hyde_cpp
 include Makefile
 include phyde/core/data.pyx

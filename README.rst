@@ -14,12 +14,13 @@ Requirements:
 ~~~~~~~~~~~~~
 
 -  Python 2.7
--  Cython
--  Numpy
--  Scipy
--  Pandas
--  Matplotlib
--  Seaborn
+-  Python Modules:
+   -  Cython
+   -  Numpy
+   -  Scipy
+   -  Pandas
+   -  Matplotlib
+   -  Seaborn
 -  C++ compiler (g++ >= v4.8)
 
 HyDe is a software package that detects hybridization in phylogenomic

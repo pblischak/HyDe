@@ -19,6 +19,20 @@ will compile the ``hyde_cpp`` C++ executable and will then install the
 dependencies are available, we suggest using a Python distribution such
 as `Miniconda <https://conda.io/miniconda.html>`__.
 
+Features
+--------
+
+- Conduct hypothesis tests using multiple individuals per taxon.
+- Test each individual within a putative hybrid lineage to assess if
+  hybridization is uniform.
+- Test all possible triples of taxa and process results from within Python.
+- Bootstrap individuals within taxa to assess patterns of hybrid speciation vs.
+  introgression.
+- Visualize the distributions of various quantities (Test Statistic, Hybridization Parameter, D-Statistic)
+  using bootstrap replicates.
+- Calculate the D-Statistic (ABBA-BABA) using site pattern counts returned during
+  a hypothesis test.
+
 Documentation
 =============
 

@@ -5,7 +5,7 @@
 Installation
 ============
 
-HyDe requires Python v2.7, a C++ compiler, and several Python modules (listed below).
+HyDe requires Python v2.7, a C++ compiler (C++11 compliant), and several Python modules (listed below).
 
 Miniconda
 ---------
@@ -24,8 +24,8 @@ to manage modules and environments.
 Required Python packages
 ------------------------
 
-With Miniconda installed,we can use ``pip`` or ``conda`` to install all of the Python
-modules that it requires.
+With Miniconda installed, we can use ``pip`` or ``conda`` to install all of the Python
+modules that HyDe requires (Cython, Numpy, Pandas, Scipy, Matplotlib, and Seaborn).
 
 .. code:: bash
 
@@ -36,7 +36,18 @@ modules that it requires.
 Installing HyDe
 ---------------
 
-Next, we'll install the HyDe module by cloning it from GitHub using the commands below:
+There are two ways that HyDe can be installed once you have all of the required Python modules:
+(1) install from PyPI using pip or (2) clone from GitHub and install manually.
+
+To install from PyPI, all we need to do is type the following command:
+
+.. code:: bash
+
+  #installing from PyPI
+  pip install phyde
+
+Next, we'll take a look at how to install HyDe by cloning it from GitHub.
+The commands below take you through every step to accomplish this:
 
 .. code:: bash
 
@@ -44,13 +55,13 @@ Next, we'll install the HyDe module by cloning it from GitHub using the commands
     git clone https://github.com/pblischak/HyDe.git
     cd HyDe/
 
-    # Compiles hyde_cpp
+    # Compile hyde_cpp
     make
 
     # Builds and installs phyde module
     python setup.py install
 
-    # Tests installation
+    # Test installation
     make test
 
 Step-by-step
@@ -64,5 +75,5 @@ steps that follow accomplish the following tasks:
   #. ``python setup.py install``: this will build and install the HyDe Python
      module, including the compilation of any Cython files.
   #. ``make test``: this will test the installation by running a series of commands
-     designed to check that the installation was completed succesfully. The main
+     designed to check that the installation was completed successfully. The main
      tests are in the ``test.py`` script in the ``test/`` folder.
