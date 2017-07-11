@@ -15,12 +15,14 @@ Requirements:
 
 -  Python 2.7
 -  Python Modules:
+
    -  Cython
    -  Numpy
    -  Scipy
    -  Pandas
    -  Matplotlib
    -  Seaborn
+
 -  C++ compiler (g++ >= v4.8)
 
 HyDe is a software package that detects hybridization in phylogenomic
@@ -60,29 +62,44 @@ The ``phyde`` module is also hosted on the Python Package Index (PyPI), and can 
   # Install from PyPI with pip
   pip install phyde
 
-Running HyDe from the Command Line
-----------------------------------
-
-Type ``run_hyde.py -h`` for options.
-
-.. code:: bash
-
-    run_hyde.py -i <infile> -m <map-file> -o <outgroup> \
-                -n <num-ind> -t <num-taxa> -s <num-sites> \
-                --prefix <prefix>
-
-Running HyDe in Python
-----------------------
+Example HyDe analysis in Python
+-------------------------------
 
 .. code:: py
 
-    import phyde as hd
+  # Import the modules that we'll need
+  from __future__ import print_function
+  import phyde as hd
 
-    # Run a hyde analysis
-    res = hd.run_hyde("data.txt", "map.txt", "out", 16, 4, 50000, bootReps=100)
+  # Run a full HyDe analysis to see if there is any evidence for hybridization.
+  # This can be done using the run_hyde() function.
+  # If you're using ipython, type `hd.run_hyde?` to see more information.
+  res_all = hd.run_hyde("data.txt", "map.txt", "out", 16, 4, 50000)
 
-    # import a data set for testing particular triples
-    data = hd.HydeData("data.txt", "map.txt", "out", 16, 4, 50000)
+  # res_all is an object of class HydeResult. The main results are stored in this object
+  # as a dictionary that is called res. We can filter the results using dictionary comprehensions.
+  # We will filter for significant results with hybridization parameter estimates (gamma)
+  # between 0 and 1.
+  filter_res = {k:v for k,v in res_all.res.items() if v['Pvalue'] < 0.025 and v['Gamma'] > 0.0 and v['Gamma'] < 1.0}
+
+  # We can now print these results to a file.
+  outfile = open("hyde-filtered-out.txt", 'wa')
+  for k,v in filtered_res.items():
+    print(k[0], '\t', k[1], '\t', k[2], '\t', sep='', end='', file=outfile)
+    for ki,vi in v.items():
+      print(ki, ":", vi, '\t', sep='', end='', file=outfile)
+    print('\n', end='', file=outfile)
+  outfile.close()
+
+  # Next we'll test each individual in each hybrid population.
+  # First we have to read the data into Python using the HydeData class
+  dat = hd.HydeData("data.txt", "map.txt", "out", 16, 4, 50000)
+
+  # Then we'll run the tests using the text_individuals() function.
+  # We'll use a dictionary comprehension again. The significat triples
+  # are stored at tuples (p1, hyb, p2).
+  ind_tests = {k: hd.test_individuals(k[0], k[1], k[2]) for k in filter_res.keys()}
+  print(ind_tests)
 
 .. |Build Status| image:: https://travis-ci.org/pblischak/HyDe.svg?branch=master
    :target: https://travis-ci.org/pblischak/HyDe

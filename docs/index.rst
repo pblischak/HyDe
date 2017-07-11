@@ -19,6 +19,8 @@ will compile the ``hyde_cpp`` C++ executable and will then install the
 dependencies are available, we suggest using a Python distribution such
 as `Miniconda <https://conda.io/miniconda.html>`__.
 
+A tutorial on using HyDe is available on GitHub: `HyDe Tutorial <http://nbviewer.jupyter.org/github/pblischak/evol2017/blob/master/HyDe.ipynb>`__.
+
 Features
 --------
 

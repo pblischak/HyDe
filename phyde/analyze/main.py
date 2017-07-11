@@ -19,6 +19,39 @@ from ..core.bootstrap import Bootstrap
 def run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue=0.05, bootReps=0, prefix="hyde"):
     """
     Wrapper for running HyDe C++ executable.
+
+    Arguments
+    ---------
+
+        - infile: data file with DNA sequence data in sequential Phylip format (no header).
+        - mapfile: two-column file assigning individuals to taxa.
+        - outgroup: name of the outgroup taxon.
+        - nInd: the number of individuals.
+        - nTaxa: the number of taxa.
+        - nSites: the number of sites.
+        - pValue: p-value for the hypothesis test (default=0.05).
+        - bootReps: number of bootstrap replicates to perform (default=0).
+        - prefix: name added to output files (default="hyde").
+
+    Returns
+    -------
+
+        If no bootstrapping is done (i.e., bootReps=0), run_hyde() returns a HydeResult
+        object that contains the results for all of the hypothesis tests conduced.
+
+        If bootstrapping is completed, the function returns a HydeResult object for the Making
+        results (all hypothesis tests) and a Bootstrap object containing all of the bootstrap reps.
+
+    Examples
+    --------
+
+        import phyde as hd
+
+        # no bootstrapping
+        res = hd.run_hyde("data.txt", "map.txt", "out", 16, 4, 50000)
+
+        # w/ bootstrapping
+        res, boot = hd.run_hyde("data.txt", "map.txt", "out", 16, 4, 50000, bootReps=1000)
     """
 
     if os.path.exists(prefix+"-out.txt"):
