@@ -98,7 +98,7 @@ Example HyDe analysis in Python
   # Then we'll run the tests using the text_individuals() function.
   # We'll use a dictionary comprehension again. The significat triples
   # are stored at tuples (p1, hyb, p2).
-  ind_tests = {k: hd.test_individuals(k[0], k[1], k[2]) for k in filter_res.keys()}
+  ind_tests = {k: dat.test_individuals(k[0], k[1], k[2]) for k in filter_res.keys()}
   print(ind_tests)
 
 .. |Build Status| image:: https://travis-ci.org/pblischak/HyDe.svg?branch=master
