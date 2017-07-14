@@ -95,7 +95,8 @@ void HyDe::run(){
     _outStream << "P1\tHybrid\tP2\tZscore\tPvalue\tGamma\tX1\tX2\tX3\tX4\tX5\tX6\tX7\tX8\tX9\tX10\tX11\tX12\tX13\tX14\tX15" << std::endl;
   }
 
-  #pragma omp parallel for num_threads(_threads) schedule(dynamic) firstprivate(_counts1, _counts2, _counts3, _taxaMap, _taxaNames, _dnaMatrix, _baseLookup, _outgroup, _numObs, _zVals, _pVals)
+  //#pragma omp parallel for num_threads(_threads) schedule(dynamic) firstprivate(_counts1, _counts2, _counts3, _taxaMap, _taxaNames, _dnaMatrix, _baseLookup, _outgroup, _numObs, _zVals, _pVals)
+  #pragma omp parallel for num_threads(_threads) schedule(dynamic) firstprivate(_counts1, _counts2, _counts3, _taxaMap, _taxaNames, _baseLookup, _outgroup, _numObs, _zVals, _pVals)
   for(unsigned i = 0; i < _taxaNames.size() - 2; i++){
     for(unsigned j = i + 1; j < _taxaNames.size() - 1; j++){
       for(unsigned k = j + 1; k < _taxaNames.size(); k++){
@@ -510,7 +511,7 @@ void HyDe::_bootstrap(){
       std::cerr << std::endl << std::endl;
     }*/
 
-    #pragma omp parallel for num_threads(_threads) schedule(dynamic) firstprivate(_counts1, _counts2, _counts3, _taxaMap, _taxaNames, _dnaMatrix, _baseLookup, _outgroup, _numObs, _zVals, _pVals)
+    #pragma omp parallel for num_threads(_threads) schedule(dynamic) firstprivate(_counts1, _counts2, _counts3, _taxaMap, _taxaMapCopy, _taxaNames, _baseLookup, _outgroup, _numObs, _zVals, _pVals)
     for(unsigned i = 0; i < _taxaNames.size() - 2; i++){
       for(unsigned j = i + 1; j < _taxaNames.size() - 1; j++){
         for(unsigned k = j + 1; k < _taxaNames.size(); k++){
