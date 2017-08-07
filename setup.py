@@ -1,5 +1,6 @@
 from __future__ import print_function
 from setuptools import setup, find_packages
+from setuptools.extension import Extension
 import sys
 try:
     import subprocess32 as sps
@@ -41,7 +42,7 @@ except ImportError:
     missing_modules.append('seaborn')
 
 # Check that hyde executable works
-print("Testing hyde_cpp compilation...")
+print("Testing hyde_cpp compilation...", end='')
 test_hyde = sps.Popen(['src/hyde_cpp'], stdout=sps.PIPE, stderr=sps.PIPE, shell=True)
 (out, err) = test_hyde.communicate()
 if not str(err).startswith('\n** ERROR'):
@@ -51,6 +52,7 @@ if not str(err).startswith('\n** ERROR'):
         INSTALL_ERROR=True
 else:
     pass
+print("Done.")
 
 if len(missing_modules) > 0:
     INSTALL_ERROR = True
@@ -75,8 +77,10 @@ else:
         author="Paul Blischak & Laura Kubatko",
         author_email="blischak.4@osu.edu",
         packages=find_packages(),
-        ext_modules=cythonize("phyde/**/*.pyx", compiler_directives={'--cplus': True}),
-        include_dirs=[numpy.get_include()],
+        ext_modules=cythonize([Extension("phyde.core.data", ["phyde/core/data.pyx"],
+                                         include_dirs=[numpy.get_include()],
+                                         language="c++"),]),
+        #include_dirs=[numpy.get_include()],
         scripts=['scripts/run_hyde.py', 'src/hyde_cpp'],
         license="GPL",
         classifiers=[
