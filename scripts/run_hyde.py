@@ -78,4 +78,4 @@ if __name__ == "__main__":
     pValue   = args.pvalue
     prefix   = args.prefix
 
-    res = hd.run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue, bootReps, prefix)
+    res = hd.run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue, 0, prefix)
