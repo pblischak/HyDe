@@ -40,8 +40,8 @@ private:
                  const int& hyb, const int& p2);
   double _calcPvalue(const double& myZ);                                         /* Calculate p-value for GH test statistic.        */
   double _calcPvalueTwo(const double& myZ);
-  void   _bootstrap();                                                           /* Bootstrap individuals within taxa.              */
-  void   _resampleTaxonMap();                                                    /* Resample individuals within taxon map.          */
+  //void   _bootstrap();                                                         /* Bootstrap individuals within taxa.              */
+  //void   _resampleTaxonMap();                                                  /* Resample individuals within taxon map.          */
   inline long int _nCk(const long int& n, long int& k);                          /* Calculates binomial coefficient: n choose k.    */
   double _bonferroniCorrect();                                                   /* Bonferroni correction based on number of taxa.  */
   double _getCountMatrix(const int& p1,                                          /* Populates count matrix from given triplet.      */
@@ -52,7 +52,7 @@ private:
   /* private member variables */
   std::string _infile = "none", _mapfile = "none", _prefix = "hyde";
   double _pValue = 0.05;
-  int _nInd = -999, _nSites = -999, _nTaxa = -999, _threads = 1, _bootReps = -999;
+  int _nInd = -999, _nSites = -999, _nTaxa = -999, _threads = 1;
   std::vector<std::string> _indNames;
 };
 

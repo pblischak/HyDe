@@ -143,11 +143,11 @@ void HyDe::run(){
       }
     }
   }
-  if(_bootReps > 0){
+  /*if(_bootReps > 0){
     //std::cerr << "** ERROR: Bootstrapping not yet implemented... (sorry!) **\n" << std::endl;
     std::clog << "Starting bootstrapping (" << _bootReps << " replicates):\n" << std::endl;
     _bootstrap();
-  }
+  }*/
   clock_t end_time = clock(); // End timing...
   double elapsed_time    = double(end_time - start_time) / CLOCKS_PER_SEC;
   int elapsed_hours   = elapsed_time / 3600;
@@ -181,7 +181,8 @@ void HyDe::_parseCommandLine(int ac, char* av[]){
     } else if(strcmp(av[i], "-p") == 0 || strcmp(av[i], "--pvalue") == 0){
       _pValue = atof(av[i + 1]);
     } else if (strcmp(av[i], "-b") == 0 || strcmp(av[i], "--bootstrap") == 0){
-      _bootReps = atoi(av[i + 1]);
+      std::cerr << "\n** WARNING: Bootstrapping is no longer done by the hyde_cpp program. **\n" << std::endl;
+      std::cerr << "   Please use the bootstrap_hyde.py script.\n" << std::endl;
     } else if(strcmp(av[i], "-j") == 0 || strcmp(av[i], "--threads") == 0){
       #ifdef _OPENMP
         _threads = atoi(av[i + 1]);
@@ -205,7 +206,7 @@ void HyDe::_parseCommandLine(int ac, char* av[]){
   if(_invalidArgCount != 0){
     std::cerr << "\n** ERROR: Unrecognized command line flag(s). **\n" << std::endl;
     for(unsigned i = 0; i < _invalidArgs.size(); i++){
-      std::cerr << "  " << _invalidArgs[i] << std::endl;
+      std::cerr << "   " << _invalidArgs[i] << std::endl;
     }
     std::cerr << "\nType 'hyde -h' for command line options.\n" << std::endl;
     exit(EXIT_FAILURE);
@@ -278,29 +279,29 @@ void HyDe::_parseSpeciesMap(){
     }
   } else {
     std::cerr << "\n** ERROR: Cannot open species map file. **\n" << std::endl
-              << "  File specified: " << _mapfile << "\n" << std::endl;
+              << "   File specified: " << _mapfile << "\n" << std::endl;
     exit(EXIT_FAILURE);
   }
 
   if(_indCount != _nInd){
     std::cerr << "\n** ERROR: Number of individuals in species map does not match the number specified at the command line. **\n" << std::endl
-              << "  Number from command line:   " << _nInd << std::endl
-              << "  Number in species map file: " << _indCount << std::endl << std::endl;
+              << "   Number from command line:   " << _nInd << std::endl
+              << "   Number in species map file: " << _indCount << std::endl << std::endl;
               exit(EXIT_FAILURE);
   }
 
   if(_taxaCount != _nTaxa){
     std::cerr << "\n** ERROR: Number of taxa in species map does not match the number specified at the command line. **\n" << std::endl
-              << "  Number from command line:   " << _nTaxa << std::endl
-              << "  Number in species map file: " << _taxaCount << std::endl << std::endl;
+              << "   Number from command line:   " << _nTaxa << std::endl
+              << "   Number in species map file: " << _taxaCount << std::endl << std::endl;
               exit(EXIT_FAILURE);
   }
 
   if(!_outgroupFound){
     std::cerr << "\n** ERROR: Outgroup specified at the command line (" << _outgroupName << ") does not match any taxon names in the map file.\n" << std::endl
-              << "Taxon names in map file:" << std::endl;
+              << "   Taxon names in map file:" << std::endl;
     for(unsigned i = 0; i < _taxaNames.size(); i++){
-      std::cerr << "  " << _taxaNames[i] << std::endl;
+      std::cerr << "     " << _taxaNames[i] << std::endl;
     }
     exit(EXIT_FAILURE);
   }
@@ -320,11 +321,11 @@ void HyDe::_readInfile(){
     while(_infileStream >> _str1 >> _str2){
       if(_str1.compare(_indNames[_indIndex]) != 0){
         std::cerr << "\n** ERROR: Name in infile does not match name in map file. **\n" << std::endl
-                  << "  Line " << _indIndex + 1 << ": " << _str1 << " vs." << _indNames[_indIndex] << "\n" << std::endl;
+                  << "   Line " << _indIndex + 1 << ": " << _str1 << " vs." << _indNames[_indIndex] << "\n" << std::endl;
         _errCount++;
       } else if(_str2.length() != (unsigned) _nSites){
         std::cerr << "\n** ERROR: Length of input sequence not equal to specified number of sites (" << _nSites << "). **\n" << std::endl
-                  << "  Line " << _indIndex + 1 << " in " << _infile << " has " << _str2.length() << " sites.\n" << std::endl;
+                  << "   Line " << _indIndex + 1 << " in " << _infile << " has " << _str2.length() << " sites.\n" << std::endl;
         _errCount++;
       }
 
@@ -411,7 +412,7 @@ double HyDe::_calcGH(const double cp[16][16], const double& nObs,
   if(fabs((1.0 / nObs) * (pxxxx + pxxxy + pxxyx + pxxyy + pxxyz + pxyxx + pxyxy + pxyxz
                        +  pxyyx + pyxxx + pxyyz + pzxyz + pyxzx + pyzxx + pxyzw) - 1.0) > 0.0001){
     std::cerr << "\n** WARNING: There was a problem counting site patterns... exiting. **\n" << std::endl;
-    std::cerr << "  Failed for comparison between " << _taxaNames[p1] << "\t" << _taxaNames[hyb]
+    std::cerr << "   Failed for comparison between " << _taxaNames[p1] << "\t" << _taxaNames[hyb]
               << "\t" << _taxaNames[p2] << "\t" << fabs((1.0 / nObs) * (pxxxx + pxxxy + pxxyx + pxxyy + pxxyz + pxyxx + pxyxy + pxyxz
                                    +  pxyyx + pyxxx + pxyyz + pzxyz + pyxzx + pyzxx + pxyzw) - 1.0) << std::endl << std::endl;
     //exit(EXIT_FAILURE);
@@ -489,7 +490,7 @@ double HyDe::_calcPvalueTwo(const double& myZ){
   return 1.0 - (0.5 * (1.0 + sign * y));
 }
 
-void HyDe::_bootstrap(){
+/*void HyDe::_bootstrap(){
   std::string _bootfile = _prefix + "-boot.txt";
   std::ofstream _bootStream;
   _bootStream.open(_bootfile, std::ios::out | std::ios::app);
@@ -504,19 +505,12 @@ void HyDe::_bootstrap(){
     _bootStream << "P1\tHybrid\tP2\tZscore\tPvalue\tGamma\tX1\tX2\tX3\tX4\tX5\tX6\tX7\tX8\tX9\tX10\tX11\tX12\tX13\tX14\tX15" << std::endl;
     _resampleTaxonMap();
 
-    /*for(unsigned i = 0; i < _taxaMap.size(); i++){
-      for(unsigned j = 0; j < _taxaMap[i].size(); j++){
-        std::cerr << _taxaMap[i][j] << " ";
-      }
-      std::cerr << std::endl << std::endl;
-    }*/
-
     #pragma omp parallel for num_threads(_threads) schedule(dynamic) firstprivate(_counts1, _counts2, _counts3, _taxaMap, _taxaMapCopy, _taxaNames, _baseLookup, _outgroup, _numObs, _zVals, _pVals)
     for(unsigned i = 0; i < _taxaNames.size() - 2; i++){
       for(unsigned j = i + 1; j < _taxaNames.size() - 1; j++){
         for(unsigned k = j + 1; k < _taxaNames.size(); k++){
           double _avgNumObs = 0.0;
-          /* Re-initialize count matrices to 0. */
+          // Re-initialize count matrices to 0.
           for(int a = 0; a < 16; a++){
             for(int b = 0; b < 16; b++){
               _counts1[a][b] = 0.0;
@@ -529,13 +523,13 @@ void HyDe::_bootstrap(){
           _numObs[2] = _getCountMatrix(i, k, j, _counts3);
           //std::cerr << _numObs[0] << "\t" << _numObs[1] << "\t" << _numObs[2] << std::endl;
 
-          /* Calculate the GH statistic. */
+          // Calculate the GH statistic.
           _avgNumObs = _numObs[0] / (double) (_taxaMap[_outgroup].size() * _taxaMap[i].size() * _taxaMap[j].size() * _taxaMap[k].size());
           _zVals[0] = _calcGH(_counts1, _numObs[0], _avgNumObs, i, j, k);
           _zVals[1] = _calcGH(_counts2, _numObs[1], _avgNumObs, j, i, k);
           _zVals[2] = _calcGH(_counts3, _numObs[2], _avgNumObs, i, k, j);
 
-          /* Get p-values. */
+          //Get p-values.
           _pVals[0] = _calcPvalueTwo(_zVals[0]);
           _pVals[1] = _calcPvalueTwo(_zVals[1]);
           _pVals[2] = _calcPvalueTwo(_zVals[2]);
@@ -552,10 +546,9 @@ void HyDe::_bootstrap(){
         }
       }
     }
-    /*
-    Progress bar:
-    http://stackoverflow.com/questions/14539867/how-to-display-a-progress-indicator-in-pure-c-c-cout-printf
-    */
+
+    // Progress bar:
+    // http://stackoverflow.com/questions/14539867/how-to-display-a-progress-indicator-in-pure-c-c-cout-printf
     if(b != _bootReps) _bootStream << "####" << std::endl;
     progress += 1.0 / _bootReps;
     std::clog << "[";
@@ -569,9 +562,9 @@ void HyDe::_bootstrap(){
     std::clog.flush();
   }
   std::clog << std::endl << std::endl;
-}
+}*/
 
-void HyDe::_resampleTaxonMap(){
+/*void HyDe::_resampleTaxonMap(){
   unsigned size = 0, newIndex = 0;
   for(unsigned i = 0; i < _taxaMap.size(); i++){
     size = _taxaMap[i].size();
@@ -580,7 +573,7 @@ void HyDe::_resampleTaxonMap(){
       _taxaMap[i][j] = _taxaMapCopy[i][newIndex];
     }
   }
-}
+}*/
 
 /* Populate 16 x 16 count pattern matrix for the given triplet + outgroup. */
 double HyDe::_getCountMatrix(const int& p1, const int& hyb, const int& p2, double cp[16][16]){

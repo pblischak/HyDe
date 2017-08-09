@@ -5,8 +5,8 @@
 #include "HyDe.hpp"
 
 /* Version info. */
-const std::string Version = "0.2.2-alpha";
-const std::string Date    = "July 2017";
+const std::string Version = "0.3.0-alpha";
+const std::string Date    = "August 2017";
 
 void usage(); /* Print usage/helo information. */
 
@@ -53,6 +53,5 @@ void usage(){
             << "  -s [--num-sites]     Number of sites in the data matrix" << std::endl
             << "\nAdditional options:" << std::endl
             << "  -p [--pvalue]        P-value cutoff for test of significance (default=0.05)" << std::endl
-            << "  -b [--bootstrap]     Number of bootstrap replicates to perform (default=0)" << std::endl
             << "  --prefix             Append a prefix to the beginning of outfile and logfile\n" << std::endl;
 }
