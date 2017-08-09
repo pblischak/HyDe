@@ -70,7 +70,7 @@ cdef class HydeData:
     cdef double ind_nucl_probs[4][15]
     cdef bytes outgroup
 
-    def __init__(self, infile, mapfile, outgroup, int nind, int ntaxa, int nsites, partition=None):
+    def __init__(self, infile, mapfile, outgroup, int nind, int ntaxa, int nsites):
         """
         Constructor:
             Read infile with DNA characters. Parse mapfile and partition
@@ -97,11 +97,6 @@ cdef class HydeData:
         self.taxonMap = {}
         self.taxonMap_cp = {}
         self.outgroup = outgroup
-        if partition is not None:
-            self.partitions = {}
-            self._read_partfile(partition)
-        else:
-            pass
         print("Reading input file",end='')
         self._read_infile(infile)
         print("Done.")
@@ -155,14 +150,6 @@ cdef class HydeData:
                 self.taxonMap[l.split()[1]].append((i, l.split()[0]))
                 self.taxonMap_cp[l.split()[1]].append((i, l.split()[0]))
                 print(".", end='')
-
-    def _read_partfile(self, partfile):
-        with open(partfile) as f:
-            lines = f.read().splitlines()
-            for l in lines:
-                entry = l.split("=")
-                start_stop = entry[1].split("-")
-                self.partitions[entry[0]] = start_stop
 
     def resetOutgroup(self, newOut):
         self.outgroup = newOut
@@ -229,6 +216,28 @@ cdef class HydeData:
             res[self.taxonMap[hyb][t][1]] = self._test_triple_c(p1_rows, curr_ind, p2_rows)
             #tmp_res = self._test_triple_c(p1_rows, hyb_rows[t], p2_rows)
             #res[self.taxonMap[hyb][t]] = tmp_res
+        return res
+
+    cpdef dict bootstrap_triple(self, bytes p1, bytes hyb, bytes p2, int reps=100):
+        """
+        Perform bootstrap resampling of individuals within the putative hybrid.
+
+        Arguments
+        =========
+
+          All arguments are the names of the taxa that you want to test as parent one, the putative hybrid,
+          and parent two.
+        """
+        cdef np.ndarray[INDEX_t, ndim=1] p1_rows  = np.array([i[0] for i in self.taxonMap[p1]], dtype=INDEX)
+        cdef np.ndarray[INDEX_t, ndim=1] hyb_rows = np.array([i[0] for i in self.taxonMap[hyb]],  dtype=INDEX)
+        cdef np.ndarray[INDEX_t, ndim=1] p2_rows  = np.array([i[0] for i in self.taxonMap[p2]],  dtype=INDEX)
+        cdef np.ndarray[INDEX_t, ndim=1] hyb_resampled = hyb_rows
+        cdef dict res = {}
+        cdef int r
+        for r in range(reps):
+            hyb_resampled = np.random.choice(hyb_rows, hyb_rows.shape[0], replace=True)
+            res[r+1] = {}
+            res[r+1] = self._test_triple_c(p1_rows, hyb_resampled, p2_rows)
         return res
 
     cpdef list list_triples(self):
