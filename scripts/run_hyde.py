@@ -1,15 +1,49 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# hyde.py
+# run_hyde.py
 # Written by PD Blischak
 
-import phyde
+"""
+
+
+Arguments
+---------
+
+
+
+Output
+------
+"""
+
+from __future__ import print_function
+import phyde as hd
 import argparse
+
+def parse_triples(triples_file):
+    """
+    Parse a three column table or previous results file to get the names
+    of the taxa that are going to be tested for hybridization.
+
+    Returns a list of three-tuples of the form (P1, Hybrid, P2) for all triples
+    that are to be tested.
+    """
+    triples = []
+    with open(triples_file) as f:
+        lines = f.splitlines()
+        # remove header information if reading in a previous results file
+        if lines[0].split()[0] == "P1" and lines[0].split()[1] == "Hybrid" and lines[0].split()[2] == "P2":
+            lines = lines[1:]
+        # catch the case where the last line in the file is blank
+        if len(lines[-1]) == 0:
+            triples = [(l.split()[0], l.split()[1], l.split()[2]) for l in lines[:-1]]
+        else:
+            triples = [(l.split()[0], l.split()[1], l.split()[2]) for l in lines]
+    return triples
 
 if __name__ == "__main__":
     """
-    Run the main script.
+    Runs the script.
     """
     parser = argparse.ArgumentParser(description="Options for hyde.py",
                                      add_help=True)
@@ -31,8 +65,6 @@ if __name__ == "__main__":
     additional = parser.add_argument_group("additional arguments")
     additional.add_argument('-p', '--pvalue', action="store", type=float, default=0.05,
                             metavar='\b', help="p-value cutoff for test of significance [default=0.05]")
-    additional.add_argument('-b', '--bootstrap', action="store", type=int, default=0,
-                            metavar='\b', help="number of bootstrap replicates [default=0]")
     additional.add_argument('--prefix', action="store", type=str, default="hyde",
                             metavar='\b', help="prefix appended to output files [default=hyde]")
 
@@ -44,11 +76,6 @@ if __name__ == "__main__":
     nTaxa    = args.num_taxa
     nSites   = args.num_sites
     pValue   = args.pvalue
-    bootReps = args.bootstrap
     prefix   = args.prefix
 
-    if bootReps > 0:
-        res, boot = phyde.run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue, bootReps, prefix)
-    else:
-        res = phyde.run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue, bootReps, prefix)
-#    hyde.make_cf_table(prefix+"-out.txt", outgroup, prefix)
+    res = hd.run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue, bootReps, prefix)

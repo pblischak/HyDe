@@ -70,7 +70,7 @@ if INSTALL_ERROR:
 else:
     setup(
         name="phyde",
-        version="0.2.2",
+        version="0.2.3",
         description="Hybridization detection using phylogenetic invariants",
         long_description=open('README.rst').read(),
         url="https://github.com/pblischak/HyDe",
@@ -87,6 +87,11 @@ else:
             'Programming Language :: Python',
             'Programming Language :: Python :: 2',
             'Programming Language :: Python :: 2.7',
+            'Programming Language :: Cython',
+            'Programming Language :: C++',
+            'Development Status :: 3 - Alpha',
+            'Intended Audience :: Science/Research',
+            'License :: OSI Approved :: GNU General Public License v3 (GPLv3)'
         ],
         zip_safe=False
     )
