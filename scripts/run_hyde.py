@@ -5,7 +5,8 @@
 # Written by PD Blischak
 
 """
-
+Run a full hybridization detection analysis or test for hybridization in a
+specified set of triples.
 
 Arguments
 ---------
@@ -78,4 +79,4 @@ if __name__ == "__main__":
     pValue   = args.pvalue
     prefix   = args.prefix
 
-    res = hd.run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue, 0, prefix)
+    res = hd.run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue, prefix)

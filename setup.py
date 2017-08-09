@@ -70,7 +70,7 @@ if INSTALL_ERROR:
 else:
     setup(
         name="phyde",
-        version="0.2.3",
+        version="0.3.0",
         description="Hybridization detection using phylogenetic invariants",
         long_description=open('README.rst').read(),
         url="https://github.com/pblischak/HyDe",
@@ -81,8 +81,11 @@ else:
                                          include_dirs=[numpy.get_include()],
                                          language="c++"),]),
         #include_dirs=[numpy.get_include()],
-        scripts=['scripts/run_hyde.py', 'src/hyde_cpp'],
-        license="GPL",
+        scripts=['scripts/bootstrap_hyde.py',
+                 'scripts/individual_hyde.py',
+                 'scripts/run_hyde.py',
+                 'src/hyde_cpp'],
+        license="GPLv3",
         classifiers=[
             'Programming Language :: Python',
             'Programming Language :: Python :: 2',
