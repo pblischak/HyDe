@@ -1,5 +1,6 @@
 include test/data.txt
 include test/map.txt
+include test/triples.txt
 include examples/snake-data.txt
 include examples/snake-map.txt
 include src/*.cpp

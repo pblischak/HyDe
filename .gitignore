@@ -12,6 +12,7 @@ notebooks
 !examples/snake-map.txt
 !test/data.txt
 !test/map.txt
+!test/triples.txt
 sims
 build
 dist
