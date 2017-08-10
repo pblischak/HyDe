@@ -105,17 +105,6 @@ cdef class HydeData:
         print("Done.")
         self.outIndex = np.array([i[0] for i in self.taxonMap[outgroup]], dtype=INDEX)
 
-    def __call__(self, p1, hyb, p2, fast=False):
-        cdef np.ndarray[INDEX_t, ndim=1] p1_rows  = np.array([i[0] for i in self.taxonMap[p1]], dtype=INDEX)
-        cdef np.ndarray[INDEX_t, ndim=1] hyb_rows = np.array([i[0] for i in self.taxonMap[hyb]],  dtype=INDEX)
-        cdef np.ndarray[INDEX_t, ndim=1] p2_rows  = np.array([i[0] for i in self.taxonMap[p2]],  dtype=INDEX)
-        if fast:
-            res = self._test_triple_c_fast(p1_rows, hyb_rows, p2_rows)
-        elif not fast:
-            res = self._test_triple_c(p1_rows, hyb_rows, p2_rows)
-        else:
-            pass
-
     def _read_infile(self, infile):
         counter = 0
         with open(infile) as f:
@@ -160,42 +149,32 @@ cdef class HydeData:
         for s in range(len(d)):
             self.dnaMat[row,s] = _BASE_TO_UINT8[d[s]]
 
-    cpdef dict test_triple(self, bytes p1, bytes hyb, bytes p2, bint fast=False):
+    cpdef dict test_triple(self, bytes p1, bytes hyb, bytes p2):
         """
         Main method for testing a hypothesis on a specified triple.
         ((P1,Hyb),P2):gamma and (P1,(Hyb,P2)):1-gamma.
 
-        It is a wrapper for the C based methods `_test_triple_c()` and
-        `_test_triple_c_fast()`, which are not accessible from Python.
+        It is a wrapper for the C++ based methods `_test_triple_c()`,
+        which is not accessible from Python.
 
         Arguments
-        =========
+        ---------
 
             - p1 <str>: parent one
             - hyb <str>: the putative hybrid
             - p2 <str>: parent two
-            - fast: logical variable to indicate whether a fast
-              analysis is run or not (default=False).
 
-        A note on "fast" analyses
-        -------------------------
+        Output
+        ------
 
-        Fast analyses are fast because they precalculate the frequency of each site pattern
-        in each taxon first and then use them in the calculation of the overall site patterns.
-        The alternative is to run all permutations of individuals within taxa, which is more
-        thorough but is also much more time consuming.
+          Returns a dictionary with the values for the Z-score, P-value, estimate
+          of gamma, and all of the site pattern counts.
         """
         cdef np.ndarray[INDEX_t, ndim=1] p1_rows  = np.array([i[0] for i in self.taxonMap[p1]], dtype=INDEX)
         cdef np.ndarray[INDEX_t, ndim=1] hyb_rows = np.array([i[0] for i in self.taxonMap[hyb]],  dtype=INDEX)
         cdef np.ndarray[INDEX_t, ndim=1] p2_rows  = np.array([i[0] for i in self.taxonMap[p2]],  dtype=INDEX)
         cdef dict res
-        if fast:
-            res = self._test_triple_c_fast(p1_rows, hyb_rows, p2_rows)
-        elif not fast:
-            res = self._test_triple_c(p1_rows, hyb_rows, p2_rows)
-        else:
-            pass
-
+        res = self._test_triple_c(p1_rows, hyb_rows, p2_rows)
         return res
 
     cpdef dict test_individuals(self, bytes p1, bytes hyb, bytes p2):
@@ -293,39 +272,21 @@ cdef class HydeData:
             "Pvalue": p_val,
             "Gamma" : gamma,
             "AAAA"  : self.site_pattern_probs[0],
-            "AAAA"  : self.site_pattern_probs[1],
-            "AAAB"  : self.site_pattern_probs[2],
-            "AABA"  : self.site_pattern_probs[3],
-            "AABB"  : self.site_pattern_probs[4],
-            "AABC"  : self.site_pattern_probs[5],
-            "ABAA"  : self.site_pattern_probs[6],
-            "ABAB"  : self.site_pattern_probs[7],
-            "ABAC"  : self.site_pattern_probs[8],
-            "ABBA"  : self.site_pattern_probs[9],
-            "BAAA"  : self.site_pattern_probs[10],
-            "ABBC"  : self.site_pattern_probs[11],
-            "CABC"  : self.site_pattern_probs[12],
-            "BACA"  : self.site_pattern_probs[13],
-            "BCAA"  : self.site_pattern_probs[14],
-            "ABCD"  : self.site_pattern_probs[15]
+            "AAAB"  : self.site_pattern_probs[1],
+            "AABA"  : self.site_pattern_probs[2],
+            "AABB"  : self.site_pattern_probs[3],
+            "AABC"  : self.site_pattern_probs[4],
+            "ABAA"  : self.site_pattern_probs[5],
+            "ABAB"  : self.site_pattern_probs[6],
+            "ABAC"  : self.site_pattern_probs[7],
+            "ABBA"  : self.site_pattern_probs[8],
+            "BAAA"  : self.site_pattern_probs[9],
+            "ABBC"  : self.site_pattern_probs[10],
+            "CABC"  : self.site_pattern_probs[11],
+            "BACA"  : self.site_pattern_probs[12],
+            "BCAA"  : self.site_pattern_probs[13],
+            "ABCD"  : self.site_pattern_probs[14]
         }
-
-    cdef dict _test_triple_c_fast(self,  np.ndarray[INDEX_t, ndim=1] p1,
-                                  np.ndarray[INDEX_t, ndim=1] hyb,
-                                  np.ndarray[INDEX_t, ndim=1] p2):
-        """
-
-        """
-        cdef:
-            INDEX_t i, j, k, l, s
-            int sites = self.dnaMat.shape[1]
-            double res[3]
-        for i in self.outIndex:
-            for j in p1:
-                for k in hyb:
-                    for l in p2:
-                        for s in range(sites):
-                            i * j * k * l * s
 
     @cython.nonecheck(False)
     cdef double _get_counts(self, int out, int p1, int hyb, int p2):

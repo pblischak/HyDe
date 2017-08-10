@@ -92,7 +92,7 @@ void HyDe::run(){
     std::cerr << "** ERROR: Could not open outfile: " << _outfile << ". **\n" << std::endl;
     exit(EXIT_FAILURE);
   } else {
-    _outStream << "P1\tHybrid\tP2\tZscore\tPvalue\tGamma\tX1\tX2\tX3\tX4\tX5\tX6\tX7\tX8\tX9\tX10\tX11\tX12\tX13\tX14\tX15" << std::endl;
+    _outStream << "P1\tHybrid\tP2\tZscore\tPvalue\tGamma\tAAAA\t\tAABA\tAABB\tAABC\tABAA\tABAB\tABAC\tABBA\tBAAA\tABBC\tCABC\tBACA\tBCAA\tABCD" << std::endl;
   }
 
   //#pragma omp parallel for num_threads(_threads) schedule(dynamic) firstprivate(_counts1, _counts2, _counts3, _taxaMap, _taxaNames, _dnaMatrix, _baseLookup, _outgroup, _numObs, _zVals, _pVals)
