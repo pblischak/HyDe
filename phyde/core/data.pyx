@@ -97,7 +97,7 @@ cdef class HydeData:
         self.taxonMap = {}
         self.taxonMap_cp = {}
         self.outgroup = outgroup
-        print("Reading input file",end='')
+        print("\nReading input file",end='')
         self._read_infile(infile)
         print("Done.")
         print("Reading map file",end='')

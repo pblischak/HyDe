@@ -28,7 +28,11 @@ class Bootstrap:
 
     def _read_bootstraps(self, bootfile):
         with open(bootfile) as b:
-            boot_reps = b.read()[:-1].split("####\n")
+            boot_read_in = b.read()
+            if boot_read_in[-1] == "\n":
+                boot_reps = boot_read_in[:-1].split("####\n")
+            else:
+                boot_reps = boot_read_in.split("####\n")
             print("Number of boot reps:", len(boot_reps))
             split_bootreps = [r.splitlines() for r in boot_reps]
             for s in split_bootreps:

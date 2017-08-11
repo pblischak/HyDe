@@ -2423,7 +2423,7 @@ static const char __pyx_k_dtype_is_object[] = "dtype_is_object";
 static const char __pyx_k_Reading_map_file[] = "Reading map file";
 static const char __pyx_k_bootstrap_triple[] = "bootstrap_triple";
 static const char __pyx_k_test_individuals[] = "test_individuals";
-static const char __pyx_k_Reading_input_file[] = "Reading input file";
+static const char __pyx_k_Reading_input_file[] = "\nReading input file";
 static const char __pyx_k_strided_and_direct[] = "<strided and direct>";
 static const char __pyx_k_strided_and_indirect[] = "<strided and indirect>";
 static const char __pyx_k_contiguous_and_direct[] = "<contiguous and direct>";
@@ -2935,7 +2935,7 @@ static int __pyx_pf_5phyde_4core_4data_8HydeData___init__(struct __pyx_obj_5phyd
  *         self.taxonMap = {}
  *         self.taxonMap_cp = {}             # <<<<<<<<<<<<<<
  *         self.outgroup = outgroup
- *         print("Reading input file",end='')
+ *         print("\nReading input file",end='')
  */
   __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 98, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -2949,7 +2949,7 @@ static int __pyx_pf_5phyde_4core_4data_8HydeData___init__(struct __pyx_obj_5phyd
  *         self.taxonMap = {}
  *         self.taxonMap_cp = {}
  *         self.outgroup = outgroup             # <<<<<<<<<<<<<<
- *         print("Reading input file",end='')
+ *         print("\nReading input file",end='')
  *         self._read_infile(infile)
  */
   if (!(likely(PyBytes_CheckExact(__pyx_v_outgroup))||((__pyx_v_outgroup) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_v_outgroup)->tp_name), 0))) __PYX_ERR(0, 99, __pyx_L1_error)
@@ -2964,7 +2964,7 @@ static int __pyx_pf_5phyde_4core_4data_8HydeData___init__(struct __pyx_obj_5phyd
   /* "phyde/core/data.pyx":100
  *         self.taxonMap_cp = {}
  *         self.outgroup = outgroup
- *         print("Reading input file",end='')             # <<<<<<<<<<<<<<
+ *         print("\nReading input file",end='')             # <<<<<<<<<<<<<<
  *         self._read_infile(infile)
  *         print("Done.")
  */
@@ -2978,7 +2978,7 @@ static int __pyx_pf_5phyde_4core_4data_8HydeData___init__(struct __pyx_obj_5phyd
 
   /* "phyde/core/data.pyx":101
  *         self.outgroup = outgroup
- *         print("Reading input file",end='')
+ *         print("\nReading input file",end='')
  *         self._read_infile(infile)             # <<<<<<<<<<<<<<
  *         print("Done.")
  *         print("Reading map file",end='')
@@ -3031,7 +3031,7 @@ static int __pyx_pf_5phyde_4core_4data_8HydeData___init__(struct __pyx_obj_5phyd
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
   /* "phyde/core/data.pyx":102
- *         print("Reading input file",end='')
+ *         print("\nReading input file",end='')
  *         self._read_infile(infile)
  *         print("Done.")             # <<<<<<<<<<<<<<
  *         print("Reading map file",end='')
@@ -25372,7 +25372,7 @@ static int __Pyx_InitCachedConstants(void) {
   /* "phyde/core/data.pyx":100
  *         self.taxonMap_cp = {}
  *         self.outgroup = outgroup
- *         print("Reading input file",end='')             # <<<<<<<<<<<<<<
+ *         print("\nReading input file",end='')             # <<<<<<<<<<<<<<
  *         self._read_infile(infile)
  *         print("Done.")
  */
@@ -25381,7 +25381,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GIVEREF(__pyx_tuple_);
 
   /* "phyde/core/data.pyx":102
- *         print("Reading input file",end='')
+ *         print("\nReading input file",end='')
  *         self._read_infile(infile)
  *         print("Done.")             # <<<<<<<<<<<<<<
  *         print("Reading map file",end='')

@@ -1,6 +1,6 @@
 # Change log
 
-## v0.3.0 (forthcoming)
+## v0.3.0
 
 **Changes introducing incompatibilities with previous versions:**
 
@@ -42,6 +42,13 @@ sp2 sp3 sp4
 The `individual_hyde.py` and `bootstrap_hyde.py` files can also take output files
 from previous runs of HyDe. These contain header information that the scripts will
 automatically check for and will then parse the first three columns of the file.
+
+## v0.2.3
+
+### **Final release of v0.2.* series.**
+
+This release can be used as a legacy version for the old workflow for HyDe.
+Ideally users should switch to the newest version (see above).
 
 ## v0.2.0
 

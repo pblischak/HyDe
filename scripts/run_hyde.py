@@ -24,7 +24,7 @@ Arguments
 Output
 ------
 
-    Writes a file listing each triple that was tested (P1, Hybrid, P2),
+    Writes a file ('hyde-out.txt') listing each triple that was tested (P1, Hybrid, P2),
     along with the corresponding Z-score, p-value, gamma estimate, and
     site pattern counts.
 """

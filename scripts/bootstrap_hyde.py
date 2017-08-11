@@ -25,7 +25,7 @@ Arguments
 Output
 ------
 
-    Writes a file with the bootstrap results for each triple. These are Written
+    Writes a file ('hyde-boot.txt') with the bootstrap results for each triple. These are Written
     in the same format as the normal hyde results file except that the bootstrap
     replicates for each triple are separated by four pound symbols and a new line
     "####\\n" (can be used to split the bootstrap replicates with the split()
@@ -95,7 +95,7 @@ if __name__ == "__main__":
         print(__doc__)
         sys.exit(0)
 
-    parser = argparse.ArgumentParser(description="Options for run_hyde.py",
+    parser = argparse.ArgumentParser(description="Options for bootstrap_hyde.py",
                                      add_help=True)
 
     required = parser.add_argument_group("required arguments")
