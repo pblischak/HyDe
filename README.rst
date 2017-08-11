@@ -21,28 +21,28 @@ as `Miniconda <https://conda.io/miniconda.html>`__.
 To facilitate analyses using the Python module, three scripts are provided to
 conduct hybridization detection analyses directly from the command line:
 
-- `run_hyde.py`: runs a standard hybridization detection analysis on all triples
+- ``run_hyde.py``: runs a standard hybridization detection analysis on all triples
   in all directions. Results are also filtered based on whether there is significant
   evidence for hybridization.
-- `individual_hyde.py`: tests each individual within a putative hybrid population
+- ``individual_hyde.py``: tests each individual within a putative hybrid population
   using a list of specified triples specified.
-- `bootstrap_hyde.py`: conducts bootstrap resampling of the individuals within
+- ``bootstrap_hyde.py``: conducts bootstrap resampling of the individuals within
   the putative hybrid lineages for each specified triple.
 
 These last two scripts need to be given a three column table of triples
 (P1, Hybrid, P2) that you wish to test:
 
-```
-sp1 sp2 sp3
-sp1 sp3 sp4
-sp3 sp4 sp5
-.
-.
-.
-```
+.. code::
+
+  sp1 sp2 sp3
+  sp1 sp3 sp4
+  sp3 sp4 sp5
+  .
+  .
+  .
 
 You can also use a results file from a previous analysis as a triples file.
-For example, you can use the filtered results from the `run_hyde.py` script so that
+For example, you can use the filtered results from the ``run_hyde.py`` script so that
 you only run analyses on triples that have significant levels of hybridization.
 If you only have a few hypotheses that you want to test, then you can also pass
 a triples file to `run_hyde.py` and it will only test those hypotheses rather than
