@@ -18,11 +18,15 @@ will compile the ``hyde_cpp`` C++ executable and will then install the
 dependencies are available, we suggest using a Python distribution such
 as `Miniconda <https://conda.io/miniconda.html>`__.
 
-- If you have questions about running HyDe please feel free to use the
-  **gitter chatroom** to get help: |Gitter|
+If you have questions about running HyDe please feel free to use the
+**gitter chatroom** to get help:
 
-- If you have a problem while running HyDe and you think it may be a bug,
-  please consider filing an issue: |HyDe Issues|
+ - |Gitter|
+
+If you have a problem while running HyDe and you think it may be a bug,
+please consider filing an issue: 
+
+ - |HyDe Issues|
 
 Installation
 ------------
