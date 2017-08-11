@@ -1,11 +1,28 @@
 
-|Build Status| |Documentation|  |PyPI Badge|  |Gitter|
+|Build Status| |Documentation|  |PyPI Badge|
 
 HyDe: hybridization detection using phylogenetic invariants
 -----------------------------------------------------------
 
 `Read the Docs <http://hybridization-detection.rtfd.io/>`__
 -----------------------------------------------------------
+
+HyDe is a software package that detects hybridization in phylogenomic
+data sets using phylogenetic invariants. The primary interface for HyDe is a Python
+module called ``phyde`` (**P**\ ythonic **Hy**\ bridization **De**\ tection).
+``phyde`` provides a suite of tools for performing hypothesis tests on triples of taxa
+to detect hybridization. It also has built in functions to wrap calls to the pure C++ version
+of HyDe, ``hyde_cpp``. We have provided a ``Makefile`` that
+will compile the ``hyde_cpp`` C++ executable and will then install the
+``phyde`` Python package using the ``setup.py`` file. To ensure that the necessary
+dependencies are available, we suggest using a Python distribution such
+as `Miniconda <https://conda.io/miniconda.html>`__.
+
+- If you have questions about running HyDe please feel free to use the
+  **gitter chatroom** to get help: |Gitter|
+
+- If you have a problem while running HyDe and you think it may be a bug,
+  please consider filing an issue: |HyDe Issues|
 
 Installation
 ------------
@@ -24,17 +41,6 @@ Requirements:
    -  Seaborn
 
 -  C++ compiler (g++ >= v4.8)
-
-HyDe is a software package that detects hybridization in phylogenomic
-data sets using phylogenetic invariants. The primary interface for HyDe is a Python
-module called ``phyde`` (**P**\ ythonic **Hy**\ bridization **De**\ tection).
-``phyde`` provides a suite of tools for performing hypothesis tests on triples of taxa
-to detect hybridization. It also has built in functions to wrap calls to the pure C++ version
-of HyDe, ``hyde_cpp``. We have provided a ``Makefile`` that
-will compile the ``hyde_cpp`` C++ executable and will then install the
-``phyde`` Python package using the ``setup.py`` file. To ensure that the necessary
-dependencies are available, we suggest using a Python distribution such
-as `Miniconda <https://conda.io/miniconda.html>`__.
 
 .. code:: bash
 
@@ -62,25 +68,7 @@ The ``phyde`` module is also hosted on the Python Package Index (PyPI), and can 
   # Install from PyPI with pip
   pip install phyde
 
-Example HyDe workflow
----------------------
-
-The following commands
-
-.. code:: bash
-
-  # run a full hyde analysis to detect hybridization
-  run_hyde.py -i data.txt -m map.txt -o out -n 16 -t 4 -s 50000
-
-  #
-  individual_hyde.py -i data.txt -m map.txt -o out \
-                     --triples hyde-out-filtered.txt \
-                     -n 16 -t 4 -s 50000
-
-  #
-  bootstrap_hyde.py -i data.txt -m map.txt -o out \
-                     --triples hyde-out-filtered.txt \
-                     -n 16 -t 4 -s 50000
+Documentation for analyzing data using HyDe can be found `here <http://hybridization-detection.readthedocs.io/en/latest/analyze.html>`_.
 
 .. |Build Status| image:: https://travis-ci.org/pblischak/HyDe.svg?branch=master
    :target: https://travis-ci.org/pblischak/HyDe
@@ -93,3 +81,6 @@ The following commands
 
 .. |Gitter| image:: https://badges.gitter.im/Join%20Chat.svg
    :target: https://gitter.im/pblischak-HyDe/Lobby
+
+.. |HyDe Issues| image:: https://img.shields.io/badge/HyDe-Issues-blue.svg
+   :target: https://github.com/pblischak/HyDe/issues
