@@ -18,15 +18,48 @@ will compile the ``hyde_cpp`` C++ executable and will then install the
 dependencies are available, we suggest using a Python distribution such
 as `Miniconda <https://conda.io/miniconda.html>`__.
 
-If you have questions about running HyDe please feel free to use the
+To facilitate analyses using the Python module, three scripts are provided to
+conduct hybridization detection analyses directly from the command line:
+
+- `run_hyde.py`: runs a standard hybridization detection analysis on all triples
+  in all directions. Results are also filtered based on whether there is significant
+  evidence for hybridization.
+- `individual_hyde.py`: tests each individual within a putative hybrid population
+  using a list of specified triples specified.
+- `bootstrap_hyde.py`: conducts bootstrap resampling of the individuals within
+  the putative hybrid lineages for each specified triple.
+
+These last two scripts need to be given a three column table of triples
+(P1, Hybrid, P2) that you wish to test:
+
+```
+sp1 sp2 sp3
+sp1 sp3 sp4
+sp3 sp4 sp5
+.
+.
+.
+```
+
+You can also use a results file from a previous analysis as a triples file.
+For example, you can use the filtered results from the `run_hyde.py` script so that
+you only run analyses on triples that have significant levels of hybridization.
+If you only have a few hypotheses that you want to test, then you can also pass
+a triples file to `run_hyde.py` and it will only test those hypotheses rather than
+testing everything.
+
+Getting help
+------------
+
+If you have questions about running HyDe, please feel free to use the
 **gitter chatroom** to get help:
 
- - |Gitter|
+|Gitter|
 
 If you have a problem while running HyDe and you think it may be a bug,
-please consider filing an issue: 
+please consider filing an issue:
 
- - |HyDe Issues|
+|HyDe Issues|
 
 Installation
 ------------
