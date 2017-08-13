@@ -69,13 +69,14 @@ all individuals in a particular taxon grouped together sequentially.
   IndN  PopM
 
 Triples file
-============
+------------
 
 Each of the Python scripts that are part of HyDe take a file
 of triples that are to be tested for hybridization. The format of this triples
 file is a three column table where each row is a triple to be tested. Column one
 of the table is parent one, column two is the putative hybrid,
 and column three is parent two.
+You can name the populations anything you like as long as the name doesn't have spaces.
 
 .. code::
 

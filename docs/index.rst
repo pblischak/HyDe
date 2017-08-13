@@ -6,7 +6,7 @@
 HyDe: hybridization detection using phylogenetic invariants
 ===========================================================
 
-|Build Status| |Documentation| |PyPI Badge| |Gitter|
+|Build Status| |Documentation| |PyPI Badge|
 
 HyDe is a software package that detects hybridization in phylogenomic
 data sets using phylogenetic invariants. The primary interface for HyDe is a Python
@@ -19,12 +19,53 @@ will compile the ``hyde_cpp`` C++ executable and will then install the
 dependencies are available, we suggest using a Python distribution such
 as `Miniconda <https://conda.io/miniconda.html>`__.
 
-A tutorial on using HyDe is available on GitHub: `HyDe Tutorial <http://nbviewer.jupyter.org/github/pblischak/evol2017/blob/master/HyDe.ipynb>`__.
+To facilitate analyses using the Python module, three scripts are provided to
+conduct hybridization detection analyses directly from the command line:
+
+- ``run_hyde.py``: runs a standard hybridization detection analysis on all triples
+  in all directions. Results are also filtered based on whether there is significant
+  evidence for hybridization.
+- ``individual_hyde.py``: tests each individual within a putative hybrid population
+  using a list of specified triples specified.
+- ``bootstrap_hyde.py``: conducts bootstrap resampling of the individuals within
+  the putative hybrid lineages for each specified triple.
+
+These last two scripts need to be given a three column table of triples
+(P1, Hybrid, P2) that you wish to test:
+
+.. code::
+
+  sp1 sp2 sp3
+  sp1 sp3 sp4
+  sp3 sp4 sp5
+  .
+  .
+  .
+
+You can also use a results file from a previous analysis as a triples file.
+For example, you can use the filtered results from the ``run_hyde.py`` script so that
+you only run analyses on triples that have significant levels of hybridization.
+If you only have a few hypotheses that you want to test, then you can also pass
+a triples file to ``run_hyde.py`` and it will only test those hypotheses rather than
+testing everything.
+
+Getting help
+------------
+
+If you have questions about running HyDe, please feel free to use the
+**gitter chatroom** to get help:
+
+|Gitter|
+
+If you have a problem while running HyDe and you think it may be a bug,
+please consider filing an issue on GitHub:
+
+|HyDe Issues|
 
 Features
 --------
 
-- Conduct hypothesis tests using multiple individuals per taxon.
+- Conduct hypothesis tests using multiple individuals per population.
 - Test each individual within a putative hybrid lineage to assess if
   hybridization is uniform.
 - Test all possible triples of taxa and process results from within Python.
@@ -47,7 +88,6 @@ Documentation
    visualization.rst
    api.rst
 
-
 Indices and tables
 ==================
 
@@ -66,3 +106,6 @@ Indices and tables
 
 .. |Gitter| image:: https://badges.gitter.im/Join%20Chat.svg
    :target: https://gitter.im/pblischak-HyDe/Lobby
+
+.. |HyDe Issues| image:: https://img.shields.io/badge/HyDe-Issues-blue.svg
+   :target: https://github.com/pblischak/HyDe/issues

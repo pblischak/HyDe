@@ -45,7 +45,7 @@ You can also use a results file from a previous analysis as a triples file.
 For example, you can use the filtered results from the ``run_hyde.py`` script so that
 you only run analyses on triples that have significant levels of hybridization.
 If you only have a few hypotheses that you want to test, then you can also pass
-a triples file to `run_hyde.py` and it will only test those hypotheses rather than
+a triples file to ``run_hyde.py`` and it will only test those hypotheses rather than
 testing everything.
 
 Getting help
