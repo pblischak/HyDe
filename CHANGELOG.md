@@ -1,5 +1,13 @@
 # Change log
 
+## v0.3.1
+
+**Bug fixes**
+
+ - Corrected bootstrap_hyde.py output.
+ - Bootstrap class now correctly calculates # of bootstrap reps.
+ - Better handling of files with extra empty line at the end.
+
 ## v0.3.0
 
 **Changes introducing incompatibilities with previous versions:**
