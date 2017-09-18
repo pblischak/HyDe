@@ -30,7 +30,11 @@ class HydeResult:
         Fxn for reading in results file from a hyde_cpp analysis.
         """
         with open(file) as f:
-            results = f.read().splitlines()[1:-1]
+            results_read_in = f.read()
+            if results_read_in[-1] == "\n":
+                results = results_read_in[:-1].splitlines()[1:]
+            else:
+                results = results_read_in.splitlines()[1:]
             for r in results:
                 rs    = r.split('\t')
                 tripl = (rs[0], rs[1], rs[2])

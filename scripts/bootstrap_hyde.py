@@ -64,7 +64,7 @@ def write_boot(boot, triple, outfile):
     Write the current dictionary of bootstrapping output from bootstrap_triple()
     to the file passed as an argument to the function.
     """
-    print("P1\tHybrid\tP2\tZscore\tPvalue\tGamma\tAAAA\t\tAABA\tAABB\tAABC\tABAA\tABAB\tABAC\tABBA\tBAAA\tABBC\tCABC\tBACA\tBCAA\tABCD\n", end='', file=outfile)
+    print("P1\tHybrid\tP2\tZscore\tPvalue\tGamma\tAAAA\tAAAB\tAABA\tAABB\tAABC\tABAA\tABAB\tABAC\tABBA\tBAAA\tABBC\tCABC\tBACA\tBCAA\tABCD\n", end='', file=outfile)
     for v in boot.values():
         print(triple[0], "\t", triple[1], "\t", triple[2], "\t", sep='', end='', file=outfile)
         print(v['Zscore'], "\t", sep='', end='', file=outfile)

@@ -70,7 +70,7 @@ if INSTALL_ERROR:
 else:
     setup(
         name="phyde",
-        version="0.3.0",
+        version="0.3.1",
         description="Hybridization detection using phylogenetic invariants",
         long_description=open('README.rst').read(),
         url="https://github.com/pblischak/HyDe",

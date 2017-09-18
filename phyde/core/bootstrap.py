@@ -33,8 +33,8 @@ class Bootstrap:
                 boot_reps = boot_read_in[:-1].split("####\n")
             else:
                 boot_reps = boot_read_in.split("####\n")
-            print("Number of boot reps:", len(boot_reps))
             split_bootreps = [r.splitlines() for r in boot_reps]
+            print("Number of boot reps:", len(boot_reps[0].splitlines()[1:]))
             for s in split_bootreps:
                 lines = [line.split('\t') for line in s[1:]]
                 for l in lines:
