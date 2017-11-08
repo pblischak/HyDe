@@ -37,8 +37,18 @@ out a docstring with additional details.
 
 The results will be written to file with a prefix that can be supplied
 using the ``--prefix`` flag (``<prefix>-out.txt``; the default is 'hyde').
-We also write a separate output file for results with significant hybridization
-(``<prefix>-out-filtered.txt``).
+
+.. note:: We also write a file (``<prefix>-out-filtered.txt``) that filters
+  the results from the hybridization detection
+  analysis to only include significant results with sensible values of :math:`\gamma`
+  (:math:`0 < \gamma < 1`). Some values of :math:`\gamma` in the original results
+  file may be nonsensical because they will be either negative or greater than 1. However,
+  :math:`\gamma` does not have any theoretical limits with regard to the hypothesis test in HyDe:
+  it can range from :math:`-\infty` to :math:`\infty`. The reason that these values occur and may
+  give a significant p-value is because they are testing a hypothesis that involves a hybrid but
+  in the wrong direction (i.e., a hybrid is tested as one of the parental species). Testing all possible
+  directions that hybridization can occur for three taxa is typically what causes these types of results to happen.
+
 
 ``individual_hyde.py``
 ^^^^^^^^^^^^^^^^^^^^^^
