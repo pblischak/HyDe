@@ -20,6 +20,9 @@ DNA = np.uint8
 ctypedef np.uint64_t INDEX_t
 INDEX = np.uint64
 
+# Hardcoded switch to test resolving missing and/or ambiguous bases
+_ignore_amb_sites = False
+
 cdef dict _BASE_TO_UINT8 = {
     "A": 0,  "G": 1,  "C": 2,  "T": 3,  "U": 3,
     "M": 5,  "R": 6,  "W": 7,  "S": 8,  "Y": 9,
@@ -107,8 +110,33 @@ cdef class HydeData:
 
     def _read_infile(self, infile):
         counter = 0
+        first_line = True # logical for processing potential phylip header
+        valid_header = True
+        phylip_header = False
         with open(infile) as f:
             for line in f:
+                # Check if first line has # inds and # sites
+                if first_line:
+                    first_line = False
+                    nind_phylip = line.split()[0]
+                    nsites_phylip = line.split()[1]
+                    if (int(nind_phylip) != self.nind or int(nsites_phylip) != self.nsites) and (len(nsites_phylip) != self.nsites):
+                        valid_header = False
+
+                    if int(nind_phylip) == self.nind and int(nsites_phylip) == self.nsites:
+                        phylip_header = True
+
+                    if not valid_header:
+                        print("\nERROR:")
+                        print("  First line of data file does not contain the correct header information.")
+                        print("  User input:")
+                        if len(nsites_phylip) > 50:
+                            print("\n    ", nind_phylip, " ", nsites_phylip[0:49], "...", sep='')
+                        else:
+                            print(line)
+                        sys.exit(-1)
+                    elif phylip_header:
+                        continue
                 try:
                     bases = line.split()[1]
                 except IndexError:
@@ -305,9 +333,11 @@ cdef class HydeData:
             if i < 4 and j < 4 and k < 4 and l < 4:
                 nn += 1.0
                 self.counts[i * 4 + j][k * 4 + l] += 1.0
-            else:
+            elif not _ignore_amb_sites:
                 resolved = self._resolve_ambiguity_cpp(i, j, k, l)
                 nn += resolved
+            else:
+              pass
 
         return nn
 

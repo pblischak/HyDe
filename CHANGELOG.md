@@ -1,5 +1,15 @@
 # Change log
 
+## v0.3.2
+
+**Input file format update**
+
+ - All of the `*_hyde.py` scripts now accept DNA sequence data files
+   in sequential Phylip format (ie, you don't need to remove the header line).
+   `hyde_cpp` also accepts data in this format.
+ - We maintain backwards compatabilities with the previous input format
+   without the header information as well.
+
 ## v0.3.1
 
 **Bug fixes**

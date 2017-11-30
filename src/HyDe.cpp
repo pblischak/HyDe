@@ -49,6 +49,9 @@ static std::vector<std::vector<int> > _baseLookup = { /* {A,G,C,T} == {0,1,2,3} 
   {0, 1, 2, 3}  /* N == A or G or C or T */
 };
 
+// Hardcoded switch to test resolving missing and/or ambiguous bases
+bool _ignore_amb_sites = 0;
+
 // Random number generation for bootstrapping
 MbRandom *r = new MbRandom;
 
@@ -314,11 +317,38 @@ void HyDe::_readInfile(){
   std::ifstream _infileStream(_infile);
   std::string _str1, _str2;
   int _indIndex = 0, _errCount = 0;
+  bool first_line = 1, valid_header = 1, phylip_header = 0;
   if(!_infileStream.is_open()){
     std::cerr << "\n** ERROR: Cannot open specified infile: " << _infile << ". **\n" << std::endl;
     exit(EXIT_FAILURE);
   } else {
     while(_infileStream >> _str1 >> _str2){
+      if(first_line){
+        first_line = 0;
+        if((atoi(_str1.c_str()) != _nInd || atoi(_str2.c_str()) != _nSites) &&
+           (_str2.length() != (unsigned) _nSites)){
+          valid_header = 0;
+        }
+        if(atoi(_str1.c_str()) == _nInd && atoi(_str2.c_str()) == _nSites){
+          phylip_header = 1;
+        }
+        if(!valid_header){
+          std::cerr << "\n** ERROR: First line of data file does not contain the correct header information. **" << std::endl
+                    << "   User input:\n" << std::endl;
+          if(_str2.length() > 50){
+            std::cerr << "   " << _str1 << " ";
+            for(int i = 0; i < 50; i++){
+              std::cerr << _str2[i];
+            }
+            std::cerr << "..." << std::endl << std::endl;
+          } else {
+            std::cerr << "    " << _str1 << " " << _str2 << std::endl << std::endl;
+          }
+          exit(EXIT_FAILURE);
+        } else if(phylip_header){
+          continue;
+        }
+      }
       if(_str1.compare(_indNames[_indIndex]) != 0){
         std::cerr << "\n** ERROR: Name in infile does not match name in map file. **\n" << std::endl
                   << "   Line " << _indIndex + 1 << ": " << _str1 << " vs." << _indNames[_indIndex] << "\n" << std::endl;
@@ -590,7 +620,7 @@ double HyDe::_getCountMatrix(const int& p1, const int& hyb, const int& p2, doubl
               nn += 1.0;
               cp[_dnaMatrix[_taxaMap[_outgroup][i]][s] * 4 + _dnaMatrix[_taxaMap[p1][j]][s]]
                 [_dnaMatrix[_taxaMap[hyb][k]][s] * 4 + _dnaMatrix[_taxaMap[p2][r]][s]] += 1.0;
-            } else {
+            } else if(!_ignore_amb_sites){
               resolved = _resolveAmbiguity(_dnaMatrix[_taxaMap[_outgroup][i]][s],
                                            _dnaMatrix[_taxaMap[p1][j]][s],
                                            _dnaMatrix[_taxaMap[hyb][k]][s],
