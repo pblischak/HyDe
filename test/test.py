@@ -1,3 +1,5 @@
+#!/usr/bin/env python2
+
 from __future__ import print_function
 import phyde as hd
 

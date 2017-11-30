@@ -110,21 +110,32 @@ cdef class HydeData:
 
     def _read_infile(self, infile):
         counter = 0
-        first_line = True # logical for processing potential phylip header
-        valid_header = True
-        phylip_header = False
+        first_line = 1
+        valid_header = 1
+        phylip_header = 1
+        nind_not_int = 0
+        nsites_not_int = 0
         with open(infile) as f:
             for line in f:
-                # Check if first line has # inds and # sites
-                if first_line:
-                    first_line = False
+                if first_line == 1:
+                    first_line = 0
                     nind_phylip = line.split()[0]
                     nsites_phylip = line.split()[1]
-                    if (int(nind_phylip) != self.nind or int(nsites_phylip) != self.nsites) and (len(nsites_phylip) != self.nsites):
-                        valid_header = False
 
-                    if int(nind_phylip) == self.nind and int(nsites_phylip) == self.nsites:
-                        phylip_header = True
+                    try:
+                        int(nind_phylip)
+                    except ValueError:
+                        nind_not_int = 1
+                        phylip_header = 0
+
+                    try:
+                        int(nsites_phylip)
+                    except ValueError:
+                        nsites_not_int = 1
+                        phylip_header = 0
+
+                    if (nind_not_int or nsites_not_int) and (len(nsites_phylip) != self.nsites):
+                        valid_header = 0
 
                     if not valid_header:
                         print("\nERROR:")
@@ -135,8 +146,10 @@ cdef class HydeData:
                         else:
                             print(line)
                         sys.exit(-1)
-                    elif phylip_header:
+
+                    if not nsites_not_int:
                         continue
+
                 try:
                     bases = line.split()[1]
                 except IndexError:
@@ -145,15 +158,15 @@ cdef class HydeData:
                     print("\nERROR:")
                     print("  Number of sites specified (", self.nsites, ") is not equal", sep='')
                     print("  to the number of sites in the data file (", len(bases), ").\n", sep='')
-                    sys.exit()
+                    sys.exit(-1)
                 self._convert(counter, bases)
                 print(".", end='')
                 counter += 1
                 if counter > self.nind:
-                  print("\nERROR:")
-                  print("  Number of individuals specified (", self.nind, ") is not equal", sep='')
-                  print("  to the number of individuals in the data file (>= ", counter, ").\n", sep='')
-                  sys.exit()
+                    print("\nERROR:")
+                    print("  Number of individuals specified (", self.nind, ") is not equal", sep='')
+                    print("  to the number of individuals in the data file (>= ", counter, ").\n", sep='')
+                    sys.exit(-1)
 
     def _read_mapfile(self, mapfile):
         with open(mapfile) as f:

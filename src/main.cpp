@@ -40,7 +40,7 @@ int main(int argc, char* argv[]){
 }
 
 void usage(){
-  std::cerr << "\nUsage: hyde -i <infile> -m <taxon-map> -o <outgroup> -n <num-individuals> -t <num-taxa> -s <num-sites>  [additional options]" << std::endl
+  std::cerr << "\nUsage: hyde_cpp -i <infile> -m <taxon-map> -o <outgroup> -n <num-individuals> -t <num-taxa> -s <num-sites>  [additional options]" << std::endl
             << "\nInformation options:" << std::endl
             << "  -h [--help]          Prints this help message" << std::endl
             << "  -v [--version]       Prints version information" << std::endl
