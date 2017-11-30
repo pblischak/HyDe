@@ -11,6 +11,7 @@ notebooks
 !examples/snake-data.txt
 !examples/snake-map.txt
 !test/data.txt
+!test/data-phylip.txt
 !test/map.txt
 !test/triples.txt
 sims
