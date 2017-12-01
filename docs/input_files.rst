@@ -15,15 +15,17 @@ Sequence Data
 -------------
 
 The DNA sequence data should be in sequential Phylip format with individual names
-and sequence data all on one line and separated by a tab. The header information
-that is present in a typical Phylip file (# individuals and # sites) is not needed
-for HyDe. Individual names do not have length restrictions (within reason) and do
+and sequence data all on one line and separated by a tab. In previous versions of HyDe (<= 0.3.1),
+the header information that is typically present in a Phylip file (# individuals and # sites)
+was not included. We maintain this backwards compatibility.
+Individual names do not have length restrictions (within reason) and do
 not all need to be the same number of characters.
 
 **Example:** ``data.txt``
 
 .. code::
 
+  <NumInd>  <NumSites>
   Ind1  AGATTGAGCTAGCAGACGTGACAGACAGATGACAGTGACGA...
   Ind2  AGATTGAGCTAGCAGACGTGACAGACAGATGACAGTGACGA...
   Ind3  AGATTGAGCTAGCAGACGTGACAGACAGATGACAGTGACGA...
