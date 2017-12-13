@@ -1,5 +1,15 @@
 # Change log
 
+## v0.3.3
+
+**New multithreaded script**
+
+- The `run_hyde.py` script now has a multithreaded version: `run_hyde_mp.py`.
+  It works best for data sets with a lot of species.
+
+- We also added a quiet option (`-q` or `--quiet`) to supress printing to stdout
+  while the program is running.
+
 ## v0.3.2
 
 **Input file format update**
