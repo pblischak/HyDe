@@ -5,9 +5,9 @@
 #include <cstring>
 #include <ctime>
 #include <unistd.h>
-#ifdef _OPENMP
-  #include <omp.h>
-#endif
+//#ifdef _OPENMP
+//  #include <omp.h>
+//#endif
 #include "HyDe.hpp"
 #include "MbRandom.hpp"
 
@@ -74,20 +74,21 @@ HyDe::HyDe(int c, char* v[]){
 void HyDe::run(){
   /* Open outfile and logfile (if specified). */
   clock_t start_time = clock(); // Begin timing...
-  std::clog << "\nHyDe: hybridization detection using phylogenetic invariants\n" << std::endl;
-  #ifdef _OPENMP
-    std::clog << "Multithreading with OpenMP enabled. Currently using " << _threads << " threads." << std::endl;
-  #else
-    //std::clog << "Multithreading with OpenMP not enabled. Running analysis serially." << std::endl;
-  #endif
-  std::clog << "\nNumber of individuals:   " << _nInd << std::endl
-            << "Number of taxa:          "   << _nTaxa << std::endl
-            << "Outgroup:                "   << _outgroupName << std::endl
-            << "Number of sites:         "   << _nSites << std::endl
-            << "Percent missing data:    "   << (_missing / ((double) _nInd * _nSites)) * 100.0 << " %" << std::endl;
-  std::clog << "\nBonferroni corrected p-value for significance test at \u03B1-level = "
-            << _pValue << ": " << _bonferroniCorrect() << ".\n" << std::endl;
-
+  if(!_quiet){
+    std::clog << "\nHyDe: hybridization detection using phylogenetic invariants\n" << std::endl;
+    //#ifdef _OPENMP
+    //  std::clog << "Multithreading with OpenMP enabled. Currently using " << _threads << " threads." << std::endl;
+    //#else
+    //  //std::clog << "Multithreading with OpenMP not enabled. Running analysis serially." << std::endl;
+    //#endif
+    std::clog   << "\nNumber of individuals:   " << _nInd << std::endl
+              << "Number of taxa:          "   << _nTaxa << std::endl
+              << "Outgroup:                "   << _outgroupName << std::endl
+              << "Number of sites:         "   << _nSites << std::endl
+              << "Percent missing data:    "   << (_missing / ((double) _nInd * _nSites)) * 100.0 << " %" << std::endl;
+    std::clog << "\nBonferroni corrected p-value for significance test at \u03B1-level = "
+              << _pValue << ": " << _bonferroniCorrect() << ".\n" << std::endl;
+  }
   std::string _outfile = _prefix + "-out.txt";
   std::ofstream _outStream;
   _outStream.open(_outfile, std::ios::out | std::ios::app);
@@ -99,7 +100,7 @@ void HyDe::run(){
   }
 
   //#pragma omp parallel for num_threads(_threads) schedule(dynamic) firstprivate(_counts1, _counts2, _counts3, _taxaMap, _taxaNames, _dnaMatrix, _baseLookup, _outgroup, _numObs, _zVals, _pVals)
-  #pragma omp parallel for num_threads(_threads) schedule(dynamic) firstprivate(_counts1, _counts2, _counts3, _taxaMap, _taxaNames, _baseLookup, _outgroup, _numObs, _zVals, _pVals)
+  //#pragma omp parallel for num_threads(_threads) schedule(dynamic) firstprivate(_counts1, _counts2, _counts3, _taxaMap, _taxaNames, _baseLookup, _outgroup, _numObs, _zVals, _pVals)
   for(unsigned i = 0; i < _taxaNames.size() - 2; i++){
     for(unsigned j = i + 1; j < _taxaNames.size() - 1; j++){
       for(unsigned k = j + 1; k < _taxaNames.size(); k++){
@@ -128,7 +129,7 @@ void HyDe::run(){
         _pVals[1] = _calcPvalueTwo(_zVals[1]);
         _pVals[2] = _calcPvalueTwo(_zVals[2]);
 
-        #pragma omp critical
+        //#pragma omp critical
         {
           /*std::cout << _taxaNames[i] << ":" << _taxaMap[i].size() <<  "\t" << _taxaNames[j]
                     << ":" << _taxaMap[j].size() << "\t" << _taxaNames[k] << ":"
@@ -156,8 +157,10 @@ void HyDe::run(){
   int elapsed_hours   = elapsed_time / 3600;
   int elapsed_minutes = (elapsed_time - elapsed_hours * 3600) / 60;
   double elapsed_seconds = elapsed_time - elapsed_hours * 3600.0 - elapsed_minutes * 60.0;
-  std::clog << "Elapsed time: " << elapsed_hours << " hour(s) "
-            << elapsed_minutes << " minute(s) " << elapsed_seconds << " seconds.\n" << std::endl;
+  if(!_quiet){
+    std::clog << "Elapsed time: " << elapsed_hours << " hour(s) "
+              << elapsed_minutes << " minute(s) " << elapsed_seconds << " seconds.\n" << std::endl;
+  }
 }
 
 /*************************************************************/
@@ -187,7 +190,7 @@ void HyDe::_parseCommandLine(int ac, char* av[]){
       std::cerr << "\n** WARNING: Bootstrapping is no longer done by the hyde_cpp program. **\n" << std::endl;
       std::cerr << "   Please use the bootstrap_hyde.py script.\n" << std::endl;
     } else if(strcmp(av[i], "-j") == 0 || strcmp(av[i], "--threads") == 0){
-      #ifdef _OPENMP
+      /*#ifdef _OPENMP
         _threads = atoi(av[i + 1]);
         int _maxThreads = omp_get_max_threads();
         if(_threads > _maxThreads){
@@ -197,9 +200,12 @@ void HyDe::_parseCommandLine(int ac, char* av[]){
         }
       #else
         std::cerr << "\n** WARNING: OpenMP not enabled. --threads argument will be ignored. **\n" << std::endl;
-      #endif
+      #endif*/
+      std::cerr << "Multithreading is not enabled for hyde_cpp." << std::endl;
     } else if(strcmp(av[i], "--prefix") == 0){
       _prefix = av[i + 1];
+    } else if(strcmp(av[i], "-q") == 0 || strcmp(av[i], "--quiet") == 0){
+      _quiet = 1;
     } else if(av[i][0] == '-'){ /* This checks if it is a flag that isn't valid. */
       _invalidArgCount++;
       _invalidArgs.push_back(av[i]);
@@ -211,7 +217,7 @@ void HyDe::_parseCommandLine(int ac, char* av[]){
     for(unsigned i = 0; i < _invalidArgs.size(); i++){
       std::cerr << "   " << _invalidArgs[i] << std::endl;
     }
-    std::cerr << "\nType 'hyde -h' for command line options.\n" << std::endl;
+    std::cerr << "\nType 'hyde_cpp -h' for command line options.\n" << std::endl;
     exit(EXIT_FAILURE);
   }
 }

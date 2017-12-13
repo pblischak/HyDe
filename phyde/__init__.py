@@ -1,5 +1,5 @@
 
-__version__ = "0.3.2"
+__version__ = "0.3.3a"
 __author__  = "Paul Blischak and Laura Kubatko"
 
 from phyde.analyze.main import run_hyde

@@ -19,6 +19,8 @@ Arguments
     - nind <int>        : number of sampled individuals.
     - nsites <int>      : number of sampled sites.
     - ntaxa <int>       : number of sampled taxa (populations, OTUs, etc.).
+    - prefix <string>   : name added to the beginning of output file.
+    - quiet <flag>      : suppress printing to stdout.
 
 Output
 ------
@@ -103,7 +105,7 @@ if __name__ == "__main__":
     required.add_argument('-o', '--outgroup', action="store", type=str, required=True,
                           metavar='\b', help="name of the outgroup (only one accepted)")
     required.add_argument('-tr','--triples', action="store", type=str, required=True,
-                          metavar='\b', help="table of triples to be analyzed using bootstrapping.")
+                          metavar='\b', help="table of triples to be analyzed.")
     required.add_argument('-n', '--num_ind', action="store", type=int, required=True,
                           metavar='\b', help="number of individuals in data matrix")
     required.add_argument('-t', '--num_taxa', action="store", type=int, required=True,
@@ -114,6 +116,8 @@ if __name__ == "__main__":
     additional = parser.add_argument_group("additional arguments")
     additional.add_argument('--prefix', action="store", type=str, default="hyde",
                             metavar='\b', help="prefix appended to output files [default=hyde]")
+    additional.add_argument('-q', '--quiet', action="store_true",
+                            help="supress printing to stdout")
 
     args     = parser.parse_args()
     infile   = args.infile
@@ -124,19 +128,20 @@ if __name__ == "__main__":
     ntaxa    = args.num_taxa
     nsites   = args.num_sites
     prefix   = args.prefix
+    quiet    = args.quiet
 
     # Read data into a HydeData object
     data = hd.HydeData(infile, mapfile, outgroup, nind, ntaxa, nsites)
 
     if os.path.exists(prefix+"-ind.txt"):
-        print("\n**  Warning: File '"+prefix+"-ind.txt' already exists. **")
-        print("**  Renaming to 'old-"+prefix+"-ind.txt'. **\n")
+        if not quiet: print("\n**  Warning: File '"+prefix+"-ind.txt' already exists. **")
+        if not quiet: print("**  Renaming to 'old-"+prefix+"-ind.txt'. **\n")
         os.rename(prefix+"-ind.txt", "old-"+prefix+"-ind.txt")
         outfile = open(prefix+"-ind.txt", 'wa')
     else:
         outfile = open(prefix+"-ind.txt", 'wa')
 
-    print("P1\tHybrid\tP2\tZscore\tPvalue\tGamma\tAAAA\t\tAABA\tAABB\tAABC\tABAA\tABAB\tABAC\tABBA\tBAAA\tABBC\tCABC\tBACA\tBCAA\tABCD\n", end='', file=outfile)
+    print("P1\tHybrid\tP2\tZscore\tPvalue\tGamma\tAAAA\tAAAB\tAABA\tAABB\tAABC\tABAA\tABAB\tABAC\tABBA\tBAAA\tABBC\tCABC\tBACA\tBCAA\tABCD\n", end='', file=outfile)
 
     for t in triples:
         res = data.test_individuals(t[0], t[1], t[2])

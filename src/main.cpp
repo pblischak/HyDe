@@ -5,7 +5,7 @@
 #include "HyDe.hpp"
 
 /* Version info. */
-const std::string Version = "0.3.2-alpha";
+const std::string Version = "0.3.3a";
 const std::string Date    = "December 2017";
 
 void usage(); /* Print usage/helo information. */

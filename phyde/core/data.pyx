@@ -39,22 +39,22 @@ cdef dict _BASE_LOOKUP = {
 
 
 cdef vector[vector[int]] _baseLookup = [ #/* {A,G,C,T} == {0,1,2,3} */
-  [0],
-  [1],
-  [2],
-  [3],
-  [4],          #/* - == ignore */
-  [0, 2],       #/* M == A or C */
-  [0, 1],       #/* R == A or G */
-  [0, 3],       #/* W == A ot T */
-  [1, 2],       #/* S == G or C */
-  [2, 3],       #/* Y == C or T */
-  [1, 3],       #/* K == G or T */
-  [1, 2, 3],    #/* B == C or G or T */
-  [0, 1, 3],    #/* D == A or G or T */
-  [0, 2, 3],    #/* H == A or C or T */
-  [0, 1, 2],    #/* V == A or G or C */
-  [0, 1, 2, 3]  #/* N == A or G or C or T */
+    [0],
+    [1],
+    [2],
+    [3],
+    [4],          #/* - == ignore */
+    [0, 2],       #/* M == A or C */
+    [0, 1],       #/* R == A or G */
+    [0, 3],       #/* W == A ot T */
+    [1, 2],       #/* S == G or C */
+    [2, 3],       #/* Y == C or T */
+    [1, 3],       #/* K == G or T */
+    [1, 2, 3],    #/* B == C or G or T */
+    [0, 1, 3],    #/* D == A or G or T */
+    [0, 2, 3],    #/* H == A or C or T */
+    [0, 1, 2],    #/* V == A or G or C */
+    [0, 1, 2, 3]  #/* N == A or G or C or T */
 ]
 
 cdef class HydeData:
@@ -72,8 +72,9 @@ cdef class HydeData:
     cdef double site_pattern_probs[15]
     cdef double ind_nucl_probs[4][15]
     cdef bytes outgroup
+    cdef bint quiet
 
-    def __init__(self, infile, mapfile, outgroup, int nind, int ntaxa, int nsites):
+    def __init__(self, infile, mapfile, outgroup, int nind, int ntaxa, int nsites, bint quiet = False):
         """
         Constructor:
             Read infile with DNA characters. Parse mapfile and partition
@@ -91,8 +92,8 @@ cdef class HydeData:
             - outgroup <str>: name of the outgroup (can be
               reset using the `resetOutgroup()` method)
             - nind <int>: total number of individuals sampled
-            - nsites <int>: number of sites
             - ntaxa <int>: number of taxa
+            - nsites <int>: number of sites
         """
         self.nind = nind
         self.nsites = nsites
@@ -100,12 +101,17 @@ cdef class HydeData:
         self.taxonMap = {}
         self.taxonMap_cp = {}
         self.outgroup = outgroup
-        print("\nReading input file",end='')
+        self.quiet = quiet
+        if not self.quiet:
+            print("\nReading input file",end='')
         self._read_infile(infile)
-        print("Done.")
-        print("Reading map file",end='')
+        if not self.quiet:
+            print("Done.")
+        if not self.quiet:
+            print("Reading map file  ",end='')
         self._read_mapfile(mapfile)
-        print("Done.")
+        if not self.quiet:
+            print("Done.")
         self.outIndex = np.array([i[0] for i in self.taxonMap[outgroup]], dtype=INDEX)
 
     def _read_infile(self, infile):
@@ -160,7 +166,8 @@ cdef class HydeData:
                     print("  to the number of sites in the data file (", len(bases), ").\n", sep='')
                     sys.exit(-1)
                 self._convert(counter, bases)
-                print(".", end='')
+                if not self.quiet:
+                    print(".", end='')
                 counter += 1
                 if counter > self.nind:
                     print("\nERROR:")
@@ -179,7 +186,8 @@ cdef class HydeData:
                     self.taxonMap_cp[l.split()[1]] = []
                 self.taxonMap[l.split()[1]].append((i, l.split()[0]))
                 self.taxonMap_cp[l.split()[1]].append((i, l.split()[0]))
-                print(".", end='')
+                if not self.quiet:
+                    print(".", end='')
 
     def resetOutgroup(self, newOut):
         self.outgroup = newOut
@@ -442,7 +450,7 @@ cdef class HydeData:
                               + self.site_pattern_probs[4]  + self.site_pattern_probs[5] + self.site_pattern_probs[6] + self.site_pattern_probs[7]
                               + self.site_pattern_probs[8]  + self.site_pattern_probs[9] + self.site_pattern_probs[10] + self.site_pattern_probs[11]
                               + self.site_pattern_probs[12] + self.site_pattern_probs[13] + self.site_pattern_probs[14]) - 1.0) > 0.05):
-            print("** WARNING: There was a problem counting site patterns. **")
+            if not self.quiet: print("** WARNING: There was a problem counting site patterns. **")
             return -99999.9
 
         cdef:

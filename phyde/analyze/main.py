@@ -11,7 +11,7 @@ import os
 from ..core.result import HydeResult
 #from ..core.bootstrap import Bootstrap
 
-def run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue=0.05, prefix="hyde"):
+def run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue=0.05, prefix="hyde", quiet=False):
     """
     Wrapper for running HyDe C++ executable.
 
@@ -41,8 +41,8 @@ def run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue=0.05, prefix
     """
 
     if os.path.exists(prefix+"-out.txt"):
-        print("\n**  Warning: File '"+prefix+"-out.txt' already exists. **")
-        print("**  Renaming to 'old-"+prefix+"-out.txt'. **\n")
+        if not quiet: print("\n**  Warning: File '"+prefix+"-out.txt' already exists. **")
+        if not quiet: print("**  Renaming to 'old-"+prefix+"-out.txt'. **\n")
         os.rename(prefix+"-out.txt", "old-"+prefix+"-out.txt")
     else:
         pass
@@ -73,6 +73,9 @@ def run_hyde(infile, mapfile, outgroup, nInd, nTaxa, nSites, pValue=0.05, prefix
         "-p", str(pValue),
         "--prefix", prefix
     ]
+
+    if quiet:
+        hyde_cmd.append("--quiet")
 
     proc = sps.call(hyde_cmd)
 

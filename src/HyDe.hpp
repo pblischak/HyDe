@@ -52,8 +52,9 @@ private:
   /* private member variables */
   std::string _infile = "none", _mapfile = "none", _prefix = "hyde";
   double _pValue = 0.05;
-  int _nInd = -999, _nSites = -999, _nTaxa = -999, _threads = 1;
+  int _nInd = -999, _nSites = -999, _nTaxa = -999;
   std::vector<std::string> _indNames;
+  bool _quiet = 0;
 };
 
 /* Convert DNA bases to ints as they are read in. */

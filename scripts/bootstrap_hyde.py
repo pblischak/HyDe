@@ -21,6 +21,8 @@ Arguments
     - nind <int>        : number of sampled individuals.
     - nsites <int>      : number of sampled sites.
     - ntaxa <int>       : number of sampled taxa/populations.
+    - prefix <string>   : name added to the beginning of output file.
+    - quiet <flag>      : suppress printing to stdout.
 
 Output
 ------
@@ -106,7 +108,7 @@ if __name__ == "__main__":
     required.add_argument('-o', '--outgroup', action="store", type=str, required=True,
                           metavar='\b', help="name of the outgroup (only one accepted)")
     required.add_argument('-tr','--triples', action="store", type=str, required=True,
-                          metavar='\b', help="table of triples to be analyzed using bootstrapping.")
+                          metavar='\b', help="table of triples to be analyzed.")
     required.add_argument('-n', '--num_ind', action="store", type=int, required=True,
                           metavar='\b', help="number of individuals in data matrix")
     required.add_argument('-t', '--num_taxa', action="store", type=int, required=True,
@@ -120,6 +122,8 @@ if __name__ == "__main__":
                             metavar='\b', help="number of bootstrap replicates [default=100]")
     additional.add_argument('--prefix', action="store", type=str, default="hyde",
                             metavar='\b', help="prefix appended to output files [default=hyde]")
+    additional.add_argument('-q', '--quiet', action="store_true",
+                            help="supress printing to stdout")
 
     args     = parser.parse_args()
     infile   = args.infile
@@ -131,13 +135,14 @@ if __name__ == "__main__":
     nsites   = args.num_sites
     reps     = args.reps
     prefix   = args.prefix
+    quiet    = args.quiet
 
     # Read data into a HydeData object
     data = hd.HydeData(infile, mapfile, outgroup, nind, ntaxa, nsites)
 
     if os.path.exists(prefix+"-boot.txt"):
-        print("\n**  Warning: File '"+prefix+"-boot.txt' already exists. **")
-        print("**  Renaming to 'old-"+prefix+"-boot.txt'. **\n")
+        if not quiet: print("\n**  Warning: File '"+prefix+"-boot.txt' already exists. **")
+        if not quiet: print("**  Renaming to 'old-"+prefix+"-boot.txt'. **\n")
         os.rename(prefix+"-boot.txt", "old-"+prefix+"-boot.txt")
         outfile = open(prefix+"-boot.txt", 'wa')
     else:

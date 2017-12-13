@@ -20,6 +20,8 @@ Arguments
     - nsites <int>      : number of sampled sites.
     - ntaxa <int>       : number of sampled taxa/populations.
     - triples <string>  : name of the file containing triples for testing [optional].
+    - prefix <string>   : name added to the beginning of output file.
+    - quiet <flag>      : suppress printing to stdout.
 
 Output
 ------
@@ -108,11 +110,13 @@ if __name__ == "__main__":
 
     additional = parser.add_argument_group("additional arguments")
     additional.add_argument('-tr','--triples', action="store", type=str, default="none",
-                          metavar='\b', help="table of triples to be analyzed using bootstrapping.")
+                          metavar='\b', help="table of triples to be analyzed")
     additional.add_argument('-p', '--pvalue', action="store", type=float, default=0.05,
                             metavar='\b', help="p-value cutoff for test of significance [default=0.05]")
     additional.add_argument('--prefix', action="store", type=str, default="hyde",
                             metavar='\b', help="prefix appended to output files [default=hyde]")
+    additional.add_argument('-q', '--quiet', action="store_true",
+                            help="supress printing to stdout")
 
     args     = parser.parse_args()
     infile   = args.infile
@@ -123,38 +127,39 @@ if __name__ == "__main__":
     nsites   = args.num_sites
     pvalue   = args.pvalue
     prefix   = args.prefix
+    quiet    = args.quiet
 
     if os.path.exists(prefix+"-out-filtered.txt"):
-        print("\n**  Warning: File '"+prefix+"-out-filtered.txt' already exists. **")
-        print("**  Renaming to 'old-"+prefix+"-out-filtered.txt'. **\n")
+        if not quiet: print("\n**  Warning: File '"+prefix+"-out-filtered.txt' already exists. **")
+        if not quiet: print("**  Renaming to 'old-"+prefix+"-out-filtered.txt'. **\n")
         os.rename(prefix+"-out-filtered.txt", "old-"+prefix+"-out-filtered.txt")
         filtered_outfile = open(prefix+"-out-filtered.txt", 'wa')
     else:
         filtered_outfile = open(prefix+"-out-filtered.txt", 'wa')
-    print("P1\tHybrid\tP2\tZscore\tPvalue\tGamma\tAAAA\t\tAABA\tAABB\tAABC\tABAA\tABAB\tABAC\tABBA\tBAAA\tABBC\tCABC\tBACA\tBCAA\tABCD\n", end='', file=filtered_outfile)
+    print("P1\tHybrid\tP2\tZscore\tPvalue\tGamma\tAAAA\tAAAB\tAABA\tAABB\tAABC\tABAA\tABAB\tABAC\tABBA\tBAAA\tABBC\tCABC\tBACA\tBCAA\tABCD\n", end='', file=filtered_outfile)
 
     if args.triples != "none":
-        print("--> Using triples in file ", args.triples, sep='')
+        if not quiet: print("--> Using triples in file ", args.triples, sep='')
         triples = parse_triples(args.triples)
         if os.path.exists(prefix+"-out.txt"):
-            print("\n**  Warning: File '"+prefix+"-out.txt' already exists. **")
-            print("**  Renaming to 'old-"+prefix+"-out.txt'. **\n")
+            if not quiet: print("\n**  Warning: File '"+prefix+"-out.txt' already exists. **")
+            if not quiet: print("**  Renaming to 'old-"+prefix+"-out.txt'. **\n")
             os.rename(prefix+"-out.txt", "old-"+prefix+"-out.txt")
             outfile = open(prefix+"-out.txt", 'wa')
         else:
             outfile = open(prefix+"-out.txt", 'wa')
 
         # Read in data as HydeData object
-        data = hd.HydeData(infile, mapfile, outgroup, nind, ntaxa, nsites)
-        print("P1\tHybrid\tP2\tZscore\tPvalue\tGamma\tAAAA\t\tAABA\tAABB\tAABC\tABAA\tABAB\tABAC\tABBA\tBAAA\tABBC\tCABC\tBACA\tBCAA\tABCD\n", end='', file=outfile)
+        data = hd.HydeData(infile, mapfile, outgroup, nind, ntaxa, nsites, quiet)
+        print("P1\tHybrid\tP2\tZscore\tPvalue\tGamma\tAAAA\tAAAB\tAABA\tAABB\tAABC\tABAA\tABAB\tABAC\tABBA\tBAAA\tABBC\tCABC\tBACA\tBCAA\tABCD\n", end='', file=outfile)
         for t in triples:
             res = data.test_triple(t[0], t[1], t[2])
             write_out(res, t, outfile)
             if res['Pvalue'] < (pvalue / len(triples)) and res['Gamma'] > 0.0 and res['Gamma'] < 1.0:
                 write_out(res, t, filtered_outfile)
     else:
-        print("--> Running full HyDe analysis with hyde_cpp")
-        res = hd.run_hyde(infile, mapfile, outgroup, nind, ntaxa, nsites, pvalue, prefix)
+        if not quiet: print("--> Running full HyDe analysis with hyde_cpp")
+        res = hd.run_hyde(infile, mapfile, outgroup, nind, ntaxa, nsites, pvalue, prefix, quiet)
         filtered_res = {k:v for k,v in res.res.items() if v['Pvalue'] < (pvalue / len(res.res)) and v['Gamma'] > 0.0 and v['Gamma'] < 1.0}
         for k,v in filtered_res.items():
             write_out(v, k, filtered_outfile)

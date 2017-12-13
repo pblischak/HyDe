@@ -41,6 +41,11 @@ try:
 except ImportError:
     missing_modules.append('seaborn')
 
+try:
+    import multiprocessing
+except ImportError:
+    missing_modules.append('multiprocessing')
+
 # Check that hyde executable works
 print("Testing hyde_cpp compilation...", end='')
 test_hyde = sps.Popen(['src/hyde_cpp'], stdout=sps.PIPE, stderr=sps.PIPE, shell=True)
@@ -70,7 +75,7 @@ if INSTALL_ERROR:
 else:
     setup(
         name="phyde",
-        version="0.3.2",
+        version="0.3.3",
         description="Hybridization detection using phylogenetic invariants",
         long_description=open('README.rst').read(),
         url="https://github.com/pblischak/HyDe",
@@ -84,6 +89,7 @@ else:
         scripts=['scripts/bootstrap_hyde.py',
                  'scripts/individual_hyde.py',
                  'scripts/run_hyde.py',
+                 'scripts/run_hyde_mp.py',
                  'src/hyde_cpp'],
         license="GPLv3",
         classifiers=[
