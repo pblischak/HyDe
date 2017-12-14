@@ -2,10 +2,6 @@ from __future__ import print_function
 from setuptools import setup, find_packages
 from setuptools.extension import Extension
 import sys
-try:
-    import subprocess32 as sps
-except ImportError:
-    import subprocess as sps
 missing_modules = []
 INSTALL_ERROR   = False
 
@@ -46,19 +42,6 @@ try:
 except ImportError:
     print("\n'multiprocess' module not found.\n\n  Install with: pip install multiprocess")
 
-# Check that hyde executable works
-print("Testing hyde_cpp compilation...", end='')
-test_hyde = sps.Popen(['src/hyde_cpp'], stdout=sps.PIPE, stderr=sps.PIPE, shell=True)
-(out, err) = test_hyde.communicate()
-if not str(err).startswith('\n** ERROR'):
-    try:
-        sps.call(['make'])
-    except:
-        INSTALL_ERROR=True
-else:
-    pass
-print("Done.")
-
 if len(missing_modules) > 0:
     INSTALL_ERROR = True
     print("\nERROR:")
@@ -69,13 +52,13 @@ if len(missing_modules) > 0:
 
 if INSTALL_ERROR:
     print("\nERROR:")
-    print("  Unable to install hyde.")
+    print("  Unable to install phyde.")
     print("  Please see the documentation at http://hybridization-detection.rtfd.io/.\n")
-    sys.exit()
+    sys.exit(-1)
 else:
     setup(
         name="phyde",
-        version="0.3.3",
+        version="0.4.0",
         description="Hybridization detection using phylogenetic invariants",
         long_description=open('README.rst').read(),
         url="https://github.com/pblischak/HyDe",
@@ -86,23 +69,23 @@ else:
                                          include_dirs=[numpy.get_include()],
                                          language="c++"),]),
         #include_dirs=[numpy.get_include()],
-        scripts=['scripts/run_hyde.py',
-                 'scripts/run_hyde_mp.py',
-                 'scripts/individual_hyde.py',
-                 'scripts/individual_hyde_mp.py',
-                 'scripts/bootstrap_hyde.py',
-                 'scripts/bootstrap_hyde_mp.py',
-                 'src/hyde_cpp'
-                ],
+        scripts=[
+            'scripts/run_hyde.py',
+            'scripts/run_hyde_mp.py',
+            'scripts/individual_hyde.py',
+            'scripts/individual_hyde_mp.py',
+            'scripts/bootstrap_hyde.py',
+            'scripts/bootstrap_hyde_mp.py'
+        ],
         license="GPLv3",
-        classifiers=['Programming Language :: Python',
-                     'Programming Language :: Python :: 2',
-                     'Programming Language :: Python :: 2.7',
-                     'Programming Language :: Cython',
-                     'Programming Language :: C++',
-                     'Development Status :: 3 - Alpha',
-                     'Intended Audience :: Science/Research',
-                     'License :: OSI Approved :: GNU General Public License v3 (GPLv3)'
-                    ],
+        classifiers=[
+            'Programming Language :: Python',
+            'Programming Language :: Python :: 2',
+            'Programming Language :: Python :: 2.7',
+            'Programming Language :: Cython',
+            'Development Status :: 3 - Alpha',
+            'Intended Audience :: Science/Research',
+            'License :: OSI Approved :: GNU General Public License v3 (GPLv3)'
+        ],
         zip_safe=False
     )

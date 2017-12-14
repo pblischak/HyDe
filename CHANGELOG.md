@@ -1,16 +1,29 @@
 # Change log
 
+## v0.4.0
+
+**Removing dependence on `hyde_cpp`**
+
+ - The `hyde_cpp` executable has been deprecated in favor of using the
+   `*_hyde.py` scripts, which are just as fast.
+
+ - The `phyde.analyze` submodule has been removed, and all functions calling the
+   `hyde_cpp` program have been either modified or removed.
+
+ - We anticipate that this will make the installation process simpler, and will
+   allow us to distribute the software as purely a Python package (w/ Cython for speed).
+
 ## v0.3.3
 
 **New multithreaded scripts**
 
-- All of the `*_hyde.py` scripts now have multithreaded versions:
-  `run_hyde_mp.py`, `individual_hyde_mp.py`, and `bootstrap_hyde_mp.py`.
-  Parallelization with these scripts works best with data sets that have a lot of species.
-  We use the `multiprocess` module, which will need to be installed: `pip install multiprocess`.
+ - All of the `*_hyde.py` scripts now have multithreaded versions:
+   `run_hyde_mp.py`, `individual_hyde_mp.py`, and `bootstrap_hyde_mp.py`.
+   Parallelization with these scripts works best with data sets that have a lot of species.
+   We use the `multiprocess` module, which will need to be installed: `pip install multiprocess`.
 
-- We also added a quiet option (`-q` or `--quiet`) to suppress printing to stdout
-  while the program is running.
+ - We also added a quiet option (`-q` or `--quiet`) to suppress printing to stdout
+   while the program is running.
 
 ## v0.3.2
 

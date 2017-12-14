@@ -1,8 +1,7 @@
 
-__version__ = "0.3.3a"
+__version__ = "0.4.0a"
 __author__  = "Paul Blischak and Laura Kubatko"
 
-from phyde.analyze.main import run_hyde
 from phyde.core.bootstrap import Bootstrap
 from phyde.core.data import HydeData
 from phyde.core.result import HydeResult
