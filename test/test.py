@@ -19,11 +19,6 @@ print("\n**** Test 4: Running bootstrap_triple(). ****")
 print(data.bootstrap_triple('sp1', 'sp2', 'sp3', 20))
 print("**** Good. ****")
 
-print("\n**** Test 5: Running run_hyde(). ****")
-res = hd.run_hyde("data.txt", "map.txt", "out", 16, 4, 50000)
-print(res.res[res.triples[0]])
-print("**** Good. ****")
-
 print("\n**** Test 6: Reading in HyDe results. ****")
 res2 = hd.HydeResult("../hyde-out.txt")
 print("**** Good. ****")
