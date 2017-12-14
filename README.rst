@@ -87,13 +87,14 @@ Requirements:
    -  Pandas
    -  Matplotlib
    -  Seaborn
+   -  Multiprocess
 
 -  C++ compiler (g++ >= v4.8)
 
 .. code:: bash
 
     # To install dependencies
-    pip install cython numpy scipy pandas matplotlib seaborn
+    pip install cython numpy scipy pandas matplotlib seaborn multiprocess
 
     # Clone HyDe repository from GitHub
     git clone https://github.com/pblischak/HyDe.git

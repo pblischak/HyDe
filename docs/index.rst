@@ -49,6 +49,11 @@ If you only have a few hypotheses that you want to test, then you can also pass
 a triples file to ``run_hyde.py`` and it will only test those hypotheses rather than
 testing everything.
 
+Multithreaded versions of these scripts are also available (``run_hyde_mp.py``,
+``individual_hyde_mp.py``, and ``bootstrap_hyde_mp.py``).
+Make sure you have the ``multiprocess`` module installed before you use them:
+``pip install multiprocess``.
+
 Getting help
 ------------
 

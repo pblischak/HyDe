@@ -25,13 +25,15 @@ Required Python packages
 ------------------------
 
 With Miniconda installed, we can use ``pip`` or ``conda`` to install all of the Python
-modules that HyDe requires (Cython, Numpy, Pandas, Scipy, Matplotlib, and Seaborn).
+modules that HyDe requires (Cython, Numpy, Pandas, Scipy, Matplotlib, Seaborn, and Multiprocess).
 
 .. code:: bash
 
   # Install packages with conda or pip command
   conda install cython numpy pandas scipy matplotlib seaborn
-  # pip install cython numpy pandas scipy matplotlib seaborn
+
+  # use pip to install multiprocess
+  pip install multiprocess
 
 Installing HyDe
 ---------------
