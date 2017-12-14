@@ -42,9 +42,9 @@ except ImportError:
     missing_modules.append('seaborn')
 
 try:
-    import multiprocessing
+    import multiprocess
 except ImportError:
-    missing_modules.append('multiprocessing')
+    print("\n'multiprocess' module not found.\n\n  Install with: pip install multiprocess")
 
 # Check that hyde executable works
 print("Testing hyde_cpp compilation...", end='')
@@ -86,21 +86,23 @@ else:
                                          include_dirs=[numpy.get_include()],
                                          language="c++"),]),
         #include_dirs=[numpy.get_include()],
-        scripts=['scripts/bootstrap_hyde.py',
-                 'scripts/individual_hyde.py',
-                 'scripts/run_hyde.py',
+        scripts=['scripts/run_hyde.py',
                  'scripts/run_hyde_mp.py',
-                 'src/hyde_cpp'],
+                 'scripts/individual_hyde.py',
+                 'scripts/individual_hyde_mp.py',
+                 'scripts/bootstrap_hyde.py',
+                 'scripts/bootstrap_hyde_mp.py',
+                 'src/hyde_cpp'
+                ],
         license="GPLv3",
-        classifiers=[
-            'Programming Language :: Python',
-            'Programming Language :: Python :: 2',
-            'Programming Language :: Python :: 2.7',
-            'Programming Language :: Cython',
-            'Programming Language :: C++',
-            'Development Status :: 3 - Alpha',
-            'Intended Audience :: Science/Research',
-            'License :: OSI Approved :: GNU General Public License v3 (GPLv3)'
-        ],
+        classifiers=['Programming Language :: Python',
+                     'Programming Language :: Python :: 2',
+                     'Programming Language :: Python :: 2.7',
+                     'Programming Language :: Cython',
+                     'Programming Language :: C++',
+                     'Development Status :: 3 - Alpha',
+                     'Intended Audience :: Science/Research',
+                     'License :: OSI Approved :: GNU General Public License v3 (GPLv3)'
+                    ],
         zip_safe=False
     )

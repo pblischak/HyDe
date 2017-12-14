@@ -1,16 +1,13 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
-# run_hyde.py
+# individual_hyde.py
 # Written by PD Blischak
 
 """
-<< run_hyde_mp.py >>
+<< individual_hyde.py >>
 
-Run a full hybridization detection analysis or test for hybridization in a
-specified set of triples. Uses the multiprocessing package to parallelize
-the running of hypothesis tests. This is most useful for running larger
-numbers of species.
+Test all individuals within a putative hybrid lineage for a specified triple.
 
 Arguments
 ---------
@@ -18,28 +15,29 @@ Arguments
     - infile <string>   : name of the DNA sequence data file.
     - mapfile <string>  : name of the taxon map file.
     - outgroup <string> : name of the outgroup.
+    - triples <string>  : name of the file containing triples for testing.
     - nind <int>        : number of sampled individuals.
     - nsites <int>      : number of sampled sites.
-    - ntaxa <int>       : number of sampled taxa/populations.
-    - threads <int>     : number of threads to use. [default=all available]
-    - triples <string>  : name of the file containing triples for testing [optional].
+    - ntaxa <int>       : number of sampled taxa (populations, OTUs, etc.).
     - prefix <string>   : name added to the beginning of output file.
     - quiet <flag>      : suppress printing to stdout.
 
 Output
 ------
 
-    Writes a file ('hyde-out.txt') listing each triple that was tested (P1, Hybrid, P2),
-    along with the corresponding Z-score, p-value, gamma estimate, and
-    site pattern counts.
+    Writes a file ('hyde-ind.txt') with the results of the hybridization
+    detection analysis for each individual tested against the putative parents
+    specified in the triples file. P1 and P2 will be the name of the parents
+    but the Hybrid column will contain the names of all of the individuals that
+    were tested.
 """
 
 from __future__ import print_function
 import phyde as hd
-import multiprocess as mp
 import argparse
 import sys
 import os
+import multiprocess as mp
 
 def parse_triples(triples_file):
     """
@@ -62,40 +60,42 @@ def parse_triples(triples_file):
             triples = [(l.split()[0], l.split()[1], l.split()[2]) for l in lines]
     return triples
 
-def write_out(out, triple, outfile):
+def write_ind(out, triple, outfile):
     """
-    Take the output from test_triple() and write it to file.
+    Write the current output dictionary from test_individuals()
+    to the file passed as an argument to the function.
     """
-    print(triple[0], "\t", triple[1], "\t", triple[2], "\t", sep='', end='', file=outfile)
-    print(out['Zscore'], "\t", sep='', end='', file=outfile)
-    print(out['Pvalue'], "\t", sep='', end='', file=outfile)
-    print(out['Gamma'], "\t", sep='', end='', file=outfile)
-    print(out['AAAA'], "\t", sep='', end='', file=outfile)
-    print(out['AAAB'], "\t", sep='', end='', file=outfile)
-    print(out['AABA'], "\t", sep='', end='', file=outfile)
-    print(out['AABB'], "\t", sep='', end='', file=outfile)
-    print(out['AABC'], "\t", sep='', end='', file=outfile)
-    print(out['ABAA'], "\t", sep='', end='', file=outfile)
-    print(out['ABAB'], "\t", sep='', end='', file=outfile)
-    print(out['ABAC'], "\t", sep='', end='', file=outfile)
-    print(out['ABBA'], "\t", sep='', end='', file=outfile)
-    print(out['BAAA'], "\t", sep='', end='', file=outfile)
-    print(out['ABBC'], "\t", sep='', end='', file=outfile)
-    print(out['CABC'], "\t", sep='', end='', file=outfile)
-    print(out['BACA'], "\t", sep='', end='', file=outfile)
-    print(out['BCAA'], "\t", sep='', end='', file=outfile)
-    print(out['ABCD'], "\n", sep='', end='', file=outfile)
+    for k,v in out.items():
+        print(triple[0], "\t", k, "\t", triple[2], "\t", sep='', end='', file=outfile)
+        print(v['Zscore'], "\t", sep='', end='', file=outfile)
+        print(v['Pvalue'], "\t", sep='', end='', file=outfile)
+        print(v['Gamma'], "\t", sep='', end='', file=outfile)
+        print(v['AAAA'], "\t", sep='', end='', file=outfile)
+        print(v['AAAB'], "\t", sep='', end='', file=outfile)
+        print(v['AABA'], "\t", sep='', end='', file=outfile)
+        print(v['AABB'], "\t", sep='', end='', file=outfile)
+        print(v['AABC'], "\t", sep='', end='', file=outfile)
+        print(v['ABAA'], "\t", sep='', end='', file=outfile)
+        print(v['ABAB'], "\t", sep='', end='', file=outfile)
+        print(v['ABAC'], "\t", sep='', end='', file=outfile)
+        print(v['ABBA'], "\t", sep='', end='', file=outfile)
+        print(v['BAAA'], "\t", sep='', end='', file=outfile)
+        print(v['ABBC'], "\t", sep='', end='', file=outfile)
+        print(v['CABC'], "\t", sep='', end='', file=outfile)
+        print(v['BACA'], "\t", sep='', end='', file=outfile)
+        print(v['BCAA'], "\t", sep='', end='', file=outfile)
+        print(v['ABCD'], "\n", sep='', end='', file=outfile)
 
 if __name__ == "__main__":
     """
-    Runs the script.
+    Runs the scripts.
     """
     # print docstring if only the name of the script is given
     if len(sys.argv) < 2:
         print(__doc__)
         sys.exit(0)
 
-    parser = argparse.ArgumentParser(description="Options for run_hyde.py",
+    parser = argparse.ArgumentParser(description="Options for individual_hyde.py",
                                      add_help=True)
 
     required = parser.add_argument_group("required arguments")
@@ -105,6 +105,8 @@ if __name__ == "__main__":
                           metavar='\b', help="map of individuals to taxa")
     required.add_argument('-o', '--outgroup', action="store", type=str, required=True,
                           metavar='\b', help="name of the outgroup (only one accepted)")
+    required.add_argument('-tr','--triples', action="store", type=str, required=True,
+                          metavar='\b', help="table of triples to be analyzed.")
     required.add_argument('-n', '--num_ind', action="store", type=int, required=True,
                           metavar='\b', help="number of individuals in data matrix")
     required.add_argument('-t', '--num_taxa', action="store", type=int, required=True,
@@ -115,10 +117,6 @@ if __name__ == "__main__":
     additional = parser.add_argument_group("additional arguments")
     additional.add_argument('-j','--threads', action="store", type=int, default=mp.cpu_count(),
                             metavar='\b', help="number of threads [default=all available]")
-    additional.add_argument('-tr','--triples', action="store", type=str, default="none",
-                          metavar='\b', help="table of triples to be analyzed.")
-    additional.add_argument('-p', '--pvalue', action="store", type=float, default=0.05,
-                            metavar='\b', help="p-value cutoff for test of significance [default=0.05]")
     additional.add_argument('--prefix', action="store", type=str, default="hyde",
                             metavar='\b', help="prefix appended to output files [default=hyde]")
     additional.add_argument('-q', '--quiet', action="store_true",
@@ -128,42 +126,28 @@ if __name__ == "__main__":
     infile   = args.infile
     mapfile  = args.map
     outgroup = args.outgroup
+    triples  = parse_triples(args.triples)
     nind     = args.num_ind
     ntaxa    = args.num_taxa
     nsites   = args.num_sites
     threads  = args.threads
-    pvalue   = args.pvalue
     prefix   = args.prefix
     quiet    = args.quiet
 
-    if os.path.exists(prefix+"-out-filtered.txt"):
-        if not quiet: print("\n**  Warning: File '"+prefix+"-out-filtered.txt' already exists. **")
-        if not quiet: print("**  Renaming to 'old-"+prefix+"-out-filtered.txt'. **\n")
-        os.rename(prefix+"-out-filtered.txt", "old-"+prefix+"-out-filtered.txt")
-        filtered_outfile = open(prefix+"-out-filtered.txt", 'wa')
-    else:
-        filtered_outfile = open(prefix+"-out-filtered.txt", 'wa')
-
-    if os.path.exists(prefix+"-out.txt"):
-        if not quiet: print("\n**  Warning: File '"+prefix+"-out.txt' already exists. **")
-        if not quiet: print("**  Renaming to 'old-"+prefix+"-out.txt'. **\n")
-        os.rename(prefix+"-out.txt", "old-"+prefix+"-out.txt")
-        outfile = open(prefix+"-out.txt", 'wa')
-    else:
-        outfile = open(prefix+"-out.txt", 'wa')
-
     if not quiet: print("\nCurrently using ", threads, " thread(s).", sep='')
-    data = hd.HydeData(infile, mapfile, outgroup, nind, ntaxa, nsites, quiet)
+    # Read data into a HydeData object
+    data = hd.HydeData(infile, mapfile, outgroup, nind, ntaxa, nsites)
 
-    if args.triples != "none":
-        if not quiet: print("--> Using triples in file ", args.triples, sep='')
-        triples = parse_triples(args.triples)
+    if os.path.exists(prefix+"-ind.txt"):
+        if not quiet: print("\n**  Warning: File '"+prefix+"-ind.txt' already exists. **")
+        if not quiet: print("**  Renaming to 'old-"+prefix+"-ind.txt'. **\n")
+        os.rename(prefix+"-ind.txt", "old-"+prefix+"-ind.txt")
+        outfile = open(prefix+"-ind.txt", 'wa')
     else:
-        triples = data.list_triples()
+        outfile = open(prefix+"-ind.txt", 'wa')
 
-    # print file headers
+    # print file header
     print("P1\tHybrid\tP2\tZscore\tPvalue\tGamma\tAAAA\tAAAB\tAABA\tAABB\tAABC\tABAA\tABAB\tABAC\tABBA\tBAAA\tABBC\tCABC\tBACA\tBCAA\tABCD\n", end='', file=outfile)
-    print("P1\tHybrid\tP2\tZscore\tPvalue\tGamma\tAAAA\tAAAB\tAABA\tAABB\tAABC\tABAA\tABAB\tABAC\tABBA\tBAAA\tABBC\tCABC\tBACA\tBCAA\tABCD\n", end='', file=filtered_outfile)
 
     def wrap_test((p1, hyb, p2)):
         """
@@ -171,7 +155,7 @@ if __name__ == "__main__":
         test on a given triple.
         """
         res = {}
-        res[(p1, hyb, p2)] = data.test_triple(p1, hyb, p2)
+        res[(p1, hyb, p2)] = data.test_individuals(p1, hyb, p2)
         return res
 
     def mp_run():
@@ -183,9 +167,7 @@ if __name__ == "__main__":
         return res
 
     out = mp_run()
-    for o in  out:
+    for o in out:
         key = o.keys()[0]
-        val = o.values()[0]
-        write_out(val, key, outfile)
-        if val['Pvalue'] < (pvalue / len(triples)) and val['Gamma'] > 0.0 and val['Gamma'] < 1.0:
-            write_out(val, key, filtered_outfile)
+        value = o.values()[0]
+        write_ind(value, key, outfile)

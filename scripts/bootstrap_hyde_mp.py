@@ -1,16 +1,14 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
-# run_hyde.py
+# bootstrap_hyde.py
 # Written by PD Blischak
 
 """
-<< run_hyde_mp.py >>
+<< bootstrap_hyde.py >>
 
-Run a full hybridization detection analysis or test for hybridization in a
-specified set of triples. Uses the multiprocessing package to parallelize
-the running of hypothesis tests. This is most useful for running larger
-numbers of species.
+Bootstrap resample individuals within a putative hybrid population for a
+specified triple.
 
 Arguments
 ---------
@@ -18,28 +16,30 @@ Arguments
     - infile <string>   : name of the DNA sequence data file.
     - mapfile <string>  : name of the taxon map file.
     - outgroup <string> : name of the outgroup.
+    - triples <string>  : name of the file containing triples for testing.
+    - reps <int>        : number of bootstrap replicates (default=100).
     - nind <int>        : number of sampled individuals.
     - nsites <int>      : number of sampled sites.
     - ntaxa <int>       : number of sampled taxa/populations.
-    - threads <int>     : number of threads to use. [default=all available]
-    - triples <string>  : name of the file containing triples for testing [optional].
     - prefix <string>   : name added to the beginning of output file.
     - quiet <flag>      : suppress printing to stdout.
 
 Output
 ------
 
-    Writes a file ('hyde-out.txt') listing each triple that was tested (P1, Hybrid, P2),
-    along with the corresponding Z-score, p-value, gamma estimate, and
-    site pattern counts.
+    Writes a file ('hyde-boot.txt') with the bootstrap results for each triple. These are Written
+    in the same format as the normal hyde results file except that the bootstrap
+    replicates for each triple are separated by four pound symbols and a new line
+    "####\\n" (can be used to split the bootstrap replicates with the split()
+    function).
 """
 
 from __future__ import print_function
 import phyde as hd
-import multiprocess as mp
 import argparse
 import sys
 import os
+import multiprocess as mp
 
 def parse_triples(triples_file):
     """
@@ -62,29 +62,32 @@ def parse_triples(triples_file):
             triples = [(l.split()[0], l.split()[1], l.split()[2]) for l in lines]
     return triples
 
-def write_out(out, triple, outfile):
+def write_boot(boot, triple, outfile):
     """
-    Take the output from test_triple() and write it to file.
+    Write the current dictionary of bootstrapping output from bootstrap_triple()
+    to the file passed as an argument to the function.
     """
-    print(triple[0], "\t", triple[1], "\t", triple[2], "\t", sep='', end='', file=outfile)
-    print(out['Zscore'], "\t", sep='', end='', file=outfile)
-    print(out['Pvalue'], "\t", sep='', end='', file=outfile)
-    print(out['Gamma'], "\t", sep='', end='', file=outfile)
-    print(out['AAAA'], "\t", sep='', end='', file=outfile)
-    print(out['AAAB'], "\t", sep='', end='', file=outfile)
-    print(out['AABA'], "\t", sep='', end='', file=outfile)
-    print(out['AABB'], "\t", sep='', end='', file=outfile)
-    print(out['AABC'], "\t", sep='', end='', file=outfile)
-    print(out['ABAA'], "\t", sep='', end='', file=outfile)
-    print(out['ABAB'], "\t", sep='', end='', file=outfile)
-    print(out['ABAC'], "\t", sep='', end='', file=outfile)
-    print(out['ABBA'], "\t", sep='', end='', file=outfile)
-    print(out['BAAA'], "\t", sep='', end='', file=outfile)
-    print(out['ABBC'], "\t", sep='', end='', file=outfile)
-    print(out['CABC'], "\t", sep='', end='', file=outfile)
-    print(out['BACA'], "\t", sep='', end='', file=outfile)
-    print(out['BCAA'], "\t", sep='', end='', file=outfile)
-    print(out['ABCD'], "\n", sep='', end='', file=outfile)
+    print("P1\tHybrid\tP2\tZscore\tPvalue\tGamma\tAAAA\tAAAB\tAABA\tAABB\tAABC\tABAA\tABAB\tABAC\tABBA\tBAAA\tABBC\tCABC\tBACA\tBCAA\tABCD\n", end='', file=outfile)
+    for v in boot.values():
+        print(triple[0], "\t", triple[1], "\t", triple[2], "\t", sep='', end='', file=outfile)
+        print(v['Zscore'], "\t", sep='', end='', file=outfile)
+        print(v['Pvalue'], "\t", sep='', end='', file=outfile)
+        print(v['Gamma'], "\t", sep='', end='', file=outfile)
+        print(v['AAAA'], "\t", sep='', end='', file=outfile)
+        print(v['AAAB'], "\t", sep='', end='', file=outfile)
+        print(v['AABA'], "\t", sep='', end='', file=outfile)
+        print(v['AABB'], "\t", sep='', end='', file=outfile)
+        print(v['AABC'], "\t", sep='', end='', file=outfile)
+        print(v['ABAA'], "\t", sep='', end='', file=outfile)
+        print(v['ABAB'], "\t", sep='', end='', file=outfile)
+        print(v['ABAC'], "\t", sep='', end='', file=outfile)
+        print(v['ABBA'], "\t", sep='', end='', file=outfile)
+        print(v['BAAA'], "\t", sep='', end='', file=outfile)
+        print(v['ABBC'], "\t", sep='', end='', file=outfile)
+        print(v['CABC'], "\t", sep='', end='', file=outfile)
+        print(v['BACA'], "\t", sep='', end='', file=outfile)
+        print(v['BCAA'], "\t", sep='', end='', file=outfile)
+        print(v['ABCD'], "\n", sep='', end='', file=outfile)
 
 if __name__ == "__main__":
     """
@@ -95,7 +98,7 @@ if __name__ == "__main__":
         print(__doc__)
         sys.exit(0)
 
-    parser = argparse.ArgumentParser(description="Options for run_hyde.py",
+    parser = argparse.ArgumentParser(description="Options for bootstrap_hyde.py",
                                      add_help=True)
 
     required = parser.add_argument_group("required arguments")
@@ -105,6 +108,8 @@ if __name__ == "__main__":
                           metavar='\b', help="map of individuals to taxa")
     required.add_argument('-o', '--outgroup', action="store", type=str, required=True,
                           metavar='\b', help="name of the outgroup (only one accepted)")
+    required.add_argument('-tr','--triples', action="store", type=str, required=True,
+                          metavar='\b', help="table of triples to be analyzed.")
     required.add_argument('-n', '--num_ind', action="store", type=int, required=True,
                           metavar='\b', help="number of individuals in data matrix")
     required.add_argument('-t', '--num_taxa', action="store", type=int, required=True,
@@ -112,13 +117,12 @@ if __name__ == "__main__":
     required.add_argument('-s', '--num_sites', action="store", type=int, required=True,
                           metavar='\b', help="number of sites in the data matrix")
 
+
     additional = parser.add_argument_group("additional arguments")
+    additional.add_argument('-r','--reps', action="store", type=int, default=100,
+                            metavar='\b', help="number of bootstrap replicates [default=100]")
     additional.add_argument('-j','--threads', action="store", type=int, default=mp.cpu_count(),
                             metavar='\b', help="number of threads [default=all available]")
-    additional.add_argument('-tr','--triples', action="store", type=str, default="none",
-                          metavar='\b', help="table of triples to be analyzed.")
-    additional.add_argument('-p', '--pvalue', action="store", type=float, default=0.05,
-                            metavar='\b', help="p-value cutoff for test of significance [default=0.05]")
     additional.add_argument('--prefix', action="store", type=str, default="hyde",
                             metavar='\b', help="prefix appended to output files [default=hyde]")
     additional.add_argument('-q', '--quiet', action="store_true",
@@ -128,42 +132,26 @@ if __name__ == "__main__":
     infile   = args.infile
     mapfile  = args.map
     outgroup = args.outgroup
+    triples  = parse_triples(args.triples)
     nind     = args.num_ind
     ntaxa    = args.num_taxa
     nsites   = args.num_sites
-    threads  = args.threads
-    pvalue   = args.pvalue
+    reps     = args.reps
     prefix   = args.prefix
     quiet    = args.quiet
-
-    if os.path.exists(prefix+"-out-filtered.txt"):
-        if not quiet: print("\n**  Warning: File '"+prefix+"-out-filtered.txt' already exists. **")
-        if not quiet: print("**  Renaming to 'old-"+prefix+"-out-filtered.txt'. **\n")
-        os.rename(prefix+"-out-filtered.txt", "old-"+prefix+"-out-filtered.txt")
-        filtered_outfile = open(prefix+"-out-filtered.txt", 'wa')
-    else:
-        filtered_outfile = open(prefix+"-out-filtered.txt", 'wa')
-
-    if os.path.exists(prefix+"-out.txt"):
-        if not quiet: print("\n**  Warning: File '"+prefix+"-out.txt' already exists. **")
-        if not quiet: print("**  Renaming to 'old-"+prefix+"-out.txt'. **\n")
-        os.rename(prefix+"-out.txt", "old-"+prefix+"-out.txt")
-        outfile = open(prefix+"-out.txt", 'wa')
-    else:
-        outfile = open(prefix+"-out.txt", 'wa')
+    threads  = args.threads
 
     if not quiet: print("\nCurrently using ", threads, " thread(s).", sep='')
-    data = hd.HydeData(infile, mapfile, outgroup, nind, ntaxa, nsites, quiet)
+    # Read data into a HydeData object
+    data = hd.HydeData(infile, mapfile, outgroup, nind, ntaxa, nsites)
 
-    if args.triples != "none":
-        if not quiet: print("--> Using triples in file ", args.triples, sep='')
-        triples = parse_triples(args.triples)
+    if os.path.exists(prefix+"-boot.txt"):
+        if not quiet: print("\n**  Warning: File '"+prefix+"-boot.txt' already exists. **")
+        if not quiet: print("**  Renaming to 'old-"+prefix+"-boot.txt'. **\n")
+        os.rename(prefix+"-boot.txt", "old-"+prefix+"-boot.txt")
+        outfile = open(prefix+"-boot.txt", 'wa')
     else:
-        triples = data.list_triples()
-
-    # print file headers
-    print("P1\tHybrid\tP2\tZscore\tPvalue\tGamma\tAAAA\tAAAB\tAABA\tAABB\tAABC\tABAA\tABAB\tABAC\tABBA\tBAAA\tABBC\tCABC\tBACA\tBCAA\tABCD\n", end='', file=outfile)
-    print("P1\tHybrid\tP2\tZscore\tPvalue\tGamma\tAAAA\tAAAB\tAABA\tAABB\tAABC\tABAA\tABAB\tABAC\tABBA\tBAAA\tABBC\tCABC\tBACA\tBCAA\tABCD\n", end='', file=filtered_outfile)
+        outfile = open(prefix+"-boot.txt", 'wa')
 
     def wrap_test((p1, hyb, p2)):
         """
@@ -171,7 +159,7 @@ if __name__ == "__main__":
         test on a given triple.
         """
         res = {}
-        res[(p1, hyb, p2)] = data.test_triple(p1, hyb, p2)
+        res[(p1, hyb, p2)] = data.bootstrap_triple(p1, hyb, p2, reps)
         return res
 
     def mp_run():
@@ -182,10 +170,12 @@ if __name__ == "__main__":
         res = p.map(wrap_test, triples)
         return res
 
+    # run the bootsrap replicates
     out = mp_run()
-    for o in  out:
+    counter = 0
+    for o in out:
         key = o.keys()[0]
-        val = o.values()[0]
-        write_out(val, key, outfile)
-        if val['Pvalue'] < (pvalue / len(triples)) and val['Gamma'] > 0.0 and val['Gamma'] < 1.0:
-            write_out(val, key, filtered_outfile)
+        value = o.values()[0]
+        write_boot(value, key, outfile)
+        counter += 1
+        if counter != len(triples): print("####\n", end='', file=outfile)

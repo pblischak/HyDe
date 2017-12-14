@@ -2,12 +2,14 @@
 
 ## v0.3.3
 
-**New multithreaded script**
+**New multithreaded scripts**
 
-- The `run_hyde.py` script now has a multithreaded version: `run_hyde_mp.py`.
-  It works best for data sets with a lot of species.
+- All of the `*_hyde.py` scripts now have multithreaded versions:
+  `run_hyde_mp.py`, `individual_hyde_mp.py`, and `bootstrap_hyde_mp.py`.
+  Parallelization with these scripts works best with data sets that have a lot of species.
+  We use the `multiprocess` module, which will need to be installed: `pip install multiprocess`.
 
-- We also added a quiet option (`-q` or `--quiet`) to supress printing to stdout
+- We also added a quiet option (`-q` or `--quiet`) to suppress printing to stdout
   while the program is running.
 
 ## v0.3.2
