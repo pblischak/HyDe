@@ -53,8 +53,7 @@ testing everything.
 
 Multithreaded versions of these scripts are also available (``run_hyde_mp.py``,
 ``individual_hyde_mp.py``, and ``bootstrap_hyde_mp.py``).
-Make sure you have the ``multiprocess`` module installed before you use them:
-``pip install multiprocess``.
+Make sure you have the ``multiprocess`` module installed before you use them.
 
 Getting help
 ------------
@@ -80,8 +79,6 @@ Requirements:
 
    -  Cython
    -  Numpy
-   -  Scipy
-   -  Pandas
    -  Matplotlib
    -  Seaborn
    -  Multiprocess
@@ -91,20 +88,20 @@ Requirements:
 .. code:: bash
 
     # To install dependencies
-    pip install cython numpy scipy pandas matplotlib seaborn multiprocess
+    pip install cython numpy matplotlib seaborn multiprocess
 
     # Clone HyDe repository from GitHub
     git clone https://github.com/pblischak/HyDe.git
     cd HyDe
-
-    # Compile hyde_cpp using `make`
-    make
 
     # Now install phyde module
     python setup.py install
 
     # Test the installation
     make test
+
+    # Test multithreaded scripts
+    make test_threads
 
 The ``phyde`` module is also hosted on the Python Package Index (PyPI), and can be installed directly using
 ``pip``.

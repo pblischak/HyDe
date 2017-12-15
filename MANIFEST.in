@@ -1,13 +1,9 @@
 include test/data.txt
+include test/data-phylip.txt
 include test/map.txt
 include test/triples.txt
 include examples/snake-data.txt
 include examples/snake-map.txt
-include src/*.cpp
-include src/*.hpp
-include src/Makefile
-exclude src/*.o
-exclude src/hyde_cpp
 include Makefile
 include phyde/core/data.pyx
 include LICENSE.rst

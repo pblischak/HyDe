@@ -18,16 +18,6 @@ except ImportError:
     missing_modules.append('numpy')
 
 try:
-    import scipy
-except ImportError:
-    missing_modules.append('scipy')
-
-try:
-    import pandas
-except ImportError:
-    missing_modules.append('pandas')
-
-try:
     import matplotlib
 except ImportError:
     missing_modules.append('matplotlib')
