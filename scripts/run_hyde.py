@@ -129,6 +129,17 @@ if __name__ == "__main__":
     prefix   = args.prefix
     quiet    = args.quiet
 
+    # checking to see if output files already exist
+    if os.path.exists(prefix+"-out.txt"):
+        if not quiet: print("\n**  Warning: File '"+prefix+"-out.txt' already exists. **")
+        if not quiet: print("**  Renaming to 'old-"+prefix+"-out.txt'. **\n")
+        os.rename(prefix+"-out.txt", "old-"+prefix+"-out.txt")
+        outfile = open(prefix+"-out.txt", 'wa')
+    else:
+        outfile = open(prefix+"-out.txt", 'wa')
+    # print outfile header
+    print("P1\tHybrid\tP2\tZscore\tPvalue\tGamma\tAAAA\tAAAB\tAABA\tAABB\tAABC\tABAA\tABAB\tABAC\tABBA\tBAAA\tABBC\tCABC\tBACA\tBCAA\tABCD\n", end='', file=outfile)
+
     if os.path.exists(prefix+"-out-filtered.txt"):
         if not quiet: print("\n**  Warning: File '"+prefix+"-out-filtered.txt' already exists. **")
         if not quiet: print("**  Renaming to 'old-"+prefix+"-out-filtered.txt'. **\n")
@@ -136,30 +147,20 @@ if __name__ == "__main__":
         filtered_outfile = open(prefix+"-out-filtered.txt", 'wa')
     else:
         filtered_outfile = open(prefix+"-out-filtered.txt", 'wa')
+    # print filtered outfile header
     print("P1\tHybrid\tP2\tZscore\tPvalue\tGamma\tAAAA\tAAAB\tAABA\tAABB\tAABC\tABAA\tABAB\tABAC\tABBA\tBAAA\tABBC\tCABC\tBACA\tBCAA\tABCD\n", end='', file=filtered_outfile)
 
+    # Read in data as HydeData object
+    data = hd.HydeData(infile, mapfile, outgroup, nind, ntaxa, nsites, quiet)
     if args.triples != "none":
         if not quiet: print("--> Using triples in file ", args.triples, sep='')
         triples = parse_triples(args.triples)
-        if os.path.exists(prefix+"-out.txt"):
-            if not quiet: print("\n**  Warning: File '"+prefix+"-out.txt' already exists. **")
-            if not quiet: print("**  Renaming to 'old-"+prefix+"-out.txt'. **\n")
-            os.rename(prefix+"-out.txt", "old-"+prefix+"-out.txt")
-            outfile = open(prefix+"-out.txt", 'wa')
-        else:
-            outfile = open(prefix+"-out.txt", 'wa')
-
-        # Read in data as HydeData object
-        data = hd.HydeData(infile, mapfile, outgroup, nind, ntaxa, nsites, quiet)
-        print("P1\tHybrid\tP2\tZscore\tPvalue\tGamma\tAAAA\tAAAB\tAABA\tAABB\tAABC\tABAA\tABAB\tABAC\tABBA\tBAAA\tABBC\tCABC\tBACA\tBCAA\tABCD\n", end='', file=outfile)
-        for t in triples:
-            res = data.test_triple(t[0], t[1], t[2])
-            write_out(res, t, outfile)
-            if res['Pvalue'] < (pvalue / len(triples)) and res['Gamma'] > 0.0 and res['Gamma'] < 1.0:
-                write_out(res, t, filtered_outfile)
     else:
-        if not quiet: print("--> Running full HyDe analysis with hyde_cpp")
-        res = hd.run_hyde(infile, mapfile, outgroup, nind, ntaxa, nsites, pvalue, prefix, quiet)
-        filtered_res = {k:v for k,v in res.res.items() if v['Pvalue'] < (pvalue / len(res.res)) and v['Gamma'] > 0.0 and v['Gamma'] < 1.0}
-        for k,v in filtered_res.items():
-            write_out(v, k, filtered_outfile)
+        if not quiet: print("--> Running full HyDe analysis")
+        triples = data.list_triples()
+
+    for t in triples:
+        res = data.test_triple(t[0], t[1], t[2])
+        write_out(res, t, outfile)
+        if res['Pvalue'] < (pvalue / len(triples)) and abs(res['Zscore']) != 99999.9 and res['Gamma'] > 0.0 and res['Gamma'] < 1.0:
+            write_out(res, t, filtered_outfile)

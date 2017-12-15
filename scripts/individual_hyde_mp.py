@@ -5,9 +5,10 @@
 # Written by PD Blischak
 
 """
-<< individual_hyde.py >>
+<< individual_hyde_mp.py >>
 
-Test all individuals within a putative hybrid lineage for a specified triple.
+Test all individuals within a putative hybrid lineage for a
+specified triple -- multithreaded version.
 
 Arguments
 ---------
@@ -19,6 +20,7 @@ Arguments
     - nind <int>        : number of sampled individuals.
     - nsites <int>      : number of sampled sites.
     - ntaxa <int>       : number of sampled taxa (populations, OTUs, etc.).
+    - threads <int>     : number of threads [default=all available]
     - prefix <string>   : name added to the beginning of output file.
     - quiet <flag>      : suppress printing to stdout.
 

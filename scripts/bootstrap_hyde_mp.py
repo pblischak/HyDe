@@ -5,10 +5,10 @@
 # Written by PD Blischak
 
 """
-<< bootstrap_hyde.py >>
+<< bootstrap_hyde_mp.py >>
 
 Bootstrap resample individuals within a putative hybrid population for a
-specified triple.
+specified triple -- multithreaded version.
 
 Arguments
 ---------
@@ -17,10 +17,11 @@ Arguments
     - mapfile <string>  : name of the taxon map file.
     - outgroup <string> : name of the outgroup.
     - triples <string>  : name of the file containing triples for testing.
-    - reps <int>        : number of bootstrap replicates (default=100).
+    - reps <int>        : number of bootstrap replicates [default=100].
     - nind <int>        : number of sampled individuals.
     - nsites <int>      : number of sampled sites.
     - ntaxa <int>       : number of sampled taxa/populations.
+    - threads <int>     : number of threads [default=all available]
     - prefix <string>   : name added to the beginning of output file.
     - quiet <flag>      : suppress printing to stdout.
 

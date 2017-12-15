@@ -10,6 +10,6 @@ exclude src/*.o
 exclude src/hyde_cpp
 include Makefile
 include phyde/core/data.pyx
-LICENSE.rst
-README.rst
-CHANGELOG.md
+include LICENSE.rst
+include README.rst
+include CHANGELOG.md
