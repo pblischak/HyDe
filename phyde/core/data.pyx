@@ -193,12 +193,12 @@ cdef class HydeData:
         self.outgroup = newOut
         self.outIndex = np.array([i[0] for i in self.taxonMap[newOut]], dtype=INDEX)
 
-    cdef void _convert(self, int row, bytes d):
+    cdef void _convert(self, int row, str d):
         cdef unsigned long s
         for s in range(len(d)):
             self.dnaMat[row,s] = _BASE_TO_UINT8[d[s]]
 
-    cpdef dict test_triple(self, bytes p1, bytes hyb, bytes p2):
+    cpdef dict test_triple(self, str p1, str hyb, str p2):
         """
         Main method for testing a hypothesis on a specified triple.
         ((P1,Hyb),P2):gamma and (P1,(Hyb,P2)):1-gamma.
@@ -226,7 +226,7 @@ cdef class HydeData:
         res = self._test_triple_c(p1_rows, hyb_rows, p2_rows)
         return res
 
-    cpdef dict test_individuals(self, bytes p1, bytes hyb, bytes p2):
+    cpdef dict test_individuals(self, str p1, str hyb, str p2):
         """
 
         """
@@ -246,7 +246,7 @@ cdef class HydeData:
             #res[self.taxonMap[hyb][t]] = tmp_res
         return res
 
-    cpdef dict bootstrap_triple(self, bytes p1, bytes hyb, bytes p2, int reps=100):
+    cpdef dict bootstrap_triple(self, str p1, str hyb, str p2, int reps=100):
         """
         Perform bootstrap resampling of individuals within the putative hybrid.
 
