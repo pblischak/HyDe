@@ -165,13 +165,13 @@ if __name__ == "__main__":
     print("P1\tHybrid\tP2\tZscore\tPvalue\tGamma\tAAAA\tAAAB\tAABA\tAABB\tAABC\tABAA\tABAB\tABAC\tABBA\tBAAA\tABBC\tCABC\tBACA\tBCAA\tABCD\n", end='', file=outfile)
     print("P1\tHybrid\tP2\tZscore\tPvalue\tGamma\tAAAA\tAAAB\tAABA\tAABB\tAABC\tABAA\tABAB\tABAC\tABBA\tBAAA\tABBC\tCABC\tBACA\tBCAA\tABCD\n", end='', file=filtered_outfile)
 
-    def wrap_test((p1, hyb, p2)):
+    def wrap_test(tr=(p1, hyb, p2)):
         """
         Wrapper function for running a hypothesis
         test on a given triple.
         """
         res = {}
-        res[(p1, hyb, p2)] = data.test_triple(p1, hyb, p2)
+        res[(tr[0], tr[1], tr[2])] = data.test_triple(tr[0], tr[1], tr[2])
         return res
 
     def mp_run():

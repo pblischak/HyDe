@@ -154,13 +154,13 @@ if __name__ == "__main__":
     else:
         outfile = open(prefix+"-boot.txt", 'a')
 
-    def wrap_test((p1, hyb, p2)):
+    def wrap_test(tr=(p1, hyb, p2)):
         """
         Wrapper function for running a hypothesis
         test on a given triple.
         """
         res = {}
-        res[(p1, hyb, p2)] = data.bootstrap_triple(p1, hyb, p2, reps)
+        res[(tr[0], tr[1], tr[2])] = data.bootstrap_triple(tr[0], tr[1], tr[2], reps)
         return res
 
     def mp_run():
