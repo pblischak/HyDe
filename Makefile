@@ -1,3 +1,5 @@
+all : test test_threads
+
 .PHONY: test test_threads
 
 test :
@@ -16,12 +18,12 @@ test :
 
 test_threads :
 	@printf "**** Testing run_hyde_mp.py (multithreaded; full analysis). ****\n"
-	run_hyde.py -i examples/snake-data.txt -m examples/snake-map.txt -n 52 -t 7 -s 8466 -o out
+	run_hyde_mp.py -i examples/snake-data.txt -m examples/snake-map.txt -n 52 -t 7 -s 8466 -o out
 	@printf "\n**** Testing run_hyde_mp.py (multithreaded; using triples). ****\n"
-	run_hyde.py -i test/data.txt -m test/map.txt -o out -tr test/triples.txt -n 16 -t 4 -s 50000
+	run_hyde_mp.py -i test/data.txt -m test/map.txt -o out -tr test/triples.txt -n 16 -t 4 -s 50000
 	@printf "\n**** Testing run_hyde_mp.py (multithreaded; phylip format). ****\n"
-	run_hyde.py -i test/data-phylip.txt -m test/map.txt -o out -tr test/triples.txt -n 16 -t 4 -s 50000
+	run_hyde_mp.py -i test/data-phylip.txt -m test/map.txt -o out -tr test/triples.txt -n 16 -t 4 -s 50000
 	@printf "\n**** Testing bootstrap_hyde_mp.py (multithreaded). ****\n"
-	bootstrap_hyde.py -i test/data.txt -m test/map.txt -o out -tr test/triples.txt -n 16 -t 4 -s 50000
+	bootstrap_hyde_mp.py -i test/data.txt -m test/map.txt -o out -tr test/triples.txt -n 16 -t 4 -s 50000
 	@printf "\n**** Testing individual_hyde_mp.py (multithreaded). ****\n"
-	individual_hyde.py -i test/data.txt -m test/map.txt -o out -tr test/triples.txt -n 16 -t 4 -s 50000
+	individual_hyde_mp.py -i test/data.txt -m test/map.txt -o out -tr test/triples.txt -n 16 -t 4 -s 50000
