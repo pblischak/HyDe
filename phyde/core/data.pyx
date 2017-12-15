@@ -273,7 +273,7 @@ cdef class HydeData:
 
         """
         res = []
-        ks = self.taxonMap.keys()
+        ks = list(self.taxonMap)
         for a in range(len(ks)):
             if ks[a] == self.outgroup:
                 del ks[a]
