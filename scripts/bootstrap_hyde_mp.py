@@ -175,8 +175,8 @@ if __name__ == "__main__":
     out = mp_run()
     counter = 0
     for o in out:
-        key = o.keys()[0]
-        value = o.values()[0]
+        key = list(o.keys())[0]
+        value = list(o.values())[0]
         write_boot(value, key, outfile)
         counter += 1
         if counter != len(triples): print("####\n", end='', file=outfile)

@@ -184,8 +184,8 @@ if __name__ == "__main__":
 
     out = mp_run()
     for o in  out:
-        key = o.keys()[0]
-        val = o.values()[0]
+        key = list(o.keys())[0]
+        val = list(o.values())[0]
         write_out(val, key, outfile)
         if val['Pvalue'] < (pvalue / len(triples)) and val['Gamma'] > 0.0 and val['Gamma'] < 1.0:
             write_out(val, key, filtered_outfile)

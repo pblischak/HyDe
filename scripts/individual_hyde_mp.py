@@ -170,6 +170,6 @@ if __name__ == "__main__":
 
     out = mp_run()
     for o in out:
-        key = o.keys()[0]
-        value = o.values()[0]
+        key = list(o.keys())[0]
+        value = list(o.values())[0]
         write_ind(value, key, outfile)
