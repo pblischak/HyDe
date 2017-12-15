@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 # individual_hyde.py
@@ -151,7 +151,7 @@ if __name__ == "__main__":
     # print file header
     print("P1\tHybrid\tP2\tZscore\tPvalue\tGamma\tAAAA\tAAAB\tAABA\tAABB\tAABC\tABAA\tABAB\tABAC\tABBA\tBAAA\tABBC\tCABC\tBACA\tBCAA\tABCD\n", end='', file=outfile)
 
-    def wrap_test(tr=(p1, hyb, p2)):
+    def wrap_test(tr):
         """
         Wrapper function for running a hypothesis
         test on a given triple.

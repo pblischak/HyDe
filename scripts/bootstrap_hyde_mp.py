@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 # bootstrap_hyde.py
@@ -154,7 +154,7 @@ if __name__ == "__main__":
     else:
         outfile = open(prefix+"-boot.txt", 'a')
 
-    def wrap_test(tr=(p1, hyb, p2)):
+    def wrap_test(tr):
         """
         Wrapper function for running a hypothesis
         test on a given triple.
