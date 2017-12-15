@@ -1068,7 +1068,7 @@ struct __pyx_opt_args_5phyde_4core_4data_8HydeData_bootstrap_triple;
 /* "phyde/core/data.pyx":249
  *         return res
  * 
- *     cpdef dict bootstrap_triple(self, bytes p1, bytes hyb, bytes p2, int reps=100):             # <<<<<<<<<<<<<<
+ *     cpdef dict bootstrap_triple(self, str p1, str hyb, str p2, int reps=100):             # <<<<<<<<<<<<<<
  *         """
  *         Perform bootstrap resampling of individuals within the putative hybrid.
  */
@@ -1344,6 +1344,10 @@ static void __Pyx_RaiseDoubleKeywordsError(const char* func_name, PyObject* kw_n
 static int __Pyx_ParseOptionalKeywords(PyObject *kwds, PyObject **argnames[],\
     PyObject *kwds2, PyObject *values[], Py_ssize_t num_pos_args,\
     const char* function_name);
+
+/* ArgTypeTest.proto */
+static CYTHON_INLINE int __Pyx_ArgTypeTest(PyObject *obj, PyTypeObject *type, int none_allowed,
+    const char *name, int exact);
 
 /* Profile.proto */
 #ifndef CYTHON_PROFILE
@@ -1813,46 +1817,25 @@ static void __Pyx_WriteUnraisable(const char *name, int clineno,
 /* ExtTypeTest.proto */
 static CYTHON_INLINE int __Pyx_TypeTest(PyObject *obj, PyTypeObject *type);
 
-/* ArgTypeTest.proto */
-static CYTHON_INLINE int __Pyx_ArgTypeTest(PyObject *obj, PyTypeObject *type, int none_allowed,
-    const char *name, int exact);
-
 #define __Pyx_BufPtrStrided1d(type, buf, i0, s0) (type)((char*)buf + i0 * s0)
 /* BufferFallbackError.proto */
 static void __Pyx_RaiseBufferFallbackError(void);
-
-/* py_dict_keys.proto */
-static CYTHON_INLINE PyObject* __Pyx_PyDict_Keys(PyObject* d);
-
-/* UnpackUnboundCMethod.proto */
-typedef struct {
-    PyObject *type;
-    PyObject **method_name;
-    PyCFunction func;
-    PyObject *method;
-    int flag;
-} __Pyx_CachedCFunction;
-
-/* CallUnboundCMethod0.proto */
-static PyObject* __Pyx__CallUnboundCMethod0(__Pyx_CachedCFunction* cfunc, PyObject* self);
-#if CYTHON_COMPILING_IN_CPYTHON
-#define __Pyx_CallUnboundCMethod0(cfunc, self)\
-    ((likely((cfunc)->func)) ?\
-        (likely((cfunc)->flag == METH_NOARGS) ?  (*((cfunc)->func))(self, NULL) :\
-         (likely((cfunc)->flag == (METH_VARARGS | METH_KEYWORDS)) ?  ((*(PyCFunctionWithKeywords)(cfunc)->func)(self, __pyx_empty_tuple, NULL)) :\
-             ((cfunc)->flag == METH_VARARGS ?  (*((cfunc)->func))(self, __pyx_empty_tuple) :\
-              (PY_VERSION_HEX >= 0x030600B1 && (cfunc)->flag == METH_FASTCALL ?  (*(__Pyx_PyCFunctionFast)(cfunc)->func)(self, &PyTuple_GET_ITEM(__pyx_empty_tuple, 0), 0, NULL) :\
-                __Pyx__CallUnboundCMethod0(cfunc, self))))) :\
-        __Pyx__CallUnboundCMethod0(cfunc, self))
-#else
-#define __Pyx_CallUnboundCMethod0(cfunc, self)  __Pyx__CallUnboundCMethod0(cfunc, self)
-#endif
 
 /* IncludeStringH.proto */
 #include <string.h>
 
 /* BytesEquals.proto */
 static CYTHON_INLINE int __Pyx_PyBytes_Equals(PyObject* s1, PyObject* s2, int equals);
+
+/* UnicodeEquals.proto */
+static CYTHON_INLINE int __Pyx_PyUnicode_Equals(PyObject* s1, PyObject* s2, int equals);
+
+/* StrEquals.proto */
+#if PY_MAJOR_VERSION >= 3
+#define __Pyx_PyString_Equals __Pyx_PyUnicode_Equals
+#else
+#define __Pyx_PyString_Equals __Pyx_PyBytes_Equals
+#endif
 
 /* DelItemInt.proto */
 #define __Pyx_DelItemInt(o, i, type, is_signed, to_py_func, is_list, wraparound, boundscheck)\
@@ -1875,16 +1858,6 @@ static CYTHON_INLINE void __Pyx_RaiseNeedMoreValuesError(Py_ssize_t index);
 
 /* RaiseNoneIterError.proto */
 static CYTHON_INLINE void __Pyx_RaiseNoneNotIterableError(void);
-
-/* UnicodeEquals.proto */
-static CYTHON_INLINE int __Pyx_PyUnicode_Equals(PyObject* s1, PyObject* s2, int equals);
-
-/* StrEquals.proto */
-#if PY_MAJOR_VERSION >= 3
-#define __Pyx_PyString_Equals __Pyx_PyUnicode_Equals
-#else
-#define __Pyx_PyString_Equals __Pyx_PyBytes_Equals
-#endif
 
 /* UnaryNegOverflows.proto */
 #define UNARY_NEG_WOULD_OVERFLOW(x)\
@@ -2358,7 +2331,6 @@ static const char __pyx_k_CABC[] = "CABC";
 static const char __pyx_k_Done[] = "Done.";
 static const char __pyx_k_base[] = "base";
 static const char __pyx_k_exit[] = "__exit__";
-static const char __pyx_k_keys[] = "keys";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_mode[] = "mode";
 static const char __pyx_k_name[] = "name";
@@ -2584,7 +2556,6 @@ static PyObject *__pyx_n_s_infile;
 static PyObject *__pyx_kp_s_is_not_equal;
 static PyObject *__pyx_n_s_itemsize;
 static PyObject *__pyx_kp_s_itemsize_0_for_cython_array;
-static PyObject *__pyx_n_s_keys;
 static PyObject *__pyx_n_s_list_triples;
 static PyObject *__pyx_n_s_main;
 static PyObject *__pyx_n_s_mapfile;
@@ -2691,7 +2662,6 @@ static PyObject *__pyx_tp_new_array(PyTypeObject *t, PyObject *a, PyObject *k); 
 static PyObject *__pyx_tp_new_Enum(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_memoryview(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new__memoryviewslice(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
-static __Pyx_CachedCFunction __pyx_umethod_PyDict_Type_keys = {0, &__pyx_n_s_keys, 0, 0, 0};
 static PyObject *__pyx_int_0;
 static PyObject *__pyx_int_1;
 static PyObject *__pyx_int_2;
@@ -2759,7 +2729,7 @@ static PyObject *__pyx_tuple__53;
 /* "phyde/core/data.pyx":77
  *     cdef bint quiet
  * 
- *     def __init__(self, infile, mapfile, outgroup, int nind, int ntaxa, int nsites, bint quiet = False):             # <<<<<<<<<<<<<<
+ *     def __init__(self, infile, mapfile, str outgroup, int nind, int ntaxa, int nsites, bint quiet = False):             # <<<<<<<<<<<<<<
  *         """
  *         Constructor:
  */
@@ -2852,7 +2822,7 @@ static int __pyx_pw_5phyde_4core_4data_8HydeData_1__init__(PyObject *__pyx_v_sel
     }
     __pyx_v_infile = values[0];
     __pyx_v_mapfile = values[1];
-    __pyx_v_outgroup = values[2];
+    __pyx_v_outgroup = ((PyObject*)values[2]);
     __pyx_v_nind = __Pyx_PyInt_As_int(values[3]); if (unlikely((__pyx_v_nind == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 77, __pyx_L3_error)
     __pyx_v_ntaxa = __Pyx_PyInt_As_int(values[4]); if (unlikely((__pyx_v_ntaxa == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 77, __pyx_L3_error)
     __pyx_v_nsites = __Pyx_PyInt_As_int(values[5]); if (unlikely((__pyx_v_nsites == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 77, __pyx_L3_error)
@@ -2870,9 +2840,14 @@ static int __pyx_pw_5phyde_4core_4data_8HydeData_1__init__(PyObject *__pyx_v_sel
   __Pyx_RefNannyFinishContext();
   return -1;
   __pyx_L4_argument_unpacking_done:;
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_outgroup), (&PyString_Type), 1, "outgroup", 1))) __PYX_ERR(0, 77, __pyx_L1_error)
   __pyx_r = __pyx_pf_5phyde_4core_4data_8HydeData___init__(((struct __pyx_obj_5phyde_4core_4data_HydeData *)__pyx_v_self), __pyx_v_infile, __pyx_v_mapfile, __pyx_v_outgroup, __pyx_v_nind, __pyx_v_ntaxa, __pyx_v_nsites, __pyx_v_quiet);
 
   /* function exit code */
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __pyx_r = -1;
+  __pyx_L0:;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
@@ -2997,14 +2972,11 @@ static int __pyx_pf_5phyde_4core_4data_8HydeData___init__(struct __pyx_obj_5phyd
  *         self.quiet = quiet
  *         if not self.quiet:
  */
-  if (!(likely(PyBytes_CheckExact(__pyx_v_outgroup))||((__pyx_v_outgroup) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_v_outgroup)->tp_name), 0))) __PYX_ERR(0, 103, __pyx_L1_error)
-  __pyx_t_1 = __pyx_v_outgroup;
-  __Pyx_INCREF(__pyx_t_1);
-  __Pyx_GIVEREF(__pyx_t_1);
+  __Pyx_INCREF(__pyx_v_outgroup);
+  __Pyx_GIVEREF(__pyx_v_outgroup);
   __Pyx_GOTREF(__pyx_v_self->outgroup);
   __Pyx_DECREF(__pyx_v_self->outgroup);
-  __pyx_v_self->outgroup = ((PyObject*)__pyx_t_1);
-  __pyx_t_1 = 0;
+  __pyx_v_self->outgroup = __pyx_v_outgroup;
 
   /* "phyde/core/data.pyx":104
  *         self.taxonMap_cp = {}
@@ -3346,7 +3318,7 @@ static int __pyx_pf_5phyde_4core_4data_8HydeData___init__(struct __pyx_obj_5phyd
   /* "phyde/core/data.pyx":77
  *     cdef bint quiet
  * 
- *     def __init__(self, infile, mapfile, outgroup, int nind, int ntaxa, int nsites, bint quiet = False):             # <<<<<<<<<<<<<<
+ *     def __init__(self, infile, mapfile, str outgroup, int nind, int ntaxa, int nsites, bint quiet = False):             # <<<<<<<<<<<<<<
  *         """
  *         Constructor:
  */
@@ -4344,7 +4316,7 @@ static PyObject *__pyx_pf_5phyde_4core_4data_8HydeData_2_read_infile(struct __py
  *                     print(".", end='')
  */
             __pyx_t_15 = __Pyx_PyInt_As_int(__pyx_v_counter); if (unlikely((__pyx_t_15 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 168, __pyx_L7_error)
-            if (!(likely(PyBytes_CheckExact(__pyx_v_bases))||((__pyx_v_bases) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_v_bases)->tp_name), 0))) __PYX_ERR(0, 168, __pyx_L7_error)
+            if (!(likely(PyString_CheckExact(__pyx_v_bases))||((__pyx_v_bases) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_v_bases)->tp_name), 0))) __PYX_ERR(0, 168, __pyx_L7_error)
             ((struct __pyx_vtabstruct_5phyde_4core_4data_HydeData *)__pyx_v_self->__pyx_vtab)->_convert(__pyx_v_self, __pyx_t_15, ((PyObject*)__pyx_v_bases));
 
             /* "phyde/core/data.pyx":169
@@ -5358,7 +5330,7 @@ static PyObject *__pyx_pf_5phyde_4core_4data_8HydeData_6resetOutgroup(struct __p
  *         self.outIndex = np.array([i[0] for i in self.taxonMap[newOut]], dtype=INDEX)
  * 
  */
-  if (!(likely(PyBytes_CheckExact(__pyx_v_newOut))||((__pyx_v_newOut) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_v_newOut)->tp_name), 0))) __PYX_ERR(0, 193, __pyx_L1_error)
+  if (!(likely(PyString_CheckExact(__pyx_v_newOut))||((__pyx_v_newOut) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_v_newOut)->tp_name), 0))) __PYX_ERR(0, 193, __pyx_L1_error)
   __pyx_t_1 = __pyx_v_newOut;
   __Pyx_INCREF(__pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
@@ -5372,7 +5344,7 @@ static PyObject *__pyx_pf_5phyde_4core_4data_8HydeData_6resetOutgroup(struct __p
  *         self.outgroup = newOut
  *         self.outIndex = np.array([i[0] for i in self.taxonMap[newOut]], dtype=INDEX)             # <<<<<<<<<<<<<<
  * 
- *     cdef void _convert(self, int row, bytes d):
+ *     cdef void _convert(self, int row, str d):
  */
   __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 194, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -5489,7 +5461,7 @@ static PyObject *__pyx_pf_5phyde_4core_4data_8HydeData_6resetOutgroup(struct __p
 /* "phyde/core/data.pyx":196
  *         self.outIndex = np.array([i[0] for i in self.taxonMap[newOut]], dtype=INDEX)
  * 
- *     cdef void _convert(self, int row, bytes d):             # <<<<<<<<<<<<<<
+ *     cdef void _convert(self, int row, str d):             # <<<<<<<<<<<<<<
  *         cdef unsigned long s
  *         for s in range(len(d)):
  */
@@ -5509,17 +5481,13 @@ static void __pyx_f_5phyde_4core_4data_8HydeData__convert(struct __pyx_obj_5phyd
   __Pyx_TraceCall("_convert", __pyx_f[0], 196, 0, __PYX_ERR(0, 196, __pyx_L1_error));
 
   /* "phyde/core/data.pyx":198
- *     cdef void _convert(self, int row, bytes d):
+ *     cdef void _convert(self, int row, str d):
  *         cdef unsigned long s
  *         for s in range(len(d)):             # <<<<<<<<<<<<<<
  *             self.dnaMat[row,s] = _BASE_TO_UINT8[d[s]]
  * 
  */
-  if (unlikely(__pyx_v_d == Py_None)) {
-    PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-    __PYX_ERR(0, 198, __pyx_L1_error)
-  }
-  __pyx_t_1 = PyBytes_GET_SIZE(__pyx_v_d); if (unlikely(__pyx_t_1 == -1)) __PYX_ERR(0, 198, __pyx_L1_error)
+  __pyx_t_1 = PyObject_Length(__pyx_v_d); if (unlikely(__pyx_t_1 == -1)) __PYX_ERR(0, 198, __pyx_L1_error)
   for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_1; __pyx_t_2+=1) {
     __pyx_v_s = __pyx_t_2;
 
@@ -5528,7 +5496,7 @@ static void __pyx_f_5phyde_4core_4data_8HydeData__convert(struct __pyx_obj_5phyd
  *         for s in range(len(d)):
  *             self.dnaMat[row,s] = _BASE_TO_UINT8[d[s]]             # <<<<<<<<<<<<<<
  * 
- *     cpdef dict test_triple(self, bytes p1, bytes hyb, bytes p2):
+ *     cpdef dict test_triple(self, str p1, str hyb, str p2):
  */
     if (unlikely(__pyx_v_5phyde_4core_4data__BASE_TO_UINT8 == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
@@ -5550,7 +5518,7 @@ static void __pyx_f_5phyde_4core_4data_8HydeData__convert(struct __pyx_obj_5phyd
   /* "phyde/core/data.pyx":196
  *         self.outIndex = np.array([i[0] for i in self.taxonMap[newOut]], dtype=INDEX)
  * 
- *     cdef void _convert(self, int row, bytes d):             # <<<<<<<<<<<<<<
+ *     cdef void _convert(self, int row, str d):             # <<<<<<<<<<<<<<
  *         cdef unsigned long s
  *         for s in range(len(d)):
  */
@@ -5569,7 +5537,7 @@ static void __pyx_f_5phyde_4core_4data_8HydeData__convert(struct __pyx_obj_5phyd
 /* "phyde/core/data.pyx":201
  *             self.dnaMat[row,s] = _BASE_TO_UINT8[d[s]]
  * 
- *     cpdef dict test_triple(self, bytes p1, bytes hyb, bytes p2):             # <<<<<<<<<<<<<<
+ *     cpdef dict test_triple(self, str p1, str hyb, str p2):             # <<<<<<<<<<<<<<
  *         """
  *         Main method for testing a hypothesis on a specified triple.
  */
@@ -5992,7 +5960,7 @@ static PyObject *__pyx_f_5phyde_4core_4data_8HydeData_test_triple(struct __pyx_o
  *         res = self._test_triple_c(p1_rows, hyb_rows, p2_rows)
  *         return res             # <<<<<<<<<<<<<<
  * 
- *     cpdef dict test_individuals(self, bytes p1, bytes hyb, bytes p2):
+ *     cpdef dict test_individuals(self, str p1, str hyb, str p2):
  */
   __Pyx_XDECREF(__pyx_r);
   __Pyx_INCREF(__pyx_v_res);
@@ -6002,7 +5970,7 @@ static PyObject *__pyx_f_5phyde_4core_4data_8HydeData_test_triple(struct __pyx_o
   /* "phyde/core/data.pyx":201
  *             self.dnaMat[row,s] = _BASE_TO_UINT8[d[s]]
  * 
- *     cpdef dict test_triple(self, bytes p1, bytes hyb, bytes p2):             # <<<<<<<<<<<<<<
+ *     cpdef dict test_triple(self, str p1, str hyb, str p2):             # <<<<<<<<<<<<<<
  *         """
  *         Main method for testing a hypothesis on a specified triple.
  */
@@ -6102,9 +6070,9 @@ static PyObject *__pyx_pw_5phyde_4core_4data_8HydeData_9test_triple(PyObject *__
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_p1), (&PyBytes_Type), 1, "p1", 1))) __PYX_ERR(0, 201, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_hyb), (&PyBytes_Type), 1, "hyb", 1))) __PYX_ERR(0, 201, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_p2), (&PyBytes_Type), 1, "p2", 1))) __PYX_ERR(0, 201, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_p1), (&PyString_Type), 1, "p1", 1))) __PYX_ERR(0, 201, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_hyb), (&PyString_Type), 1, "hyb", 1))) __PYX_ERR(0, 201, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_p2), (&PyString_Type), 1, "p2", 1))) __PYX_ERR(0, 201, __pyx_L1_error)
   __pyx_r = __pyx_pf_5phyde_4core_4data_8HydeData_8test_triple(((struct __pyx_obj_5phyde_4core_4data_HydeData *)__pyx_v_self), __pyx_v_p1, __pyx_v_hyb, __pyx_v_p2);
 
   /* function exit code */
@@ -6145,7 +6113,7 @@ static PyObject *__pyx_pf_5phyde_4core_4data_8HydeData_8test_triple(struct __pyx
 /* "phyde/core/data.pyx":229
  *         return res
  * 
- *     cpdef dict test_individuals(self, bytes p1, bytes hyb, bytes p2):             # <<<<<<<<<<<<<<
+ *     cpdef dict test_individuals(self, str p1, str hyb, str p2):             # <<<<<<<<<<<<<<
  *         """
  * 
  */
@@ -6710,7 +6678,7 @@ static PyObject *__pyx_f_5phyde_4core_4data_8HydeData_test_individuals(struct __
  *             #res[self.taxonMap[hyb][t]] = tmp_res
  *         return res             # <<<<<<<<<<<<<<
  * 
- *     cpdef dict bootstrap_triple(self, bytes p1, bytes hyb, bytes p2, int reps=100):
+ *     cpdef dict bootstrap_triple(self, str p1, str hyb, str p2, int reps=100):
  */
   __Pyx_XDECREF(__pyx_r);
   __Pyx_INCREF(__pyx_v_res);
@@ -6720,7 +6688,7 @@ static PyObject *__pyx_f_5phyde_4core_4data_8HydeData_test_individuals(struct __
   /* "phyde/core/data.pyx":229
  *         return res
  * 
- *     cpdef dict test_individuals(self, bytes p1, bytes hyb, bytes p2):             # <<<<<<<<<<<<<<
+ *     cpdef dict test_individuals(self, str p1, str hyb, str p2):             # <<<<<<<<<<<<<<
  *         """
  * 
  */
@@ -6823,9 +6791,9 @@ static PyObject *__pyx_pw_5phyde_4core_4data_8HydeData_11test_individuals(PyObje
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_p1), (&PyBytes_Type), 1, "p1", 1))) __PYX_ERR(0, 229, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_hyb), (&PyBytes_Type), 1, "hyb", 1))) __PYX_ERR(0, 229, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_p2), (&PyBytes_Type), 1, "p2", 1))) __PYX_ERR(0, 229, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_p1), (&PyString_Type), 1, "p1", 1))) __PYX_ERR(0, 229, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_hyb), (&PyString_Type), 1, "hyb", 1))) __PYX_ERR(0, 229, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_p2), (&PyString_Type), 1, "p2", 1))) __PYX_ERR(0, 229, __pyx_L1_error)
   __pyx_r = __pyx_pf_5phyde_4core_4data_8HydeData_10test_individuals(((struct __pyx_obj_5phyde_4core_4data_HydeData *)__pyx_v_self), __pyx_v_p1, __pyx_v_hyb, __pyx_v_p2);
 
   /* function exit code */
@@ -6866,7 +6834,7 @@ static PyObject *__pyx_pf_5phyde_4core_4data_8HydeData_10test_individuals(struct
 /* "phyde/core/data.pyx":249
  *         return res
  * 
- *     cpdef dict bootstrap_triple(self, bytes p1, bytes hyb, bytes p2, int reps=100):             # <<<<<<<<<<<<<<
+ *     cpdef dict bootstrap_triple(self, str p1, str hyb, str p2, int reps=100):             # <<<<<<<<<<<<<<
  *         """
  *         Perform bootstrap resampling of individuals within the putative hybrid.
  */
@@ -7442,7 +7410,7 @@ static PyObject *__pyx_f_5phyde_4core_4data_8HydeData_bootstrap_triple(struct __
   /* "phyde/core/data.pyx":249
  *         return res
  * 
- *     cpdef dict bootstrap_triple(self, bytes p1, bytes hyb, bytes p2, int reps=100):             # <<<<<<<<<<<<<<
+ *     cpdef dict bootstrap_triple(self, str p1, str hyb, str p2, int reps=100):             # <<<<<<<<<<<<<<
  *         """
  *         Perform bootstrap resampling of individuals within the putative hybrid.
  */
@@ -7561,9 +7529,9 @@ static PyObject *__pyx_pw_5phyde_4core_4data_8HydeData_13bootstrap_triple(PyObje
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_p1), (&PyBytes_Type), 1, "p1", 1))) __PYX_ERR(0, 249, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_hyb), (&PyBytes_Type), 1, "hyb", 1))) __PYX_ERR(0, 249, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_p2), (&PyBytes_Type), 1, "p2", 1))) __PYX_ERR(0, 249, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_p1), (&PyString_Type), 1, "p1", 1))) __PYX_ERR(0, 249, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_hyb), (&PyString_Type), 1, "hyb", 1))) __PYX_ERR(0, 249, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_p2), (&PyString_Type), 1, "p2", 1))) __PYX_ERR(0, 249, __pyx_L1_error)
   __pyx_r = __pyx_pf_5phyde_4core_4data_8HydeData_12bootstrap_triple(((struct __pyx_obj_5phyde_4core_4data_HydeData *)__pyx_v_self), __pyx_v_p1, __pyx_v_hyb, __pyx_v_p2, __pyx_v_reps);
 
   /* function exit code */
@@ -7680,7 +7648,7 @@ static PyObject *__pyx_f_5phyde_4core_4data_8HydeData_list_triples(struct __pyx_
  * 
  *         """
  *         res = []             # <<<<<<<<<<<<<<
- *         ks = self.taxonMap.keys()
+ *         ks = list(self.taxonMap)
  *         for a in range(len(ks)):
  */
   __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 275, __pyx_L1_error)
@@ -7691,41 +7659,34 @@ static PyObject *__pyx_f_5phyde_4core_4data_8HydeData_list_triples(struct __pyx_
   /* "phyde/core/data.pyx":276
  *         """
  *         res = []
- *         ks = self.taxonMap.keys()             # <<<<<<<<<<<<<<
+ *         ks = list(self.taxonMap)             # <<<<<<<<<<<<<<
  *         for a in range(len(ks)):
  *             if ks[a] == self.outgroup:
  */
-  if (unlikely(__pyx_v_self->taxonMap == Py_None)) {
-    PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%s'", "keys");
-    __PYX_ERR(0, 276, __pyx_L1_error)
-  }
-  __pyx_t_1 = __Pyx_PyDict_Keys(__pyx_v_self->taxonMap); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 276, __pyx_L1_error)
+  __pyx_t_1 = PySequence_List(__pyx_v_self->taxonMap); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 276, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_v_ks = __pyx_t_1;
+  __pyx_v_ks = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
   /* "phyde/core/data.pyx":277
  *         res = []
- *         ks = self.taxonMap.keys()
+ *         ks = list(self.taxonMap)
  *         for a in range(len(ks)):             # <<<<<<<<<<<<<<
  *             if ks[a] == self.outgroup:
  *                 del ks[a]
  */
-  __pyx_t_5 = PyObject_Length(__pyx_v_ks); if (unlikely(__pyx_t_5 == -1)) __PYX_ERR(0, 277, __pyx_L1_error)
+  __pyx_t_5 = PyList_GET_SIZE(__pyx_v_ks); if (unlikely(__pyx_t_5 == -1)) __PYX_ERR(0, 277, __pyx_L1_error)
   for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
     __pyx_v_a = __pyx_t_6;
 
     /* "phyde/core/data.pyx":278
- *         ks = self.taxonMap.keys()
+ *         ks = list(self.taxonMap)
  *         for a in range(len(ks)):
  *             if ks[a] == self.outgroup:             # <<<<<<<<<<<<<<
  *                 del ks[a]
  *         for i in range(len(ks)-2):
  */
-    __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_ks, __pyx_v_a, Py_ssize_t, 1, PyInt_FromSsize_t, 0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 278, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_7 = (__Pyx_PyBytes_Equals(__pyx_t_1, __pyx_v_self->outgroup, Py_EQ)); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 278, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __pyx_t_7 = (__Pyx_PyString_Equals(PyList_GET_ITEM(__pyx_v_ks, __pyx_v_a), __pyx_v_self->outgroup, Py_EQ)); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 278, __pyx_L1_error)
     if (__pyx_t_7) {
 
       /* "phyde/core/data.pyx":279
@@ -7735,10 +7696,10 @@ static PyObject *__pyx_f_5phyde_4core_4data_8HydeData_list_triples(struct __pyx_
  *         for i in range(len(ks)-2):
  *             for j in range(i+1, len(ks)-1):
  */
-      if (unlikely(__Pyx_DelItemInt(__pyx_v_ks, __pyx_v_a, Py_ssize_t, 1, PyInt_FromSsize_t, 0, 0, 0) < 0)) __PYX_ERR(0, 279, __pyx_L1_error)
+      if (unlikely(__Pyx_DelItemInt(__pyx_v_ks, __pyx_v_a, Py_ssize_t, 1, PyInt_FromSsize_t, 1, 0, 0) < 0)) __PYX_ERR(0, 279, __pyx_L1_error)
 
       /* "phyde/core/data.pyx":278
- *         ks = self.taxonMap.keys()
+ *         ks = list(self.taxonMap)
  *         for a in range(len(ks)):
  *             if ks[a] == self.outgroup:             # <<<<<<<<<<<<<<
  *                 del ks[a]
@@ -7754,7 +7715,7 @@ static PyObject *__pyx_f_5phyde_4core_4data_8HydeData_list_triples(struct __pyx_
  *             for j in range(i+1, len(ks)-1):
  *                 for k in range(j+1, len(ks)):
  */
-  __pyx_t_5 = PyObject_Length(__pyx_v_ks); if (unlikely(__pyx_t_5 == -1)) __PYX_ERR(0, 280, __pyx_L1_error)
+  __pyx_t_5 = PyList_GET_SIZE(__pyx_v_ks); if (unlikely(__pyx_t_5 == -1)) __PYX_ERR(0, 280, __pyx_L1_error)
   __pyx_t_1 = PyInt_FromSsize_t((__pyx_t_5 - 2)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 280, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 280, __pyx_L1_error)
@@ -7817,7 +7778,7 @@ static PyObject *__pyx_f_5phyde_4core_4data_8HydeData_list_triples(struct __pyx_
  */
     __pyx_t_1 = __Pyx_PyInt_AddObjC(__pyx_v_i, __pyx_int_1, 1, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 281, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_6 = PyObject_Length(__pyx_v_ks); if (unlikely(__pyx_t_6 == -1)) __PYX_ERR(0, 281, __pyx_L1_error)
+    __pyx_t_6 = PyList_GET_SIZE(__pyx_v_ks); if (unlikely(__pyx_t_6 == -1)) __PYX_ERR(0, 281, __pyx_L1_error)
     __pyx_t_3 = PyInt_FromSsize_t((__pyx_t_6 - 1)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 281, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 281, __pyx_L1_error)
@@ -7883,7 +7844,7 @@ static PyObject *__pyx_f_5phyde_4core_4data_8HydeData_list_triples(struct __pyx_
  */
       __pyx_t_3 = __Pyx_PyInt_AddObjC(__pyx_v_j, __pyx_int_1, 1, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 282, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_10 = PyObject_Length(__pyx_v_ks); if (unlikely(__pyx_t_10 == -1)) __PYX_ERR(0, 282, __pyx_L1_error)
+      __pyx_t_10 = PyList_GET_SIZE(__pyx_v_ks); if (unlikely(__pyx_t_10 == -1)) __PYX_ERR(0, 282, __pyx_L1_error)
       __pyx_t_1 = PyInt_FromSsize_t(__pyx_t_10); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 282, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __pyx_t_11 = PyTuple_New(2); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 282, __pyx_L1_error)
@@ -26046,7 +26007,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_is_not_equal, __pyx_k_is_not_equal, sizeof(__pyx_k_is_not_equal), 0, 0, 1, 0},
   {&__pyx_n_s_itemsize, __pyx_k_itemsize, sizeof(__pyx_k_itemsize), 0, 0, 1, 1},
   {&__pyx_kp_s_itemsize_0_for_cython_array, __pyx_k_itemsize_0_for_cython_array, sizeof(__pyx_k_itemsize_0_for_cython_array), 0, 0, 1, 0},
-  {&__pyx_n_s_keys, __pyx_k_keys, sizeof(__pyx_k_keys), 0, 0, 1, 1},
   {&__pyx_n_s_list_triples, __pyx_k_list_triples, sizeof(__pyx_k_list_triples), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
   {&__pyx_n_s_mapfile, __pyx_k_mapfile, sizeof(__pyx_k_mapfile), 0, 0, 1, 1},
@@ -26633,7 +26593,6 @@ static int __Pyx_InitCachedConstants(void) {
 }
 
 static int __Pyx_InitGlobals(void) {
-  __pyx_umethod_PyDict_Type_keys.type = (PyObject*)&PyDict_Type;
   if (__Pyx_InitStrings(__pyx_string_tab) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
   __pyx_int_0 = PyInt_FromLong(0); if (unlikely(!__pyx_int_0)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_1 = PyInt_FromLong(1); if (unlikely(!__pyx_int_1)) __PYX_ERR(0, 1, __pyx_L1_error)
@@ -27827,6 +27786,33 @@ invalid_keyword:
     #endif
 bad:
     return -1;
+}
+
+/* ArgTypeTest */
+static void __Pyx_RaiseArgumentTypeInvalid(const char* name, PyObject *obj, PyTypeObject *type) {
+    PyErr_Format(PyExc_TypeError,
+        "Argument '%.200s' has incorrect type (expected %.200s, got %.200s)",
+        name, type->tp_name, Py_TYPE(obj)->tp_name);
+}
+static CYTHON_INLINE int __Pyx_ArgTypeTest(PyObject *obj, PyTypeObject *type, int none_allowed,
+    const char *name, int exact)
+{
+    if (unlikely(!type)) {
+        PyErr_SetString(PyExc_SystemError, "Missing type object");
+        return 0;
+    }
+    if (none_allowed && obj == Py_None) return 1;
+    else if (exact) {
+        if (likely(Py_TYPE(obj) == type)) return 1;
+        #if PY_MAJOR_VERSION == 2
+        else if ((type == &PyBaseString_Type) && likely(__Pyx_PyBaseString_CheckExact(obj))) return 1;
+        #endif
+    }
+    else {
+        if (likely(PyObject_TypeCheck(obj, type))) return 1;
+    }
+    __Pyx_RaiseArgumentTypeInvalid(name, obj, type);
+    return 0;
 }
 
 /* Profile */
@@ -29395,84 +29381,10 @@ done:
     return 0;
 }
 
-/* ArgTypeTest */
-          static void __Pyx_RaiseArgumentTypeInvalid(const char* name, PyObject *obj, PyTypeObject *type) {
-    PyErr_Format(PyExc_TypeError,
-        "Argument '%.200s' has incorrect type (expected %.200s, got %.200s)",
-        name, type->tp_name, Py_TYPE(obj)->tp_name);
-}
-static CYTHON_INLINE int __Pyx_ArgTypeTest(PyObject *obj, PyTypeObject *type, int none_allowed,
-    const char *name, int exact)
-{
-    if (unlikely(!type)) {
-        PyErr_SetString(PyExc_SystemError, "Missing type object");
-        return 0;
-    }
-    if (none_allowed && obj == Py_None) return 1;
-    else if (exact) {
-        if (likely(Py_TYPE(obj) == type)) return 1;
-        #if PY_MAJOR_VERSION == 2
-        else if ((type == &PyBaseString_Type) && likely(__Pyx_PyBaseString_CheckExact(obj))) return 1;
-        #endif
-    }
-    else {
-        if (likely(PyObject_TypeCheck(obj, type))) return 1;
-    }
-    __Pyx_RaiseArgumentTypeInvalid(name, obj, type);
-    return 0;
-}
-
 /* BufferFallbackError */
           static void __Pyx_RaiseBufferFallbackError(void) {
   PyErr_SetString(PyExc_ValueError,
      "Buffer acquisition failed on assignment; and then reacquiring the old buffer failed too!");
-}
-
-/* UnpackUnboundCMethod */
-          static int __Pyx_TryUnpackUnboundCMethod(__Pyx_CachedCFunction* target) {
-    PyObject *method;
-    method = __Pyx_PyObject_GetAttrStr(target->type, *target->method_name);
-    if (unlikely(!method))
-        return -1;
-    target->method = method;
-#if CYTHON_COMPILING_IN_CPYTHON
-    #if PY_MAJOR_VERSION >= 3
-    if (likely(PyObject_TypeCheck(method, &PyMethodDescr_Type)))
-    #endif
-    {
-        PyMethodDescrObject *descr = (PyMethodDescrObject*) method;
-        target->func = descr->d_method->ml_meth;
-        target->flag = descr->d_method->ml_flags & ~(METH_CLASS | METH_STATIC | METH_COEXIST);
-    }
-#endif
-    return 0;
-}
-
-/* CallUnboundCMethod0 */
-          static PyObject* __Pyx__CallUnboundCMethod0(__Pyx_CachedCFunction* cfunc, PyObject* self) {
-    PyObject *args, *result = NULL;
-    if (unlikely(!cfunc->method) && unlikely(__Pyx_TryUnpackUnboundCMethod(cfunc) < 0)) return NULL;
-#if CYTHON_ASSUME_SAFE_MACROS
-    args = PyTuple_New(1);
-    if (unlikely(!args)) goto bad;
-    Py_INCREF(self);
-    PyTuple_SET_ITEM(args, 0, self);
-#else
-    args = PyTuple_Pack(1, self);
-    if (unlikely(!args)) goto bad;
-#endif
-    result = __Pyx_PyObject_Call(cfunc->method, args, NULL);
-    Py_DECREF(args);
-bad:
-    return result;
-}
-
-/* py_dict_keys */
-          static CYTHON_INLINE PyObject* __Pyx_PyDict_Keys(PyObject* d) {
-    if (PY_MAJOR_VERSION >= 3)
-        return __Pyx_CallUnboundCMethod0(&__pyx_umethod_PyDict_Type_keys, d);
-    else
-        return PyDict_Keys(d);
 }
 
 /* BytesEquals */
@@ -29510,6 +29422,90 @@ bad:
         Py_DECREF(py_result);
         return result;
     }
+#endif
+}
+
+/* UnicodeEquals */
+          static CYTHON_INLINE int __Pyx_PyUnicode_Equals(PyObject* s1, PyObject* s2, int equals) {
+#if CYTHON_COMPILING_IN_PYPY
+    return PyObject_RichCompareBool(s1, s2, equals);
+#else
+#if PY_MAJOR_VERSION < 3
+    PyObject* owned_ref = NULL;
+#endif
+    int s1_is_unicode, s2_is_unicode;
+    if (s1 == s2) {
+        goto return_eq;
+    }
+    s1_is_unicode = PyUnicode_CheckExact(s1);
+    s2_is_unicode = PyUnicode_CheckExact(s2);
+#if PY_MAJOR_VERSION < 3
+    if ((s1_is_unicode & (!s2_is_unicode)) && PyString_CheckExact(s2)) {
+        owned_ref = PyUnicode_FromObject(s2);
+        if (unlikely(!owned_ref))
+            return -1;
+        s2 = owned_ref;
+        s2_is_unicode = 1;
+    } else if ((s2_is_unicode & (!s1_is_unicode)) && PyString_CheckExact(s1)) {
+        owned_ref = PyUnicode_FromObject(s1);
+        if (unlikely(!owned_ref))
+            return -1;
+        s1 = owned_ref;
+        s1_is_unicode = 1;
+    } else if (((!s2_is_unicode) & (!s1_is_unicode))) {
+        return __Pyx_PyBytes_Equals(s1, s2, equals);
+    }
+#endif
+    if (s1_is_unicode & s2_is_unicode) {
+        Py_ssize_t length;
+        int kind;
+        void *data1, *data2;
+        if (unlikely(__Pyx_PyUnicode_READY(s1) < 0) || unlikely(__Pyx_PyUnicode_READY(s2) < 0))
+            return -1;
+        length = __Pyx_PyUnicode_GET_LENGTH(s1);
+        if (length != __Pyx_PyUnicode_GET_LENGTH(s2)) {
+            goto return_ne;
+        }
+        kind = __Pyx_PyUnicode_KIND(s1);
+        if (kind != __Pyx_PyUnicode_KIND(s2)) {
+            goto return_ne;
+        }
+        data1 = __Pyx_PyUnicode_DATA(s1);
+        data2 = __Pyx_PyUnicode_DATA(s2);
+        if (__Pyx_PyUnicode_READ(kind, data1, 0) != __Pyx_PyUnicode_READ(kind, data2, 0)) {
+            goto return_ne;
+        } else if (length == 1) {
+            goto return_eq;
+        } else {
+            int result = memcmp(data1, data2, (size_t)(length * kind));
+            #if PY_MAJOR_VERSION < 3
+            Py_XDECREF(owned_ref);
+            #endif
+            return (equals == Py_EQ) ? (result == 0) : (result != 0);
+        }
+    } else if ((s1 == Py_None) & s2_is_unicode) {
+        goto return_ne;
+    } else if ((s2 == Py_None) & s1_is_unicode) {
+        goto return_ne;
+    } else {
+        int result;
+        PyObject* py_result = PyObject_RichCompare(s1, s2, equals);
+        if (!py_result)
+            return -1;
+        result = __Pyx_PyObject_IsTrue(py_result);
+        Py_DECREF(py_result);
+        return result;
+    }
+return_eq:
+    #if PY_MAJOR_VERSION < 3
+    Py_XDECREF(owned_ref);
+    #endif
+    return (equals == Py_EQ);
+return_ne:
+    #if PY_MAJOR_VERSION < 3
+    Py_XDECREF(owned_ref);
+    #endif
+    return (equals == Py_NE);
 #endif
 }
 
@@ -29725,90 +29721,6 @@ bad:
 /* RaiseNoneIterError */
             static CYTHON_INLINE void __Pyx_RaiseNoneNotIterableError(void) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-}
-
-/* UnicodeEquals */
-            static CYTHON_INLINE int __Pyx_PyUnicode_Equals(PyObject* s1, PyObject* s2, int equals) {
-#if CYTHON_COMPILING_IN_PYPY
-    return PyObject_RichCompareBool(s1, s2, equals);
-#else
-#if PY_MAJOR_VERSION < 3
-    PyObject* owned_ref = NULL;
-#endif
-    int s1_is_unicode, s2_is_unicode;
-    if (s1 == s2) {
-        goto return_eq;
-    }
-    s1_is_unicode = PyUnicode_CheckExact(s1);
-    s2_is_unicode = PyUnicode_CheckExact(s2);
-#if PY_MAJOR_VERSION < 3
-    if ((s1_is_unicode & (!s2_is_unicode)) && PyString_CheckExact(s2)) {
-        owned_ref = PyUnicode_FromObject(s2);
-        if (unlikely(!owned_ref))
-            return -1;
-        s2 = owned_ref;
-        s2_is_unicode = 1;
-    } else if ((s2_is_unicode & (!s1_is_unicode)) && PyString_CheckExact(s1)) {
-        owned_ref = PyUnicode_FromObject(s1);
-        if (unlikely(!owned_ref))
-            return -1;
-        s1 = owned_ref;
-        s1_is_unicode = 1;
-    } else if (((!s2_is_unicode) & (!s1_is_unicode))) {
-        return __Pyx_PyBytes_Equals(s1, s2, equals);
-    }
-#endif
-    if (s1_is_unicode & s2_is_unicode) {
-        Py_ssize_t length;
-        int kind;
-        void *data1, *data2;
-        if (unlikely(__Pyx_PyUnicode_READY(s1) < 0) || unlikely(__Pyx_PyUnicode_READY(s2) < 0))
-            return -1;
-        length = __Pyx_PyUnicode_GET_LENGTH(s1);
-        if (length != __Pyx_PyUnicode_GET_LENGTH(s2)) {
-            goto return_ne;
-        }
-        kind = __Pyx_PyUnicode_KIND(s1);
-        if (kind != __Pyx_PyUnicode_KIND(s2)) {
-            goto return_ne;
-        }
-        data1 = __Pyx_PyUnicode_DATA(s1);
-        data2 = __Pyx_PyUnicode_DATA(s2);
-        if (__Pyx_PyUnicode_READ(kind, data1, 0) != __Pyx_PyUnicode_READ(kind, data2, 0)) {
-            goto return_ne;
-        } else if (length == 1) {
-            goto return_eq;
-        } else {
-            int result = memcmp(data1, data2, (size_t)(length * kind));
-            #if PY_MAJOR_VERSION < 3
-            Py_XDECREF(owned_ref);
-            #endif
-            return (equals == Py_EQ) ? (result == 0) : (result != 0);
-        }
-    } else if ((s1 == Py_None) & s2_is_unicode) {
-        goto return_ne;
-    } else if ((s2 == Py_None) & s1_is_unicode) {
-        goto return_ne;
-    } else {
-        int result;
-        PyObject* py_result = PyObject_RichCompare(s1, s2, equals);
-        if (!py_result)
-            return -1;
-        result = __Pyx_PyObject_IsTrue(py_result);
-        Py_DECREF(py_result);
-        return result;
-    }
-return_eq:
-    #if PY_MAJOR_VERSION < 3
-    Py_XDECREF(owned_ref);
-    #endif
-    return (equals == Py_EQ);
-return_ne:
-    #if PY_MAJOR_VERSION < 3
-    Py_XDECREF(owned_ref);
-    #endif
-    return (equals == Py_NE);
-#endif
 }
 
 /* GetAttr */
