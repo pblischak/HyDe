@@ -71,10 +71,10 @@ cdef class HydeData:
     cdef double counts[16][16]
     cdef double site_pattern_probs[15]
     cdef double ind_nucl_probs[4][15]
-    #cdef bytes outgroup
+    cdef str outgroup
     cdef bint quiet
 
-    def __init__(self, infile, mapfile, outgroup, int nind, int ntaxa, int nsites, bint quiet = False):
+    def __init__(self, infile, mapfile, str outgroup, int nind, int ntaxa, int nsites, bint quiet = False):
         """
         Constructor:
             Read infile with DNA characters. Parse mapfile and partition
