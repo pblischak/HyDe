@@ -5,7 +5,8 @@
 **Removing dependence on `hyde_cpp`**
 
  - The `hyde_cpp` executable has been deprecated in favor of using the
-   `*_hyde.py` scripts, which are just as fast.
+   `*_hyde.py` scripts, which are just as fast. It will be available
+   as its own GitHub repository for legacy purposes.
 
  - The `phyde.analyze` submodule has been removed, and all functions calling the
    `hyde_cpp` program have been either modified or removed.

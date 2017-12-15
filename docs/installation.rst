@@ -5,7 +5,7 @@
 Installation
 ============
 
-HyDe requires Python v2.7, a C++ compiler (C++11 compliant), and several Python modules (listed below).
+HyDe requires Python v2.7 or v3.6, a C++ compiler, and several Python modules (listed below).
 
 Miniconda
 ---------
@@ -24,16 +24,13 @@ to manage modules and environments.
 Required Python packages
 ------------------------
 
-With Miniconda installed, we can use ``pip`` or ``conda`` to install all of the Python
-modules that HyDe requires (Cython, Numpy, Pandas, Scipy, Matplotlib, Seaborn, and Multiprocess).
+With Miniconda installed, we can use ``pip`` (or ``conda``) to install all of the Python
+modules that HyDe requires (Cython, Numpy, Matplotlib, Seaborn, and Multiprocess).
 
 .. code:: bash
 
-  # Install packages with conda or pip command
-  conda install cython numpy pandas scipy matplotlib seaborn
-
-  # use pip to install multiprocess
-  pip install multiprocess
+  # Install packages with pip
+  pip install cython numpy matplotlib seaborn multiprocess
 
 Installing HyDe
 ---------------
@@ -57,9 +54,6 @@ The commands below take you through every step to accomplish this:
     git clone https://github.com/pblischak/HyDe.git
     cd HyDe/
 
-    # Compile hyde_cpp
-    make
-
     # Builds and installs phyde module
     python setup.py install
 
@@ -69,13 +63,11 @@ The commands below take you through every step to accomplish this:
 Step-by-step
 ^^^^^^^^^^^^
 
-After cloning HyDe from GitHub and moving into the main HyDe directory, the three
-steps that follow accomplish the following tasks:
+After cloning HyDe from GitHub and moving into the main HyDe directory, the next two
+steps accomplish the following tasks:
 
-  #. ``make``: this will compile the C++ code in the ``src/`` folder and will
-     will make the ``hyde_cpp`` executable.
   #. ``python setup.py install``: this will build and install the HyDe Python
-     module, including the compilation of any Cython files.
+     module, including the compilation of any Cython files (C++ compiler required).
   #. ``make test``: this will test the installation by running a series of commands
      designed to check that the installation was completed successfully. The main
      tests are in the ``test.py`` script in the ``test/`` folder.

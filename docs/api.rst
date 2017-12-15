@@ -106,44 +106,21 @@ file and is compiled into a shared library that can be called from Python.
       boot = hd.Bootstrap("hyde-boot.txt")
       boot.gamma(("sp1", "sp2", "sp3"))
 
-**Submodule**: ``analyze``
---------------------------
-
-The ``analyze`` submodule provides wrapper functions for running a full HyDe
-analysis on all possible triples using the ``hyde_cpp`` executable. It also reads
-the results back into Python using the classes from the ``core`` submodule so that
-they are available from within Python.
-
-**File**: ``main.py``
-^^^^^^^^^^^^^^^^^^^^^
-
-  **Function**: ``run_hyde(data, map, outgroup, num_ind, num_taxa, num_sites, boot_reps=0)``
-
 **Submodule**: ``visualize``
 ----------------------------
 
-The ``visualize`` submodule uses the ``matplotlib`` package to provide basic
+The ``visualize`` submodule uses the ``matplotlib`` and ``seaborn`` packages to provide basic
 plotting of results.
 
 **File**: ``viz.py``
 ^^^^^^^^^^^^^^^^^^^^
 
-**Class**: ``HydeViz``
-
-The HydeViz class provides a simplified interface for plotting different distributions
+The ``viz.py`` file provides simple functions for plotting different distributions
 of bootstrap replicate variables. It uses the ``matplotlib`` and ``seaborn`` plotting
 libraries.
 
-  **Constructor**: ``HydeViz(boot_obj)``
+**Function**: ``density(boot_obj, attr, p1, hyb, p2, title="", xlab="", ylab="", shade=True, color='b')``
 
-    **Example**
+**Function**: ``dist(boot_obj, attr, p1, hyb, p2, title="", xlab="", ylab="", hist=True, color='b')``
 
-    .. code:: py
-
-      import phyde as hd
-      boot = hd.Bootstrap("hyde-boot.txt")
-      vz   = hd.HydeViz(boot)
-
-
-
-  **Function**: ``density(arr, **kwargs)``
+**Function**: ``violinplot(boot_obj, attr, p1, hyb, p2, title="", xlab="", ylab="", color='b')``

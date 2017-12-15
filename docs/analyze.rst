@@ -6,7 +6,8 @@ Analyzing Data with HyDe
 ========================
 
 Below we provide details on the three main scripts that are used to analyze data with HyDe.
-We also give more details on the ``phyde`` module and the C++ executable ``hyde_cpp``.
+The multithreaded versions of these scripts behave in the exact same way, but have an added
+``--threads`` (``-j``) option to specify how many threads to use.
 
 We will be using the ``data.txt`` and ``map.txt`` files in the ``test/`` folder from
 the GitHub repo for HyDe. If you don't have a clone of the repo, you can download
@@ -16,6 +17,22 @@ the files using the following commands:
 
   curl -O https://raw.githubusercontent.com/pblischak/HyDe/master/test/data.txt
   curl -O https://raw.githubusercontent.com/pblischak/HyDe/master/test/map.txt
+
+
+.. note:: **Recommended workflow**:
+
+  When analyzing data with HyDe, we recomend the following workflow.
+
+  #. Use the ``run_hyde.py`` script to analyze all possible triples. This will produce
+     two output files, one with all results and one with only significant results
+     (see **Note** below on filtered results).
+  #. Next, if you want to see if certain individuals are hybrids, run the ``individual_hyde.py``
+     script and use the filtered results file output from the previous step as the triples file.
+  #. For the ``bootstrap_hyde.py`` script, we recommend using it when you don't have enough
+     data (and therefore not enough power) to detect hybridization within a single individual.
+     This will depend on how much hybridization has occurred, but it is typically difficult to
+     detect hybridization with HyDe using less than 10,000 sites. Otherwise, we always recommend
+     using the ``individual_hyde.py`` script.
 
 Command Line Scripts
 --------------------
@@ -38,7 +55,9 @@ out a docstring with additional details.
 The results will be written to file with a prefix that can be supplied
 using the ``--prefix`` flag (``<prefix>-out.txt``; the default is 'hyde').
 
-.. note:: We also write a file (``<prefix>-out-filtered.txt``) that filters
+.. note:: **Filtered results**:
+
+  We also write a file (``<prefix>-out-filtered.txt``) that filters
   the results from the hybridization detection
   analysis to only include significant results with sensible values of :math:`\gamma`
   (:math:`0 < \gamma < 1`). Some values of :math:`\gamma` in the original results
@@ -160,42 +179,4 @@ work with these dictionary results in Python.
   zscores = {k:v["Zscore"] for k,v in res_ind.items()}
   print zscores
 
-Testing All Triples
-^^^^^^^^^^^^^^^^^^^
-
-If you want to test all possible triples in the data set from within Python, we provide a wrapper function
-that will call the ``hyde_cpp`` executable and will return the result back to Python for you to work with.
-The ``run_hyde()`` function will return the main results as a HydeResult object. If you conduct bootstrapping,
-it will also return a Bootstrap object. Using the ``run_hyde()`` function is similar to making a HydeData
-object and the arguments are in the same order (data file, map file, outgroup,
-number of individuals, number of taxa, and number of sites).
-
-.. code:: py
-
-  # Import the phyde module if you need to do so
-  # import phyde as hd
-
-  # run_hyde() tests all triples and returns a HydeResult object
-  res = hd.run_hyde("data.txt", "map.txt", "out", 16, 4, 50000)
-
-The results from using the ``run_hyde()`` function are also written to file (``hyde-out.txt``).
-You can change the 'hyde' prefix by supplying an extra argument, ``prefix="<PREFIX>"``, to ``run_hyde()``.
-
 More detailed documentation on the HydeData, HydeResult, and Bootstrap classes can be found in the :ref:`API`.
-
-``hyde_cpp``
-------------
-
-If the Python module is not working for some reason (e.g., installation problems),
-the ``hyde_cpp`` executable can actually function as a standalone program for
-conducting hybridization detection analyses. It takes the same command line options
-as the ``run_hyde.py`` script and outputs the same files. A Makefile to compile the
-executable is provided in the main HyDe folder.
-
-.. code:: bash
-
-  # View options using -h
-  hyde_cpp -h
-
-  # Run hybridization detection analysis with hyde_cpp
-  hyde_cpp -i data.txt -m map.txt -o out -n 16 -t 4 -s 50000
