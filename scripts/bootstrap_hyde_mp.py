@@ -150,9 +150,9 @@ if __name__ == "__main__":
         if not quiet: print("\n**  Warning: File '"+prefix+"-boot.txt' already exists. **")
         if not quiet: print("**  Renaming to 'old-"+prefix+"-boot.txt'. **\n")
         os.rename(prefix+"-boot.txt", "old-"+prefix+"-boot.txt")
-        outfile = open(prefix+"-boot.txt", 'wa')
+        outfile = open(prefix+"-boot.txt", 'a')
     else:
-        outfile = open(prefix+"-boot.txt", 'wa')
+        outfile = open(prefix+"-boot.txt", 'a')
 
     def wrap_test((p1, hyb, p2)):
         """

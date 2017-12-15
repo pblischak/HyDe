@@ -134,9 +134,9 @@ if __name__ == "__main__":
         if not quiet: print("\n**  Warning: File '"+prefix+"-out.txt' already exists. **")
         if not quiet: print("**  Renaming to 'old-"+prefix+"-out.txt'. **\n")
         os.rename(prefix+"-out.txt", "old-"+prefix+"-out.txt")
-        outfile = open(prefix+"-out.txt", 'wa')
+        outfile = open(prefix+"-out.txt", 'a')
     else:
-        outfile = open(prefix+"-out.txt", 'wa')
+        outfile = open(prefix+"-out.txt", 'a')
     # print outfile header
     print("P1\tHybrid\tP2\tZscore\tPvalue\tGamma\tAAAA\tAAAB\tAABA\tAABB\tAABC\tABAA\tABAB\tABAC\tABBA\tBAAA\tABBC\tCABC\tBACA\tBCAA\tABCD\n", end='', file=outfile)
 
@@ -144,9 +144,9 @@ if __name__ == "__main__":
         if not quiet: print("\n**  Warning: File '"+prefix+"-out-filtered.txt' already exists. **")
         if not quiet: print("**  Renaming to 'old-"+prefix+"-out-filtered.txt'. **\n")
         os.rename(prefix+"-out-filtered.txt", "old-"+prefix+"-out-filtered.txt")
-        filtered_outfile = open(prefix+"-out-filtered.txt", 'wa')
+        filtered_outfile = open(prefix+"-out-filtered.txt", 'a')
     else:
-        filtered_outfile = open(prefix+"-out-filtered.txt", 'wa')
+        filtered_outfile = open(prefix+"-out-filtered.txt", 'a')
     # print filtered outfile header
     print("P1\tHybrid\tP2\tZscore\tPvalue\tGamma\tAAAA\tAAAB\tAABA\tAABB\tAABC\tABAA\tABAB\tABAC\tABBA\tBAAA\tABBC\tCABC\tBACA\tBCAA\tABCD\n", end='', file=filtered_outfile)
 

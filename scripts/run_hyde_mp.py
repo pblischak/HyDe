@@ -140,17 +140,17 @@ if __name__ == "__main__":
         if not quiet: print("\n**  Warning: File '"+prefix+"-out-filtered.txt' already exists. **")
         if not quiet: print("**  Renaming to 'old-"+prefix+"-out-filtered.txt'. **\n")
         os.rename(prefix+"-out-filtered.txt", "old-"+prefix+"-out-filtered.txt")
-        filtered_outfile = open(prefix+"-out-filtered.txt", 'wa')
+        filtered_outfile = open(prefix+"-out-filtered.txt", 'a')
     else:
-        filtered_outfile = open(prefix+"-out-filtered.txt", 'wa')
+        filtered_outfile = open(prefix+"-out-filtered.txt", 'a')
 
     if os.path.exists(prefix+"-out.txt"):
         if not quiet: print("\n**  Warning: File '"+prefix+"-out.txt' already exists. **")
         if not quiet: print("**  Renaming to 'old-"+prefix+"-out.txt'. **\n")
         os.rename(prefix+"-out.txt", "old-"+prefix+"-out.txt")
-        outfile = open(prefix+"-out.txt", 'wa')
+        outfile = open(prefix+"-out.txt", 'a')
     else:
-        outfile = open(prefix+"-out.txt", 'wa')
+        outfile = open(prefix+"-out.txt", 'a')
 
     if not quiet: print("\nCurrently using ", threads, " thread(s).", sep='')
     data = hd.HydeData(infile, mapfile, outgroup, nind, ntaxa, nsites, quiet)

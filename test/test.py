@@ -25,7 +25,6 @@ res2 = hd.HydeResult("../hyde-out.txt")
 print("**** Good. ****")
 
 print("\n**** Test 6: Testing ABBA-BABA on HydeResult object. ****")
-print(res.abba_baba("sp1", "sp2", "sp3"))
 print(res2.abba_baba("sp1", "sp2", "sp3"))
 print("**** Good. ****")
 

@@ -144,9 +144,9 @@ if __name__ == "__main__":
         if not quiet: print("\n**  Warning: File '"+prefix+"-ind.txt' already exists. **")
         if not quiet: print("**  Renaming to 'old-"+prefix+"-ind.txt'. **\n")
         os.rename(prefix+"-ind.txt", "old-"+prefix+"-ind.txt")
-        outfile = open(prefix+"-ind.txt", 'wa')
+        outfile = open(prefix+"-ind.txt", 'a')
     else:
-        outfile = open(prefix+"-ind.txt", 'wa')
+        outfile = open(prefix+"-ind.txt", 'a')
 
     # print file header
     print("P1\tHybrid\tP2\tZscore\tPvalue\tGamma\tAAAA\tAAAB\tAABA\tAABB\tAABC\tABAA\tABAB\tABAC\tABBA\tBAAA\tABBC\tCABC\tBACA\tBCAA\tABCD\n", end='', file=outfile)
