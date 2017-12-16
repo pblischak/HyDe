@@ -133,13 +133,14 @@ if __name__ == "__main__":
     # Read data into a HydeData object
     data = hd.HydeData(infile, mapfile, outgroup, nind, ntaxa, nsites)
 
-    if os.path.exists(prefix+"-ind.txt"):
-        if not quiet: print("\n**  Warning: File '"+prefix+"-ind.txt' already exists. **")
-        if not quiet: print("**  Renaming to 'old-"+prefix+"-ind.txt'. **\n")
-        os.rename(prefix+"-ind.txt", "old-"+prefix+"-ind.txt")
-        outfile = open(prefix+"-ind.txt", 'a')
+    outpath = hd.expand_prefix(prefix)
+    if os.path.exists(outpath+"-ind.txt"):
+        if not quiet: print("\n**  Warning: File '"+outpath+"-ind.txt' already exists. **")
+        if not quiet: print("**  Renaming to '"+outpath+"-ind-old.txt'. **\n")
+        os.rename(outpath+"-ind.txt", outpath+"-ind-old.txt")
+        outfile = open(outpath+"-ind.txt", 'a')
     else:
-        outfile = open(prefix+"-ind.txt", 'a')
+        outfile = open(outpath+"-ind.txt", 'a')
 
     print("P1\tHybrid\tP2\tZscore\tPvalue\tGamma\tAAAA\tAAAB\tAABA\tAABB\tAABC\tABAA\tABAB\tABAC\tABBA\tBAAA\tABBC\tCABC\tBACA\tBCAA\tABCD\n", end='', file=outfile)
 

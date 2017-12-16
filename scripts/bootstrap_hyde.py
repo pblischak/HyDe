@@ -140,13 +140,14 @@ if __name__ == "__main__":
     # Read data into a HydeData object
     data = hd.HydeData(infile, mapfile, outgroup, nind, ntaxa, nsites)
 
-    if os.path.exists(prefix+"-boot.txt"):
-        if not quiet: print("\n**  Warning: File '"+prefix+"-boot.txt' already exists. **")
-        if not quiet: print("**  Renaming to 'old-"+prefix+"-boot.txt'. **\n")
-        os.rename(prefix+"-boot.txt", "old-"+prefix+"-boot.txt")
-        outfile = open(prefix+"-boot.txt", 'a')
+    outpath = hd.expand_prefix(prefix)
+    if os.path.exists(outpath+"-boot.txt"):
+        if not quiet: print("\n**  Warning: File '"+outpath+"-boot.txt' already exists. **")
+        if not quiet: print("**  Renaming to '"+outpath+"-boot-old.txt'. **\n")
+        os.rename(prefix+"-boot.txt", outpath+"-boot-old.txt")
+        outfile = open(outpath+"-boot.txt", 'a')
     else:
-        outfile = open(prefix+"-boot.txt", 'a')
+        outfile = open(outpath+"-boot.txt", 'a')
 
     counter = 0
     for t in triples:
