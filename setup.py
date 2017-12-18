@@ -55,6 +55,13 @@ else:
         author="Paul Blischak & Laura Kubatko",
         author_email="blischak.4@osu.edu",
         packages=find_packages(),
+        install_requires=[
+            'cython',
+            'numpy',
+            'matplotlib',
+            'seaborn',
+            'multiprocess'
+        ],
         ext_modules=cythonize([Extension("phyde.core.data", ["phyde/core/data.pyx"],
                                          include_dirs=[numpy.get_include()],
                                          language="c++"),]),

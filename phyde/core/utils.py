@@ -1,8 +1,6 @@
 """Utilities for running HyDe analyses"""
 
 from __future__ import print_function
-import os
-import sys
 
 def expand_prefix(prefix):
     """
