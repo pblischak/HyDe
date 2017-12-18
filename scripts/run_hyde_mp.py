@@ -136,6 +136,21 @@ if __name__ == "__main__":
     prefix   = args.prefix
     quiet    = args.quiet
 
+    if not quiet: print("\nRunning run_hyde_mp.py")
+
+    data = hd.HydeData(infile, mapfile, outgroup, nind, ntaxa, nsites, quiet)
+
+    if args.triples != "none":
+        triples = parse_triples(args.triples)
+    else:
+        triples = data.list_triples()
+
+    if not quiet:
+        print("\nAnalyzing", len(triples), "triples using", threads, "thread(s).", sep=' ')
+        if args.triples != "none":
+            print("\nUsing triples in file ", args.triples, ".", sep='')
+
+
     # checking to see if output files already exist
     outpath = hd.expand_prefix(prefix)
     if os.path.exists(outpath+"-out.txt"):
@@ -157,15 +172,6 @@ if __name__ == "__main__":
         filtered_outfile = open(outpath+"-out-filtered.txt", 'a')
     # print filtered outfile header
     print("P1\tHybrid\tP2\tZscore\tPvalue\tGamma\tAAAA\tAAAB\tAABA\tAABB\tAABC\tABAA\tABAB\tABAC\tABBA\tBAAA\tABBC\tCABC\tBACA\tBCAA\tABCD\n", end='', file=filtered_outfile)
-
-    if not quiet: print("\nCurrently using ", threads, " thread(s).", sep='')
-    data = hd.HydeData(infile, mapfile, outgroup, nind, ntaxa, nsites, quiet)
-
-    if args.triples != "none":
-        if not quiet: print("--> Using triples in file ", args.triples, sep='')
-        triples = parse_triples(args.triples)
-    else:
-        triples = data.list_triples()
 
     def wrap_test(tr):
         """

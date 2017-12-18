@@ -137,8 +137,13 @@ if __name__ == "__main__":
     prefix   = args.prefix
     quiet    = args.quiet
 
+    if not quiet: print("\nRunning bootstrap_hyde_mp.py")
     # Read data into a HydeData object
     data = hd.HydeData(infile, mapfile, outgroup, nind, ntaxa, nsites)
+
+    if not quiet:
+        print("\nAnalyzing ", len(triples), " triples (", reps,
+              " bootstrap replicates each).", sep='')
 
     outpath = hd.expand_prefix(prefix)
     if os.path.exists(outpath+"-boot.txt"):

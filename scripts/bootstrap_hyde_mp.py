@@ -142,9 +142,14 @@ if __name__ == "__main__":
     quiet    = args.quiet
     threads  = args.threads
 
-    if not quiet: print("\nCurrently using ", threads, " thread(s).", sep='')
+    if not quiet: print("\nRunning bootstrap_hyde_mp.py")
+
     # Read data into a HydeData object
-    data = hd.HydeData(infile, mapfile, outgroup, nind, ntaxa, nsites)
+    data = hd.HydeData(infile, mapfile, outgroup, nind, ntaxa, nsites, quiet)
+
+    if not quiet:
+        print("\nAnalyzing ", len(triples), " triples (", reps,
+              " bootstrap replicates each) using ", threads, " thread(s).", sep='')
 
     outpath = hd.expand_prefix(prefix)
     if os.path.exists(outpath+"-boot.txt"):
