@@ -30,61 +30,62 @@ except ImportError:
 try:
     import multiprocess
 except ImportError:
-    print("\n'multiprocess' module not found.\n\n  Install with: pip install multiprocess")
+    missing_modules.append('multiprocess')
 
 if len(missing_modules) > 0:
-    INSTALL_ERROR = True
-    print("\nERROR:")
+    #INSTALL_ERROR = True
+    print("\WARNING:")
     print("  You are missing the following required modules:")
     for m in missing_modules:
         print("  \t", m)
     print("\n")
+    print("  Attempting to install them now...")
 
-if INSTALL_ERROR:
-    print("\nERROR:")
-    print("  Unable to install phyde.")
-    print("  Please see the documentation at http://hybridization-detection.rtfd.io/.\n")
-    sys.exit(-1)
-else:
-    setup(
-        name="phyde",
-        version="0.4.0",
-        description="Hybridization detection using phylogenetic invariants",
-        long_description=open('README.rst').read(),
-        url="https://github.com/pblischak/HyDe",
-        author="Paul Blischak & Laura Kubatko",
-        author_email="blischak.4@osu.edu",
-        packages=find_packages(),
-        install_requires=[
-            'cython',
-            'numpy',
-            'matplotlib',
-            'seaborn',
-            'multiprocess'
-        ],
-        ext_modules=cythonize([Extension("phyde.core.data", ["phyde/core/data.pyx"],
-                                         include_dirs=[numpy.get_include()],
-                                         language="c++"),]),
-        #include_dirs=[numpy.get_include()],
-        scripts=[
-            'scripts/run_hyde.py',
-            'scripts/run_hyde_mp.py',
-            'scripts/individual_hyde.py',
-            'scripts/individual_hyde_mp.py',
-            'scripts/bootstrap_hyde.py',
-            'scripts/bootstrap_hyde_mp.py'
-        ],
-        license="GPLv3",
-        classifiers=[
-            'Programming Language :: Python',
-            'Programming Language :: Python :: 2',
-            'Programming Language :: Python :: 2.7',
-            'Programming Language :: Python :: 3',
-            'Programming Language :: Python :: 3.6',
-            'Programming Language :: Cython',
-            'Development Status :: 3 - Alpha',
-            'Intended Audience :: Science/Research',
-            'License :: OSI Approved :: GNU General Public License v3 (GPLv3)'
-        ],
-        zip_safe=False
-    )
+#if INSTALL_ERROR:
+#    print("\WARNING:")
+#    print("  Unable to install phyde.")
+#    print("  Please see the documentation at http://hybridization-detection.rtfd.io/.\n")
+#    sys.exit(-1)
+#else:
+setup(
+    name="phyde",
+    version="0.4.0",
+    description="Hybridization detection using phylogenetic invariants",
+    long_description=open('README.rst').read(),
+    url="https://github.com/pblischak/HyDe",
+    author="Paul Blischak & Laura Kubatko",
+    author_email="blischak.4@osu.edu",
+    packages=find_packages(),
+    install_requires=[
+        'cython',
+        'numpy',
+        'matplotlib',
+        'seaborn',
+        'multiprocess'
+    ],
+    ext_modules=cythonize([Extension("phyde.core.data", ["phyde/core/data.pyx"],
+                                     include_dirs=[numpy.get_include()],
+                                     language="c++"),]),
+    #include_dirs=[numpy.get_include()],
+    scripts=[
+        'scripts/run_hyde.py',
+        'scripts/run_hyde_mp.py',
+        'scripts/individual_hyde.py',
+        'scripts/individual_hyde_mp.py',
+        'scripts/bootstrap_hyde.py',
+        'scripts/bootstrap_hyde_mp.py'
+    ],
+    license="GPLv3",
+    classifiers=[
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Cython',
+        'Development Status :: 3 - Alpha',
+        'Intended Audience :: Science/Research',
+        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)'
+    ],
+    zip_safe=False
+)
