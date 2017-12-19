@@ -179,4 +179,16 @@ work with these dictionary results in Python.
   zscores = {k:v["Zscore"] for k,v in res_ind.items()}
   print zscores
 
-More detailed documentation on the HydeData, HydeResult, and Bootstrap classes can be found in the :ref:`API`.
+The final method of note implemented by the HydeData class is the ``bootstrap_triple()`` function,
+which will randomly resample individuals in the hybrid population and run hypothesis tests for each
+replicate. The number of bootstrap replicates to run is specified using the ``reps=#`` argument.
+
+.. code:: py
+
+  res_boot = dat.bootstrap_triple("sp1", "sp2", "sp3", reps=100)
+
+``res_boot`` stores the results of this analysis as set of nested dictionaries.
+The easiest way to see its structure is to print it using ``print(res_boot)``.
+
+More detailed documentation on the HydeData class and other classes implemented in
+the ``phyde`` module can be found in the :ref:`API`.

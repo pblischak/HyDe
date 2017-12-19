@@ -12,3 +12,6 @@ before_install: pip install numpy cython matplotlib seaborn multiprocess
 install: python setup.py install
 
 script: make
+
+notifications:
+  email: false
