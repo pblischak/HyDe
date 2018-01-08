@@ -1,5 +1,5 @@
 
-__version__ = "0.4.0a"
+__version__ = "0.4.1a"
 __author__  = "Paul Blischak and Laura Kubatko"
 
 from phyde.core.bootstrap import Bootstrap

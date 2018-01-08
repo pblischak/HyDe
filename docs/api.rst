@@ -21,55 +21,18 @@ that allows the use of C/C++ code to speed up computationally intensive tasks
 (and many other things). This file is automatically translated into a C++ source
 file and is compiled into a shared library that can be called from Python.
 
-**Class**: ``HydeData``
-
-  The ``HydeData`` class is an extension type that implements methods for reading
-  in DNA sequence data and taxon maps for hybridization detection analyses.
-
-  **Constructor**: ``HydeData(data, map, outgroup, num_ind, num_taxa, num_sites)``
-
-    The constructor for the ``HydeData`` class.
-
-    **Example**
-
-    .. code:: py
-
-      import phyde as hd
-      data = hd.HydeData("data.txt", "map.txt", "out", 16, 4, 50000)
-
-  **Method**: ``test_triple(p1, hyb, p2)``
-
-    This is the main method for testing for hybridization at the population level.
-
-    **Example**
-
-    .. code:: py
-
-      import phyde as hd
-      data = hd.HydeData("data.txt", "map.txt", "out", 16, 4, 50000)
-      res = data.test_triple("sp1", "sp2", "sp3")
-
-  **Method**: ``test_individual(p1, hyb, p2)``
-
-    This is the main method for testing each individual in the specified hybrid
-    population.
-
-    **Example**
-
-    .. code:: py
-
-      import phyde as hd
-      data = hd.HydeData("data.txt", "map.txt", "out", 16, 4, 50000)
-      res = data.test_individual("sp1", "sp2", "sp3")
+.. autoclass:: phyde.HydeData
+  :members:
 
 **File**: ``result.py``
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-**Class**: ``HydeResult``
+.. autoclass:: phyde.HydeResult
+  :members:
 
   **Constructor**: ``HydeResult(infile)``
 
-    **Example**
+    Example:
 
     .. code:: py
 
@@ -79,13 +42,15 @@ file and is compiled into a shared library that can be called from Python.
 **File**: ``bootstrap.py``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-**Class**: ``Bootstrap``
+.. autoclass:: phyde.Bootstrap
+  :members:
+  :special-members: __call__
 
   **Constructor**: ``Bootstrap(bootfile)``
 
     Read in bootstrap replicates from a HyDe analysis.
 
-    **Example**
+    Example:
 
     .. code:: py
 
@@ -98,13 +63,7 @@ file and is compiled into a shared library that can be called from Python.
     are passed to the function as a tuple with the names of the three taxa for that
     particular hypothesis test.
 
-    **Example**
 
-    .. code:: py
-
-      import phyde as hd
-      boot = hd.Bootstrap("hyde-boot.txt")
-      boot.gamma(("sp1", "sp2", "sp3"))
 
 **Submodule**: ``visualize``
 ----------------------------
@@ -119,8 +78,8 @@ The ``viz.py`` file provides simple functions for plotting different distributio
 of bootstrap replicate variables. It uses the ``matplotlib`` and ``seaborn`` plotting
 libraries.
 
-**Function**: ``density(boot_obj, attr, p1, hyb, p2, title="", xlab="", ylab="", shade=True, color='b')``
+.. autofunction:: phyde.visualize.viz.density
 
-**Function**: ``dist(boot_obj, attr, p1, hyb, p2, title="", xlab="", ylab="", hist=True, color='b')``
+.. autofunction:: phyde.visualize.viz.dist
 
-**Function**: ``violinplot(boot_obj, attr, p1, hyb, p2, title="", xlab="", ylab="", color='b')``
+.. autofunction:: phyde.visualize.viz.violinplot

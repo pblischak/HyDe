@@ -3,6 +3,7 @@
 # cython: boundscheck = False
 # cython: wraparound = False
 # cython: cdivision = True
+# cython: embedsignature = True
 # distutils: language = c++
 
 from __future__ import print_function
@@ -22,6 +23,8 @@ INDEX = np.uint64
 
 # Hardcoded switch to test resolving missing and/or ambiguous bases
 _ignore_amb_sites = False
+if _ignore_amb_sites:
+    print("\nWARNING: Ignoring sites with missing/ambiguous bases.")
 
 cdef dict _BASE_TO_UINT8 = {
     "A": 0,  "G": 1,  "C": 2,  "T": 3,  "U": 3,
@@ -57,11 +60,25 @@ cdef vector[vector[int]] _baseLookup = [ #/* {A,G,C,T} == {0,1,2,3} */
     [0, 1, 2, 3]  #/* N == A or G or C or T */
 ]
 
-cdef class HydeData:
+cdef class HydeData(object):
     """
     Class for storing (1) a matrix of DNA bases as unsigned, 8-bit
-    integers; (2) mapping of individuals to taxa (optional); and (3)
-    partition information for multilocus data (optional).
+    integers and (2) mapping of individuals to taxa.
+
+    :param str infile: the name of the input DNA sequence data file.
+    :param str mapfile: the name of the individual mapping file.
+    :param str outgroup: the name of the outgroup.
+    :param int nind: the number of individuals.
+    :param int ntaxa: the number of populations/taxa.
+    :param int nsites: the number of sites.
+    :param bool quiet: suppress printing output.
+
+    Example:
+
+    .. code:: py
+
+        >>> data = HydeData("infile.txt", "mapfile.txt", "outgroup", 100, 6, 10000)
+        >>> data.dnaMat
     """
     cdef DNA_t[:, ::1] dnaMat
     cdef INDEX_t[::1] outIndex # outgroup sequence indices
@@ -74,26 +91,10 @@ cdef class HydeData:
     cdef str outgroup
     cdef bint quiet
 
-    def __init__(self, infile, mapfile, str outgroup, int nind, int ntaxa, int nsites, bint quiet = False):
+    def __init__(self, infile=None, mapfile=None, str outgroup=None,
+                 int nind=-1, int ntaxa=-1, int nsites=-1, bint quiet=False):
         """
-        Constructor:
-            Read infile with DNA characters. Parse mapfile and partition
-            file if they are given. Convert DNA bases to integer codes.
-
-        Example:
-            >>> data = HydeData("infile.txt", "mapfile.txt", "outgroup", 100, 10000, 6)
-            >>> data.dnaMat
-
-        Arguments
-        =========
-
-            - infile <str>: name of the input file
-            - mapfile <str>: name of the individual-to-OTU map
-            - outgroup <str>: name of the outgroup (can be
-              reset using the `resetOutgroup()` method)
-            - nind <int>: total number of individuals sampled
-            - ntaxa <int>: number of taxa
-            - nsites <int>: number of sites
+        HydData class constructor.
         """
         self.nind = nind
         self.nsites = nsites
@@ -118,9 +119,7 @@ cdef class HydeData:
         counter = 0
         first_line = 1
         valid_header = 1
-        phylip_header = 1
         nind_not_int = 0
-        nsites_not_int = 0
         with open(infile) as f:
             for line in f:
                 if first_line == 1:
@@ -132,33 +131,27 @@ cdef class HydeData:
                         int(nind_phylip)
                     except ValueError:
                         nind_not_int = 1
-                        phylip_header = 0
 
-                    try:
-                        int(nsites_phylip)
-                    except ValueError:
-                        nsites_not_int = 1
-                        phylip_header = 0
-
-                    if (nind_not_int or nsites_not_int) and (len(nsites_phylip) != self.nsites):
-                        valid_header = 0
-
-                    if not valid_header:
-                        print("\nERROR:")
-                        print("  First line of data file does not contain the correct header information.")
-                        print("  User input:")
-                        if len(nsites_phylip) > 50:
-                            print("\n    ", nind_phylip, " ", nsites_phylip[0:49], "...", sep='')
-                        else:
-                            print(line)
-                        sys.exit(-1)
-
-                    if not nsites_not_int:
+                    if nind_not_int:
+                        pass
+                    else:
                         continue
+                        #print("\nERROR:")
+                        #print("  First line of data file does not contain the correct header information.")
+                        #print("  User input:")
+                        #if len(nsites_phylip) > 50:
+                        #    print("\n    ", nind_phylip, " ", nsites_phylip[0:49], "...", sep='')
+                        #else:
+                        #    print(line)
+                        #sys.exit(-1)
 
-                try:
+                #try:
+                #    bases = line.split()[1]
+                #except IndexError:
+                #    break
+                if len(line) > self.nsites:
                     bases = line.split()[1]
-                except IndexError:
+                else:
                     break
                 if len(bases) != self.nsites:
                     print("\nERROR:")
@@ -167,7 +160,8 @@ cdef class HydeData:
                     sys.exit(-1)
                 self._convert(counter, bases)
                 if not self.quiet:
-                    print(".", end='')
+                    print(".", end='', flush=True)
+                #print("**",counter,"**",sep='')
                 counter += 1
                 if counter > self.nind:
                     print("\nERROR:")
@@ -190,6 +184,11 @@ cdef class HydeData:
                     print(".", end='')
 
     def resetOutgroup(self, newOut):
+        """
+        Reset outgroup population.
+
+        :param str newOut: Name of the new outgroup.
+        """
         self.outgroup = newOut
         self.outIndex = np.array([i[0] for i in self.taxonMap[newOut]], dtype=INDEX)
 
@@ -201,23 +200,25 @@ cdef class HydeData:
     cpdef dict test_triple(self, str p1, str hyb, str p2):
         """
         Main method for testing a hypothesis on a specified triple.
-        ((P1,Hyb),P2):gamma and (P1,(Hyb,P2)):1-gamma.
-
+        ((P1,Hyb),P2)::math:`\gamma` and (P1,(Hyb,P2))::math:`1-\gamma`.
         It is a wrapper for the C++ based methods `_test_triple_c()`,
         which is not accessible from Python.
 
-        Arguments
-        ---------
+        :param str p1:  parent one.
+        :param str hyb: the putative hybrid.
+        :param str p2:  parent two.
+        :rtype: dict
 
-            - p1 <str>: parent one
-            - hyb <str>: the putative hybrid
-            - p2 <str>: parent two
+        Returns a dictionary with the values for the Z-score, P-value, estimate
+        of gamma, and all of the site pattern counts.
 
-        Output
-        ------
+        Example:
 
-          Returns a dictionary with the values for the Z-score, P-value, estimate
-          of gamma, and all of the site pattern counts.
+        .. code:: py
+
+          import phyde as hd
+          data = hd.HydeData("data.txt", "map.txt", "out", 16, 4, 50000)
+          res = data.test_triple("sp1", "sp2", "sp3")
         """
         cdef np.ndarray[INDEX_t, ndim=1] p1_rows  = np.array([i[0] for i in self.taxonMap[p1]], dtype=INDEX)
         cdef np.ndarray[INDEX_t, ndim=1] hyb_rows = np.array([i[0] for i in self.taxonMap[hyb]],  dtype=INDEX)
@@ -228,7 +229,20 @@ cdef class HydeData:
 
     cpdef dict test_individuals(self, str p1, str hyb, str p2):
         """
+        Test all individuals in a given putative hybrid lineage (``hyb``).
 
+        :param str p1:  parent one.
+        :param str hyb: the putative hybrid.
+        :param str p2:  parent two.
+        :rtype: dict
+
+        Example:
+
+        .. code:: py
+
+          import phyde as hd
+          data = hd.HydeData("data.txt", "map.txt", "out", 16, 4, 50000)
+          res = data.test_individuals("sp1", "sp2", "sp3")
         """
         cdef:
             np.ndarray[INDEX_t, ndim=1] p1_rows  = np.array([i[0] for i in self.taxonMap[p1]], dtype=INDEX)
@@ -248,13 +262,22 @@ cdef class HydeData:
 
     cpdef dict bootstrap_triple(self, str p1, str hyb, str p2, int reps=100):
         """
-        Perform bootstrap resampling of individuals within the putative hybrid.
+        Performs bootstrap resampling of individuals within the specified hybrid
+        population.
 
-        Arguments
-        =========
+        :param str p1:  parent one.
+        :param str hyb: the putative hybrid.
+        :param str p2:  parent two.
+        :param int reps: number of boostrap replicates (default=100).
+        :rtype: dict
 
-          All arguments are the names of the taxa that you want to test as parent one, the putative hybrid,
-          and parent two.
+        Example:
+
+        .. code:: py
+
+          import phyde as hd
+          data = hd.HydeData("data.txt", "map.txt", "out", 16, 4, 50000)
+          res = data.bootstrap_triple("sp1", "sp2", "sp3")
         """
         cdef np.ndarray[INDEX_t, ndim=1] p1_rows  = np.array([i[0] for i in self.taxonMap[p1]], dtype=INDEX)
         cdef np.ndarray[INDEX_t, ndim=1] hyb_rows = np.array([i[0] for i in self.taxonMap[hyb]],  dtype=INDEX)
@@ -270,7 +293,12 @@ cdef class HydeData:
 
     cpdef list list_triples(self):
         """
+        List all possible triples based on the populations in the given
+        map file.
 
+        :rtype: list
+
+        Returns a list of 3-tuples: ``(p1, hyb, p2)``
         """
         res = []
         ks = list(self.taxonMap)

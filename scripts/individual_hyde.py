@@ -136,7 +136,7 @@ if __name__ == "__main__":
 
     # Read data into a HydeData object
     if not quiet:
-        print("\nAnalyzing", len(triples), "triples.", sep=' ')
+        print("\nAnalyzing", len(triples), "triple(s).", sep=' ')
 
     outpath = hd.expand_prefix(prefix)
     if os.path.exists(outpath+"-ind.txt"):

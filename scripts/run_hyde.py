@@ -140,7 +140,7 @@ if __name__ == "__main__":
         triples = data.list_triples()
 
     if not quiet:
-        print("\nAnalyzing", len(triples), "triples.", sep=' ')
+        print("\nAnalyzing", len(triples), "triple(s).", sep=' ')
         if args.triples != "none":
             print("Using triples in file ", args.triples, ".", sep='')
 

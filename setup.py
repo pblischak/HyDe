@@ -39,7 +39,6 @@ if len(missing_modules) > 0:
     for m in missing_modules:
         print("  \t", m)
     print("\n")
-    print("  Attempting to install them now...")
 
 if INSTALL_ERROR:
     print("ERROR:")
@@ -49,7 +48,7 @@ if INSTALL_ERROR:
 else:
     setup(
         name="phyde",
-        version="0.4.0",
+        version="0.4.1",
         description="Hybridization detection using phylogenetic invariants",
         long_description=open('README.rst').read(),
         url="https://github.com/pblischak/HyDe",

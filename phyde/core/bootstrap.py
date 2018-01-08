@@ -9,6 +9,16 @@ class Bootstrap:
     species triplets with info for each
     bootstrap replicate stored as a dictionary
     containing parameter values.
+
+    :param str bootfile: name of file with bootstrapping results.
+
+    Example:
+
+    .. code:: py
+
+        import phyde as hd
+        boot = hd.Bootstrap("hyde-boot.txt")
+        boot.gamma(("sp1", "sp2", "sp3"))
     """
     def __init__(self, bootfile):
         """

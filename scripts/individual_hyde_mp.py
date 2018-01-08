@@ -142,7 +142,7 @@ if __name__ == "__main__":
     data = hd.HydeData(infile, mapfile, outgroup, nind, ntaxa, nsites)
 
     if not quiet:
-        print("\nAnalyzing", len(triples), "triples using", threads, "thread(s).", sep=' ')
+        print("\nAnalyzing", len(triples), "triple(s) using", threads, "thread(s).", sep=' ')
 
     outpath = hd.expand_prefix(prefix)
     if os.path.exists(outpath+"-ind.txt"):

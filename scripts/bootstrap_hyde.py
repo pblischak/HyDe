@@ -137,12 +137,12 @@ if __name__ == "__main__":
     prefix   = args.prefix
     quiet    = args.quiet
 
-    if not quiet: print("\nRunning bootstrap_hyde_mp.py")
+    if not quiet: print("\nRunning bootstrap_hyde.py")
     # Read data into a HydeData object
     data = hd.HydeData(infile, mapfile, outgroup, nind, ntaxa, nsites)
 
     if not quiet:
-        print("\nAnalyzing ", len(triples), " triples (", reps,
+        print("\nAnalyzing ", len(triples), " triple(s) (", reps,
               " bootstrap replicates each).", sep='')
 
     outpath = hd.expand_prefix(prefix)

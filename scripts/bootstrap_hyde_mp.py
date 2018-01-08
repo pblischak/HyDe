@@ -148,7 +148,7 @@ if __name__ == "__main__":
     data = hd.HydeData(infile, mapfile, outgroup, nind, ntaxa, nsites, quiet)
 
     if not quiet:
-        print("\nAnalyzing ", len(triples), " triples (", reps,
+        print("\nAnalyzing ", len(triples), " triple(s) (", reps,
               " bootstrap replicates each) using ", threads, " thread(s).", sep='')
 
     outpath = hd.expand_prefix(prefix)
