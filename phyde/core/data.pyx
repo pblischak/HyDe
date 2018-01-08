@@ -160,7 +160,8 @@ cdef class HydeData(object):
                     sys.exit(-1)
                 self._convert(counter, bases)
                 if not self.quiet:
-                    print(".", end='', flush=True)
+                    print(".", end='')
+                    sys.stdout.flush()
                 #print("**",counter,"**",sep='')
                 counter += 1
                 if counter > self.nind:

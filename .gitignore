@@ -8,6 +8,7 @@ notebooks
 *.so
 *old*
 *Old*
+!requirements.txt
 !examples/snake-data.txt
 !examples/snake-map.txt
 !test/data.txt
