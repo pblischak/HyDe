@@ -117,7 +117,7 @@ Documentation for analyzing data using HyDe can be found `here <http://hybridiza
    :target: https://travis-ci.org/pblischak/HyDe
 
 .. |Documentation| image:: http://readthedocs.org/projects/hybridization-detection/badge/?version=latest
-   :target: http://hybridization-detection.readthedocs.io/?badge=latest
+   :target: http://hybridization-detection.readthedocs.io
 
 .. |PyPI Badge| image:: https://badge.fury.io/py/phyde.svg
    :target: https://pypi.python.org/pypi/phyde
