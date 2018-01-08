@@ -5,8 +5,6 @@
 API Reference
 =============
 
-**This page is still in the works. Sorry!**
-
 **Submodule**: ``core``
 -----------------------
 
@@ -29,15 +27,7 @@ file and is compiled into a shared library that can be called from Python.
 
 .. autoclass:: phyde.HydeResult
   :members:
-
-  **Constructor**: ``HydeResult(infile)``
-
-    Example:
-
-    .. code:: py
-
-      import phyde as hd
-      res = hd.HydeResult("hyde-out.txt")
+  :special-members: __call__
 
 **File**: ``bootstrap.py``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -46,37 +36,14 @@ file and is compiled into a shared library that can be called from Python.
   :members:
   :special-members: __call__
 
-  **Constructor**: ``Bootstrap(bootfile)``
-
-    Read in bootstrap replicates from a HyDe analysis.
-
-    Example:
-
-    .. code:: py
-
-      import phyde as hd
-      boot = hd.Bootstrap("hyde-boot.txt")
-
-  **Method**: ``gamma(tripl)``
-
-    Return the gamma values for all bootstrap replicates for a triplet of taxa. Triples
-    are passed to the function as a tuple with the names of the three taxa for that
-    particular hypothesis test.
-
-
-
 **Submodule**: ``visualize``
 ----------------------------
 
 The ``visualize`` submodule uses the ``matplotlib`` and ``seaborn`` packages to provide basic
-plotting of results.
+plotting of results stored by the ``phyde.Bootstrap`` class.
 
 **File**: ``viz.py``
 ^^^^^^^^^^^^^^^^^^^^
-
-The ``viz.py`` file provides simple functions for plotting different distributions
-of bootstrap replicate variables. It uses the ``matplotlib`` and ``seaborn`` plotting
-libraries.
 
 .. autofunction:: phyde.visualize.viz.density
 

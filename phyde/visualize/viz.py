@@ -9,7 +9,27 @@ import seaborn as sns
 
 def density(boot_obj, attr, p1, hyb, p2, title="", xlab="", ylab="", shade=True, color='b'):
     """
-    Make a Seaborn density plot.
+    Make a Seaborn density plot. You can turn shading off by setting ``shade=False``.
+
+    :param phyde.Bootstrap boot_obj: An object of class ``phyde.Bootstrap``.
+    :param str attr: name of hypothesis test attribute to plot (e.g., "Gamma", "Zscore", "Pvalue", etc.)
+    :param str p1: parent one.
+    :param str hyb: putative hybrid.
+    :param str p2: parent two.
+    :param str title: plot title.
+    :param str xlab: x-axis label.
+    :param str ylab: y-axis label.
+    :param bool shade: draw histogram.
+    :param str color: plot color.
+
+    Example:
+
+    .. code:: py
+
+        import phyde as hd
+        boot = hd.Bootstrap("hydeboot.txt")
+        hd.viz.density(boot, "Gamma", "sp1", "sp2", "sp3", title="Bootstrap distribution of $\gamma$",
+                       xlab="$\gamma$", ylab="density")
     """
     plt.figure(figsize=(14, 11))
     sns.set_style("white")
@@ -22,6 +42,26 @@ def dist(boot_obj, attr, p1, hyb, p2, title="", xlab="", ylab="", hist=True, col
     """
     Make a Seaborn distplot plot (density plot with histogram). Can turn histogram off
     by setting ``hist=False``.
+
+    :param phyde.Bootstrap boot_obj: An object of class ``phyde.Bootstrap``.
+    :param str attr: name of hypothesis test attribute to plot (e.g., "Gamma", "Zscore", "Pvalue", etc.)
+    :param str p1: parent one.
+    :param str hyb: putative hybrid.
+    :param str p2: parent two.
+    :param str title: plot title.
+    :param str xlab: x-axis label.
+    :param str ylab: y-axis label.
+    :param bool hist: draw histogram.
+    :param str color: plot color.
+
+    Example:
+
+    .. code:: py
+
+        import phyde as hd
+        boot = hd.Bootstrap("hydeboot.txt")
+        hd.viz.dist(boot, "Zscore", "sp1", "sp2", "sp3", title="Bootstrap distribution of Z-score",
+                    xlab="Z-score", ylab="density")
     """
     plt.figure(figsize=(14, 11))
     sns.set_style("white")
@@ -33,6 +73,25 @@ def dist(boot_obj, attr, p1, hyb, p2, title="", xlab="", ylab="", hist=True, col
 def violinplot(boot_obj, attr, p1, hyb, p2, title="", xlab="", ylab="", color='b'):
     """
     Make a Seaborn violinplot.
+
+    :param phyde.Bootstrap boot_obj: An object of class ``phyde.Bootstrap``.
+    :param str attr: name of hypothesis test attribute to plot (e.g., "Gamma", "Zscore", "Pvalue", etc.)
+    :param str p1: parent one.
+    :param str hyb: putative hybrid.
+    :param str p2: parent two.
+    :param str title: plot title.
+    :param str xlab: x-axis label.
+    :param str ylab: y-axis label.
+    :param str color: plot color.
+
+    Example:
+
+    .. code:: py
+
+        import phyde as hd
+        boot = hd.Bootstrap("hydeboot.txt")
+        hd.viz.violinplot(boot, "Pvalue", "sp1", "sp2", "sp3", title="Bootstrap distribution of P-value",
+                          xlab="P-value", ylab="density")
     """
     plt.figure(figsize=(14, 11))
     sns.set_style("white")

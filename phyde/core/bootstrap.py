@@ -18,11 +18,10 @@ class Bootstrap:
 
         import phyde as hd
         boot = hd.Bootstrap("hyde-boot.txt")
-        boot.gamma(("sp1", "sp2", "sp3"))
     """
     def __init__(self, bootfile):
         """
-        Constructor.
+        Bootstrap constructor.
         """
         self.bootfile = bootfile
         self.breps = {}
@@ -31,8 +30,25 @@ class Bootstrap:
 
     def __call__(self, attr, p1, hyb, p2):
         """
-        A callable method to access attributes rom a bootstrapped
-        HyDe analysis. Returned as a list.
+        A callable method (the object can be called as a function) to access
+        attributes from a bootstrapped HyDe analysis. Returned as a list.
+
+        :param str attr: name of hypothesis test attribute to plot (e.g., "Gamma", "Zscore", "Pvalue", etc.)
+        :param str p1: parent one.
+        :param str hyb: putative hybrid.
+        :param str p2: parent two.
+        :rtype: list
+
+        Returns a list of the given attribute across all bootstrap replicates
+        for the given triple ``(p1, hyb, p2)``.
+
+        Example:
+
+        .. code:: py
+
+            import phyde as hd
+            boot = hd.Bootstrap("hyde-boot.txt")
+            boot("Gamma", "sp1", "sp2", "sp3")
         """
         return [t[attr] for t in self.breps[(p1, hyb, p2)]]
 
@@ -84,9 +100,7 @@ class Bootstrap:
         return boot_info
 
     def summarize(self):
-        """
-        Summarizes the results of a bootsrapped HyDe analysis.
-        """
+        # Summarizes the results of a bootsrapped HyDe analysis.
         summaries = {}
         for t in self.triples:
             summaries[t] = {}
@@ -96,32 +110,40 @@ class Bootstrap:
         return summaries
 
     def gamma(self, p1, hyb, p2):
-        """
-        Return the values of gamma for the triple (p1, hyb, p2).
-        """
+        # Return the values of gamma for the triple (p1, hyb, p2).
         return [t['Gamma'] for t in self.breps[(p1, hyb, p2)]]
 
     def zscore(self, p1, hyb, p2):
-        """
-        Return the values of the test statistic for the triple (p1, hyb, p2).
-        """
+        # Return the values of the test statistic for the triple (p1, hyb, p2).
         return [t['Zscore'] for t in self.breps[(p1, hyb, p2)]]
 
     def pvalue(self, p1, hyb, p2):
-        """
-        Return the p-values for the triple (p1, hyb, p2).
-        """
+        # Return the p-values for the triple (p1, hyb, p2).
         return [t['Pvalue'] for t in self.breps[(p1, hyb, p2)]]
 
     def abba_baba(self, p1, hyb, p2):
         """
         Calculate Patterson's D-Statistic for all bootstrap replicates
         for the triple (p1, hyb, p2). Uses vectorization with numpy arrays.
+
+        :param str p1: parent 1.
+        :param str hyb: putative hybrid.
+        :param str p2:
+        :rtype: numpy.array
+
+        Example:
+
+        .. code:: py
+
+            import phyde as hd
+            boot = hd.Bootstrap("hyde-boot.txt")
+            boot.abba_baba("sp1", "sp2", "sp3")
         """
         return ((np.array([t['ABBA'] for t in self.breps[(p1, hyb, p2)]]) - np.array([t['ABAB'] for t in self.breps[(p1, hyb, p2)]])) /
                 (np.array([t['ABBA'] for t in self.breps[(p1, hyb, p2)]]) + np.array([t['ABAB'] for t in self.breps[(p1, hyb, p2)]])))
 
     def site_patterns(self, p1, hyb, p2):
+        # Get all site patterns for the triple (p1, hyb, p2)
         return {
             "AAAA" : [t['AAAA'] for t in self.breps[(p1, hyb, p2)]],
             "AAAB" : [t['AAAB'] for t in self.breps[(p1, hyb, p2)]],
@@ -141,6 +163,13 @@ class Bootstrap:
         }
 
     def write_summary(self, summary_file):
+        """
+        Write a summary of the bootstrap replicates for each tested triple.
+        The summary written to file includes the mean and standard deviation
+        of the Zscore, P-value, and estimate of :math:`\gamma`.
+
+        :param str summary_file: name of file.
+        """
         print("Writing summary to file:", summary_file)
         summ = self.summarize()
         with open(summary_file, 'w') as f:

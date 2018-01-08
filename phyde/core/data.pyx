@@ -77,8 +77,8 @@ cdef class HydeData(object):
 
     .. code:: py
 
-        >>> data = HydeData("infile.txt", "mapfile.txt", "outgroup", 100, 6, 10000)
-        >>> data.dnaMat
+        import phyde as hd
+        data = hd.HydeData("infile.txt", "mapfile.txt", "outgroup", 100, 6, 10000)
     """
     cdef DNA_t[:, ::1] dnaMat
     cdef INDEX_t[::1] outIndex # outgroup sequence indices
@@ -94,7 +94,7 @@ cdef class HydeData(object):
     def __init__(self, infile=None, mapfile=None, str outgroup=None,
                  int nind=-1, int ntaxa=-1, int nsites=-1, bint quiet=False):
         """
-        HydData class constructor.
+        HydeData class constructor.
         """
         self.nind = nind
         self.nsites = nsites

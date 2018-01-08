@@ -5,14 +5,23 @@ import numpy as np
 
 class HydeResult:
     """
-    A class for reading in and working with results from a HyDe analysis
-    using the C++ interface. It is mostly a simple container for storing
-    triples as tuples and using them as keys in a dictionary with values
-    that are also dictionaries containing the results from the HyDe analysis.
+    A class for reading in and working with results from a HyDe analysis.
+    It is mostly a simple container for storing triples as tuples and using
+    them as keys in a dictionary with values that are also dictionaries
+    containing the results from the HyDe analysis.
+
+    :param str infile: name of results file.
+
+    Example:
+
+    .. code:: py
+
+        import phyde as hd
+        res = hd.HydeResult("hyde-out.txt")
     """
     def __init__(self, infile):
         """
-        Constructor.
+        HydeResult constructor.
         """
         self.infile = infile
         self.res = {}
@@ -21,14 +30,26 @@ class HydeResult:
 
     def __call__(self, attr, p1, hyb, p2):
         """
-        Callable method for accessing information in a HydeResult object.
+        A callable method (the object can be called as a function) for
+        accessing information in a ``phyde.HydeResult`` object.
+
+        :param str attr: name of hypothesis test attribute to plot (e.g., "Gamma", "Zscore", "Pvalue", etc.)
+        :param str p1: parent one.
+        :param str hyb: putative hybrid.
+        :param str p2: parent two.
+
+        Example:
+
+        .. code:: py
+
+            import phyde as hd
+            res = hd.HydeResult("hyde-out.txt")
+            res("Zscore", "sp1", "sp2", "sp3")
         """
         return self.res[(p1, hyb, p2)][attr]
 
     def _read_hyde_results(self, file):
-        """
-        Fxn for reading in results file from a hyde_cpp analysis.
-        """
+        # Fxn for reading in results file from a hyde_cpp analysis.
         with open(file) as f:
             results_read_in = f.read()
             if results_read_in[-1] == "\n":
@@ -46,9 +67,7 @@ class HydeResult:
                     print("  The triple ", tripl, " was tested more than once.\n")
 
     def _hyde_info(self, b):
-        """
-        Store information for HyDe hypothesis test.
-        """
+        # Store information for HyDe hypothesis test.
         if len(b) != 18:
             raise ValueError("** Warning: length of hyde entry is incorrect. **")
         else:
@@ -78,6 +97,18 @@ class HydeResult:
     def abba_baba(self, p1, hyb, p2):
         """
         Calculate Patterson's D-Statistic for the triple (p1, hyb, p2).
+
+        :param str p1: parent 1.
+        :param str hyb: putative hybrid.
+        :param str p2: parent 2.
+
+        Example:
+
+        .. code:: py
+
+            import phyde as hd
+            res = hd.HydeResult("hyde-out.txt")
+            res.abba_baba("sp1", "sp2", "sp3")
         """
         return ((np.array(self.res[(p1,hyb,p2)]['ABBA']) - np.array(self.res[(p1,hyb,p2)]['ABAB'])) /
                 (np.array(self.res[(p1,hyb,p2)]['ABBA']) + np.array(self.res[(p1,hyb,p2)]['ABAB'])))
