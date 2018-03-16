@@ -27,10 +27,23 @@ if _ignore_amb_sites:
     print("\nWARNING: Ignoring sites with missing/ambiguous bases.")
 
 cdef dict _BASE_TO_UINT8 = {
-    "A": 0,  "G": 1,  "C": 2,  "T": 3,  "U": 3,
-    "M": 5,  "R": 6,  "W": 7,  "S": 8,  "Y": 9,
-    "K": 10, "B": 11, "D": 12, "H": 13, "V": 14,
-    "N": 15, "?": 15, "-": 4
+    "A": 0,  "a": 0,
+    "G": 1,  "g": 1,
+    "C": 2,  "c": 2,
+    "T": 3,  "t": 3,
+    "U": 3,  "u": 3,
+    "M": 5,  "m": 5,
+    "R": 6,  "r": 6,
+    "W": 7,  "w": 7,
+    "S": 8,  "s": 8,
+    "Y": 9,  "y": 9,
+    "K": 10, "k": 10,
+    "B": 11, "b": 11,
+    "D": 12, "d": 12,
+    "H": 13, "h": 13,
+    "V": 14, "v": 14,
+    "N": 15, "?": 15,
+    "-": 4
 }
 
 cdef dict _BASE_LOOKUP = {
