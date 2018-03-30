@@ -4,11 +4,11 @@
 HyDe: hybridization detection using phylogenetic invariants
 -----------------------------------------------------------
 
-**HyDe Preprint:**
+**Publication:**
 
-Blischak, P. D., J. Chifman, A. D. Wolfe, and L. S. Kubatko. 2017.
+Blischak, P. D., J. Chifman, A. D. Wolfe, and L. S. Kubatko. 2018.
 HyDe: a Python package for genome-scale hybridization detection.
-bioRxiv doi: `10.1101/188037 <https://doi.org/10.1101/188037>`__.
+*Systematic Biology*, doi: `https://doi.org/10.1093/sysbio/syy023 <https://doi.org/10.1093/sysbio/syy023>`__.
 
 `Read the Docs <http://hybridization-detection.rtfd.io/>`__
 -----------------------------------------------------------
