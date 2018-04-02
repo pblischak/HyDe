@@ -111,7 +111,7 @@ The ``phyde`` module is also hosted on the Python Package Index (PyPI), and can 
   # Install from PyPI with pip
   pip install phyde
 
-Documentation for analyzing data using HyDe can be found `here <http://hybridization-detection.readthedocs.io/en/latest/analyze.html>`_.
+Documentation for analyzing data using HyDe can be found `here <http://hybridization-detection.readthedocs.io/analyze.html>`_.
 
 .. |Build Status| image:: https://travis-ci.org/pblischak/HyDe.svg?branch=master
    :target: https://travis-ci.org/pblischak/HyDe
