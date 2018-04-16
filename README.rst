@@ -119,7 +119,7 @@ Documentation for analyzing data using HyDe can be found `here <http://hybridiza
 .. |Documentation| image:: http://readthedocs.org/projects/hybridization-detection/badge/?version=latest
    :target: http://hybridization-detection.readthedocs.io
 
-.. |PyPI Badge| image:: https://badge.fury.io/py/phyde.svg
+.. |PyPI Badge| image:: https://img.shields.io/pypi/v/phyde.svg
    :target: https://pypi.python.org/pypi/phyde
 
 .. |Gitter| image:: https://badges.gitter.im/Join%20Chat.svg
