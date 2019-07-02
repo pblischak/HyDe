@@ -80,6 +80,7 @@ cdef class HydeData(object):
     :param int ntaxa: the number of populations/taxa.
     :param int nsites: the number of sites.
     :param bool quiet: suppress printing output.
+    :param bool ignore_amb_sites: ignore missing/ambiguous sites.
 
     Example:
 

@@ -118,21 +118,24 @@ if __name__ == "__main__":
                             metavar='\b', help="prefix appended to output files [default=hyde]")
     additional.add_argument('-q', '--quiet', action="store_true",
                             help="supress printing to stdout")
+    additional.add_argument('--ignore_amb_sites', action="store_true",
+                            help="supress printing to stdout")
 
-    args     = parser.parse_args()
-    infile   = args.infile
-    mapfile  = args.map
-    outgroup = args.outgroup
-    nind     = args.num_ind
-    ntaxa    = args.num_taxa
-    nsites   = args.num_sites
-    pvalue   = args.pvalue
-    prefix   = args.prefix
-    quiet    = args.quiet
+    args             = parser.parse_args()
+    infile           = args.infile
+    mapfile          = args.map
+    outgroup         = args.outgroup
+    nind             = args.num_ind
+    ntaxa            = args.num_taxa
+    nsites           = args.num_sites
+    pvalue           = args.pvalue
+    prefix           = args.prefix
+    quiet            = args.quiet
+    ignore_amb_sites = args.ignore_amb_sites
 
     if not quiet: print("\nRunning run_hyde.py")
     # Read in data as HydeData object
-    data = hd.HydeData(infile, mapfile, outgroup, nind, ntaxa, nsites, quiet)
+    data = hd.HydeData(infile, mapfile, outgroup, nind, ntaxa, nsites, quiet, ignore_amb_sites)
 
     # Get triples
     if args.triples != "none":
