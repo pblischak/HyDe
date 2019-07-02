@@ -1,5 +1,13 @@
 # Change log
 
+## v0.4.3
+
+**Ignore missing or ambiguous sites**
+
+  - All scripts now have the option to ignore missing or ambiguous bases when
+    running an analysis with HyDe. Just add `--ignore_amb_sites` as a flag
+    at the command line.
+
 ## v0.4.0
 
 **Removing dependence on `hyde_cpp`**

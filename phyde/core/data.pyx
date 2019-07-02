@@ -21,11 +21,6 @@ DNA = np.uint8
 ctypedef np.uint64_t INDEX_t
 INDEX = np.uint64
 
-# Hardcoded switch to test resolving missing and/or ambiguous bases
-_ignore_amb_sites = False
-if _ignore_amb_sites:
-    print("\nWARNING: Ignoring sites with missing/ambiguous bases.")
-
 cdef dict _BASE_TO_UINT8 = {
     "A": 0,  "a": 0,
     "G": 1,  "g": 1,
@@ -103,9 +98,11 @@ cdef class HydeData(object):
     cdef double ind_nucl_probs[4][15]
     cdef str outgroup
     cdef bint quiet
+    cdef bint ignore_amb_sites
 
     def __init__(self, infile=None, mapfile=None, str outgroup=None,
-                 int nind=-1, int ntaxa=-1, int nsites=-1, bint quiet=False):
+                 int nind=-1, int ntaxa=-1, int nsites=-1, bint quiet=False,
+                 bint ignore_amb_sites=False):
         """
         HydeData class constructor.
         """
@@ -116,6 +113,9 @@ cdef class HydeData(object):
         self.taxonMap_cp = {}
         self.outgroup = outgroup
         self.quiet = quiet
+        self.ignore_amb_sites = ignore_amb_sites
+        if self.ignore_amb_sites:
+            print("\nNB: Ignoring sites with missing/ambiguous bases.\n")
         if not self.quiet:
             print("\nReading input file",end='')
         self._read_infile(infile)
@@ -396,7 +396,7 @@ cdef class HydeData(object):
             if i < 4 and j < 4 and k < 4 and l < 4:
                 nn += 1.0
                 self.counts[i * 4 + j][k * 4 + l] += 1.0
-            elif not _ignore_amb_sites:
+            elif not self.ignore_amb_sites:
                 resolved = self._resolve_ambiguity_cpp(i, j, k, l)
                 nn += resolved
             else:

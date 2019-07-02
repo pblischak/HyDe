@@ -13,17 +13,18 @@ specified triple -- multithreaded version.
 Arguments
 ---------
 
-    - infile <string>   : name of the DNA sequence data file.
-    - mapfile <string>  : name of the taxon map file.
-    - outgroup <string> : name of the outgroup.
-    - triples <string>  : name of the file containing triples for testing.
-    - reps <int>        : number of bootstrap replicates [default=100].
-    - nind <int>        : number of sampled individuals.
-    - nsites <int>      : number of sampled sites.
-    - ntaxa <int>       : number of sampled taxa/populations.
-    - threads <int>     : number of threads [default=all available]
-    - prefix <string>   : name added to the beginning of output file.
-    - quiet <flag>      : suppress printing to stdout.
+    - infile         <string> : name of the DNA sequence data file.
+    - mapfile        <string> : name of the taxon map file.
+    - outgroup       <string> : name of the outgroup.
+    - triples        <string> : name of the file containing triples for testing.
+    - reps              <int> : number of bootstrap replicates [default=100].
+    - nind              <int> : number of sampled individuals.
+    - nsites            <int> : number of sampled sites.
+    - ntaxa             <int> : number of sampled taxa/populations.
+    - threads           <int> : number of threads [default=all available]
+    - prefix         <string> : name added to the beginning of output file.
+    - quiet            <flag> : suppress printing to stdout.
+    - ignore_amb_sites <flag> : ignore missing/ambiguous bases.
 
 Output
 ------
@@ -128,24 +129,27 @@ if __name__ == "__main__":
                             metavar='\b', help="prefix appended to output files [default=hyde]")
     additional.add_argument('-q', '--quiet', action="store_true",
                             help="supress printing to stdout")
+    additional.add_argument('--ignore_amb_sites', action="store_true",
+                            help="ignore missing/ambiguous bases.")
 
-    args     = parser.parse_args()
-    infile   = args.infile
-    mapfile  = args.map
-    outgroup = args.outgroup
-    triples  = parse_triples(args.triples)
-    nind     = args.num_ind
-    ntaxa    = args.num_taxa
-    nsites   = args.num_sites
-    reps     = args.reps
-    prefix   = args.prefix
-    quiet    = args.quiet
-    threads  = args.threads
+    args             = parser.parse_args()
+    infile           = args.infile
+    mapfile          = args.map
+    outgroup         = args.outgroup
+    triples          = parse_triples(args.triples)
+    nind             = args.num_ind
+    ntaxa            = args.num_taxa
+    nsites           = args.num_sites
+    reps             = args.reps
+    prefix           = args.prefix
+    quiet            = args.quiet
+    ignore_amb_sites = args.ignore_amb_sites
+    threads          = args.threads
 
     if not quiet: print("\nRunning bootstrap_hyde_mp.py")
 
     # Read data into a HydeData object
-    data = hd.HydeData(infile, mapfile, outgroup, nind, ntaxa, nsites, quiet)
+    data = hd.HydeData(infile, mapfile, outgroup, nind, ntaxa, nsites, quiet, ignore_amb_sites)
 
     if not quiet:
         print("\nAnalyzing ", len(triples), " triple(s) (", reps,

@@ -13,15 +13,16 @@ specified set of triples.
 Arguments
 ---------
 
-    - infile <string>   : name of the DNA sequence data file.
-    - mapfile <string>  : name of the taxon map file.
-    - outgroup <string> : name of the outgroup.
-    - nind <int>        : number of sampled individuals.
-    - nsites <int>      : number of sampled sites.
-    - ntaxa <int>       : number of sampled taxa/populations.
-    - triples <string>  : name of the file containing triples for testing [optional].
-    - prefix <string>   : name added to the beginning of output file.
-    - quiet <flag>      : suppress printing to stdout.
+    - infile         <string> : name of the DNA sequence data file.
+    - mapfile        <string> : name of the taxon map file.
+    - outgroup       <string> : name of the outgroup.
+    - nind              <int> : number of sampled individuals.
+    - nsites            <int> : number of sampled sites.
+    - ntaxa             <int> : number of sampled taxa/populations.
+    - triples        <string> : name of the file containing triples for testing [optional].
+    - prefix         <string> : name added to the beginning of output file.
+    - quiet            <flag> : suppress printing to stdout.
+    - ignore_amb_sites <flag> : ignore missing/ambiguous sites.
 
 Output
 ------
