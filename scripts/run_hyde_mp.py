@@ -15,6 +15,8 @@ numbers of species.
 Arguments
 ---------
 
+For more details on script arguments, type: run_hyde_mp.py -h
+
     - infile         <string> : name of the DNA sequence data file.
     - mapfile        <string> : name of the taxon map file.
     - outgroup       <string> : name of the outgroup.

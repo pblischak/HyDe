@@ -13,6 +13,8 @@ specified set of triples.
 Arguments
 ---------
 
+For more details on script arguments, type: run_hyde.py -h
+
     - infile         <string> : name of the DNA sequence data file.
     - mapfile        <string> : name of the taxon map file.
     - outgroup       <string> : name of the outgroup.
@@ -119,7 +121,7 @@ if __name__ == "__main__":
     additional.add_argument('-q', '--quiet', action="store_true",
                             help="supress printing to stdout")
     additional.add_argument('--ignore_amb_sites', action="store_true",
-                            help="supress printing to stdout")
+                            help="ignore missing/ambiguous sites")
 
     args             = parser.parse_args()
     infile           = args.infile
