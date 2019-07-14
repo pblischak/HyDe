@@ -4,6 +4,7 @@
 # cython: wraparound = False
 # cython: cdivision = True
 # cython: embedsignature = True
+# cython: language_level = 3
 # distutils: language = c++
 
 import numpy as np
@@ -117,12 +118,12 @@ cdef class HydeData(object):
         if self.ignore_amb_sites:
             print("\nNB: Ignoring sites with missing/ambiguous bases.\n")
         if not self.quiet:
-            print("\nReading input file",end="")
+            print("\nReading input file",end='')
         self._read_infile(infile)
         if not self.quiet:
             print("Done.")
         if not self.quiet:
-            print("Reading map file  ",end="")
+            print("Reading map file  ",end='')
         self._read_mapfile(mapfile)
         if not self.quiet:
             print("Done.")
@@ -168,8 +169,8 @@ cdef class HydeData(object):
                     break
                 if len(bases) != self.nsites:
                     print("\nERROR:")
-                    print("  Number of sites specified (", self.nsites, ") is not equal", sep="")
-                    print("  to the number of sites in the data file (", len(bases), ").\n", sep="")
+                    print("  Number of sites specified (", self.nsites, ") is not equal", sep='')
+                    print("  to the number of sites in the data file (", len(bases), ").\n", sep='')
                     sys.exit(-1)
                 self._convert(counter, bases)
                 if not self.quiet:
@@ -179,8 +180,8 @@ cdef class HydeData(object):
                 counter += 1
                 if counter > self.nind:
                     print("\nERROR:")
-                    print("  Number of individuals specified (", self.nind, ") is not equal", sep="")
-                    print("  to the number of individuals in the data file (>= ", counter, ").\n", sep="")
+                    print("  Number of individuals specified (", self.nind, ") is not equal", sep='')
+                    print("  to the number of individuals in the data file (>= ", counter, ").\n", sep='')
                     sys.exit(-1)
 
     def _read_mapfile(self, mapfile):
@@ -195,7 +196,7 @@ cdef class HydeData(object):
                 self.taxonMap[l.split()[1]].append((i, l.split()[0]))
                 self.taxonMap_cp[l.split()[1]].append((i, l.split()[0]))
                 if not self.quiet:
-                    print(".", end="")
+                    print(".", end='')
 
     def resetOutgroup(self, newOut):
         """
