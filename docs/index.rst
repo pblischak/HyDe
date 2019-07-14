@@ -87,15 +87,7 @@ Documentation
    installation.rst
    input_files.rst
    analyze.rst
-   visualization.rst
    api.rst
-
-Indices and Tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
 
 .. |Build Status| image:: https://travis-ci.org/pblischak/HyDe.svg?branch=master
    :target: https://travis-ci.org/pblischak/HyDe
