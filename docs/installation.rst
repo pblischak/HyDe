@@ -5,7 +5,7 @@
 Installation
 ============
 
-HyDe requires Python v2.7 or v3.6, a C++ compiler, and several Python modules (listed below).
+HyDe requires Python v3.6+, a C++ compiler, and several Python modules (listed below).
 
 Miniconda
 ---------
@@ -17,20 +17,20 @@ to manage modules and environments.
 
   # Get Miniconda for your operating system (Mac or Linux)
   # Answer yes to the questions the Installer asks
-  # These commands will download Python 2.7 for Mac OSX
-  curl -O https://repo.continuum.io/miniconda/Miniconda2-latest-MacOSX-x86_64.sh
-  bash Miniconda2-latest-MacOSX-x86_64.sh
+  # These commands will download Python 3.6 for Mac OSX
+  curl -O https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
+  bash Miniconda3-latest-MacOSX-x86_64.sh
 
-Required Python packages
+Required Python Packages
 ------------------------
 
 With Miniconda installed, we can use ``pip`` (or ``conda``) to install all of the Python
-modules that HyDe requires (Cython, Numpy, Matplotlib, Seaborn, and Multiprocess).
+modules that HyDe requires (Cython, Numpy, and Multiprocess).
 
 .. code:: bash
 
   # Install packages with pip
-  pip install cython numpy matplotlib seaborn multiprocess
+  conda install cython numpy multiprocess
 
 Installing HyDe
 ---------------
@@ -60,7 +60,7 @@ The commands below take you through every step to accomplish this:
     # Test installation
     make test
 
-Step-by-step
+Step-By-Step
 ^^^^^^^^^^^^
 
 After cloning HyDe from GitHub and moving into the main HyDe directory, the next two

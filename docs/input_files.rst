@@ -70,7 +70,7 @@ all individuals in a particular taxon grouped together sequentially.
   Ind(N-1)  PopM
   IndN  PopM
 
-Triples file
+Triples File
 ------------
 
 Each of the Python scripts that are part of HyDe take a file

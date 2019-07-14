@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-HyDe: hybridization detection using phylogenetic invariants
+HyDe: Hybridization Detection Using Phylogenetic Invariants
 ===========================================================
 
 |Build Status| |Documentation| |PyPI Badge|
@@ -51,7 +51,7 @@ Multithreaded versions of these scripts are also available (``run_hyde_mp.py``,
 Make sure you have the ``multiprocess`` module installed before you use them:
 ``pip install multiprocess``.
 
-Getting help
+Getting Help
 ------------
 
 If you have questions about running HyDe, please feel free to use the
@@ -90,7 +90,7 @@ Documentation
    visualization.rst
    api.rst
 
-Indices and tables
+Indices and Tables
 ==================
 
 * :ref:`genindex`

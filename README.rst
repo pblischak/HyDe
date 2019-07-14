@@ -1,13 +1,13 @@
 
 |Build Status| |Documentation|  |PyPI Badge|
 
-HyDe: hybridization detection using phylogenetic invariants
+HyDe: Hybridization Detection Using Phylogenetic Invariants
 -----------------------------------------------------------
 
 **Publication:**
 
 Blischak, P. D., J. Chifman, A. D. Wolfe, and L. S. Kubatko. 2018.
-HyDe: a Python package for genome-scale hybridization detection.
+HyDe: A Python Package For Genome-Scale Hybridization Detection.
 *Systematic Biology*, doi: `https://doi.org/10.1093/sysbio/syy023 <https://doi.org/10.1093/sysbio/syy023>`__.
 
 `Read the Docs <http://hybridization-detection.rtfd.io/>`__
@@ -55,7 +55,7 @@ Multithreaded versions of these scripts are also available (``run_hyde_mp.py``,
 ``individual_hyde_mp.py``, and ``bootstrap_hyde_mp.py``).
 Make sure you have the ``multiprocess`` module installed before you use them.
 
-Getting help
+Getting Help
 ------------
 
 If you have questions about running HyDe, please feel free to use the
@@ -74,13 +74,11 @@ Installation
 Requirements:
 ~~~~~~~~~~~~~
 
--  Python 2.7 or 3.6
+-  Python 3.6
 -  Python Modules:
 
    -  Cython
    -  Numpy
-   -  Matplotlib
-   -  Seaborn
    -  Multiprocess
 
 -  C++ compiler
@@ -88,7 +86,7 @@ Requirements:
 .. code:: bash
 
     # To install dependencies
-    pip install cython numpy matplotlib seaborn multiprocess
+    pip install cython numpy multiprocess
 
     # Clone HyDe repository from GitHub
     git clone https://github.com/pblischak/HyDe.git

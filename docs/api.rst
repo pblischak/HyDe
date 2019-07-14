@@ -5,12 +5,6 @@
 API Reference
 =============
 
-**Submodule**: ``core``
------------------------
-
-The ``core`` submodule provides the main Python interface for hybridization detection analyses
-and data exploration through the use of implemented classes.
-
 **File**: ``data.pyx``
 ^^^^^^^^^^^^^^^^^^^^^^
 
@@ -35,18 +29,3 @@ file and is compiled into a shared library that can be called from Python.
 .. autoclass:: phyde.Bootstrap
   :members:
   :special-members: __call__
-
-**Submodule**: ``visualize``
-----------------------------
-
-The ``visualize`` submodule uses the ``matplotlib`` and ``seaborn`` packages to provide basic
-plotting of results stored by the ``phyde.Bootstrap`` class.
-
-**File**: ``viz.py``
-^^^^^^^^^^^^^^^^^^^^
-
-.. autofunction:: phyde.visualize.viz.density
-
-.. autofunction:: phyde.visualize.viz.dist
-
-.. autofunction:: phyde.visualize.viz.violinplot
