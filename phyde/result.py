@@ -1,6 +1,5 @@
 """ Class for processing HyDe output. """
 
-from __future__ import print_function
 import numpy as np
 
 class HydeResult:

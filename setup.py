@@ -18,16 +18,6 @@ except ImportError:
     missing_modules.append('numpy')
 
 try:
-    import matplotlib
-except ImportError:
-    missing_modules.append('matplotlib')
-
-try:
-    import seaborn
-except ImportError:
-    missing_modules.append('seaborn')
-
-try:
     import multiprocess
 except ImportError:
     missing_modules.append('multiprocess')
@@ -48,14 +38,14 @@ if INSTALL_ERROR:
 else:
     setup(
         name="phyde",
-        version="0.4.3",
+        version="1.0.0",
         description="Hybridization detection using phylogenetic invariants",
         long_description=open('README.rst').read(),
         url="https://github.com/pblischak/HyDe",
         author="Paul Blischak & Laura Kubatko",
         author_email="blischak.4@osu.edu",
         packages=find_packages(),
-        ext_modules=cythonize([Extension("phyde.core.data", ["phyde/core/data.pyx"],
+        ext_modules=cythonize([Extension("phyde.data", ["phyde/data.pyx"],
                                          include_dirs=[numpy.get_include()],
                                          language="c++"),]),
         scripts=[
@@ -65,16 +55,14 @@ else:
             'scripts/individual_hyde_mp.py',
             'scripts/bootstrap_hyde.py',
             'scripts/bootstrap_hyde_mp.py'
+            #'scripts/hyde_gui.py'
         ],
         license="GPLv3",
         classifiers=[
             'Programming Language :: Python',
-            'Programming Language :: Python :: 2',
-            'Programming Language :: Python :: 2.7',
             'Programming Language :: Python :: 3',
-            'Programming Language :: Python :: 3.6',
             'Programming Language :: Cython',
-            'Development Status :: 3 - Alpha',
+            'Development Status :: 5 - Production/Stable',
             'Intended Audience :: Science/Research',
             'License :: OSI Approved :: GNU General Public License v3 (GPLv3)'
         ],

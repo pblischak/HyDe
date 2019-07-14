@@ -4,10 +4,10 @@ language: python
 os: "linux"
 
 python:
-  - "2.7"
   - "3.6"
+  - "3.7"
 
-before_install: pip install numpy cython matplotlib seaborn multiprocess
+before_install: pip install numpy cython multiprocess
 
 install: python setup.py install
 

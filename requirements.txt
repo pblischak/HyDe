@@ -1,5 +1,3 @@
 cython
-matplotlib
 multiprocess
 numpy
-seaborn
