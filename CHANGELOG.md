@@ -1,5 +1,26 @@
 # Change log
 
+## v1.0.0
+
+**First Major Release + GUI**
+
+After much testing and feedback from users (thank you!), we have gone through
+the code for HyDe and have updated the package architecture and documentation.
+Many of the changes in this update are cosmetic and will not change how users
+interact with HyDe. However, one addition that is likely going to change the user experience
+is the addition of a new script, `hyde_gui.py`, which will launch a graphical user interface (GUI)
+to allow users to set up analyses in an interactive window.
+
+Below are other changes that were made during this update:
+
+  - Dropping support for Python 2.7. Python 2.7 is set to lose support in
+    the next year, so we are moving forward with Python 3 development only.
+  - Submodules in the `core` folder have been moved up one level.
+    The `core` module itself no longer exists.
+  - The `visualization` module has been removed. We instead
+    provide code for generating the same types of plots in the documentation, but
+    no longer include the plotting functions as part of the software.
+
 ## v0.4.3
 
 **Ignore missing or ambiguous sites**

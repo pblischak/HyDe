@@ -10,7 +10,7 @@ Blischak, P. D., J. Chifman, A. D. Wolfe, and L. S. Kubatko. 2018.
 HyDe: A Python Package For Genome-Scale Hybridization Detection.
 *Systematic Biology*, doi: `https://doi.org/10.1093/sysbio/syy023 <https://doi.org/10.1093/sysbio/syy023>`__.
 
-`Read the Docs <http://hybridization-detection.rtfd.io/>`__
+`Read the Docs <https://hybridization-detection.rtfd.io/>`__
 -----------------------------------------------------------
 
 HyDe is a software package that detects hybridization in phylogenomic
@@ -55,6 +55,16 @@ Multithreaded versions of these scripts are also available (``run_hyde_mp.py``,
 ``individual_hyde_mp.py``, and ``bootstrap_hyde_mp.py``).
 Make sure you have the ``multiprocess`` module installed before you use them.
 
+Graphical User Interface
+------------------------
+
+We have also developed a graphical user interface (GUI) for **single-threaded**
+hybridization detection analyses with HyDe. Users can supply file names and other
+options in the GUI window and hit ``Run`` or ``<Return>`` to run analyses.
+
+.. image:: docs/img/gui.png
+   :align: center
+
 Getting Help
 ------------
 
@@ -74,18 +84,19 @@ Installation
 Requirements:
 ~~~~~~~~~~~~~
 
--  Python 3.6
+-  Python 3.6+
 -  Python Modules:
 
-   -  Cython
-   -  Numpy
-   -  Multiprocess
+   -  cython
+   -  numpy
+   -  multiprocess
+   -  progress (optional: needed for GUI)
 
 -  C++ compiler
 
 .. code:: bash
 
-    # To install dependencies
+    # To install dependencies -- add progress if you're using the GUI
     pip install cython numpy multiprocess
 
     # Clone HyDe repository from GitHub
