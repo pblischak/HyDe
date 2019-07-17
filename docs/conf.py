@@ -155,6 +155,6 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc, 'HyDe', u'HyDe Documentation',
-     author, 'HyDe', 'One line description of project.',
+     author, 'HyDe', 'Hybridization Detection Using Phylogenetic Invariants.',
      'Miscellaneous'),
 ]
