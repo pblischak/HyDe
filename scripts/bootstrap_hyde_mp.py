@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # bootstrap_hyde.py
@@ -38,7 +38,6 @@ Output
     function).
 """
 
-from __future__ import print_function
 import phyde as hd
 import argparse
 import sys
@@ -72,7 +71,7 @@ def write_boot(boot, triple, outfile):
     to the file passed as an argument to the function.
     """
     print("P1\tHybrid\tP2\tZscore\tPvalue\tGamma\tAAAA\tAAAB\tAABA\tAABB\tAABC\tABAA\tABAB\tABAC\tABBA\tBAAA\tABBC\tCABC\tBACA\tBCAA\tABCD\n", end='', file=outfile)
-    for v in boot.values():
+    for _,v in boot.items():
         print(triple[0], "\t", triple[1], "\t", triple[2], "\t", sep='', end='', file=outfile)
         print(v['Zscore'], "\t", sep='', end='', file=outfile)
         print(v['Pvalue'], "\t", sep='', end='', file=outfile)

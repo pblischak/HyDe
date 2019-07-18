@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # bootstrap_hyde.py
@@ -37,7 +37,6 @@ Output
     function).
 """
 
-from __future__ import print_function
 import phyde as hd
 import argparse
 import sys

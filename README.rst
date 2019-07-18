@@ -55,8 +55,8 @@ Multithreaded versions of these scripts are also available (``run_hyde_mp.py``,
 ``individual_hyde_mp.py``, and ``bootstrap_hyde_mp.py``).
 Make sure you have the ``multiprocess`` module installed before you use them.
 
-Graphical User Interface
-------------------------
+Graphical User Interface (Beta)
+-------------------------------
 
 We have also developed a graphical user interface (GUI) for **single-threaded**
 hybridization detection analyses with HyDe. Users can supply file names and other

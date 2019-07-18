@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # individual_hyde.py
@@ -35,7 +35,6 @@ Output
     were tested.
 """
 
-from __future__ import print_function
 import phyde as hd
 import argparse
 import sys

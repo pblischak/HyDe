@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # run_hyde.py
@@ -34,7 +34,6 @@ Output
     site pattern counts.
 """
 
-from __future__ import print_function
 import phyde as hd
 import argparse
 import sys
