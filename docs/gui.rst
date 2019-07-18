@@ -20,7 +20,7 @@ a graphical user interface (GUI) that is shipped with HyDe. With the ``phyde`` m
 the GUI can be launched by navigating to the folder with the data you would like to analyze
 using a terminal window and typing ``hyde_gui.py``. This will launch the GUI window, allowing
 you to type in the information for you analysis. Details about the analyses being conducted,
-as well as any errors, will still be printed in the terminal window. 
+as well as any errors, will be printed in the terminal window.
 
 .. figure:: img/gui.png
    :align: center

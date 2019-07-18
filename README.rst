@@ -96,7 +96,7 @@ Requirements:
 
 .. code:: bash
 
-    # To install dependencies -- add progress if you're using the GUI
+    # To install dependencies -- add 'progress' if you're using the GUI
     pip install cython numpy multiprocess
 
     # Clone HyDe repository from GitHub
