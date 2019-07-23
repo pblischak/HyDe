@@ -54,8 +54,8 @@ else:
             'scripts/individual_hyde.py',
             'scripts/individual_hyde_mp.py',
             'scripts/bootstrap_hyde.py',
-            'scripts/bootstrap_hyde_mp.py'
-            #'scripts/hyde_gui.py'
+            'scripts/bootstrap_hyde_mp.py',
+            'scripts/hyde_gui.py'
         ],
         license="GPLv3",
         classifiers=[

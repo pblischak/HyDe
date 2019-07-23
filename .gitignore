@@ -6,6 +6,7 @@ notebooks
 *.txt
 *.pyc
 *.so
+*.cpp
 *old*
 *Old*
 !requirements.txt

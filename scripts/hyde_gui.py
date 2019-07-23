@@ -372,7 +372,6 @@ if __name__ == "__main__":
     
     for child in mainframe.winfo_children(): child.grid_configure(padx=5,pady=3)
     
-    #feet_entry.focus()
     root.bind('<Return>',
         lambda event: main(infile.get(),
                            mapfile.get(),
