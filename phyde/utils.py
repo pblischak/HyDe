@@ -1,5 +1,8 @@
 """Utilities for running HyDe analyses"""
 
+import os
+
+
 def expand_prefix(prefix):
     """
     Check for '~', '.', and '..' in file path names

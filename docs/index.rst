@@ -88,6 +88,7 @@ Documentation
    input_files.rst
    analyze.rst
    gui.rst
+   results.rst
    api.rst
 
 .. |Build Status| image:: https://travis-ci.org/pblischak/HyDe.svg?branch=master

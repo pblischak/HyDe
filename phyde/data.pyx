@@ -42,10 +42,10 @@ cdef dict _BASE_TO_UINT8 = {
 }
 
 cdef dict _BASE_LOOKUP = {
-    0: [0], 1: [1], 2: [2], 3: [3], 4: [4], 5: [0,2],
-    6: [0,1], 7: [0,3], 8: [1,2], 9: [2,3], 10: [1,3],
-    11: [1,2,3], 12: [0,1,3], 13: [0,2,3], 14: [0,1,2],
-    15: [1,2,3,4]
+    0: [0], 1: [1], 2: [2], 3: [3], 4: [4], 5: [0, 2],
+    6: [0, 1], 7: [0, 3], 8: [1, 2], 9: [2, 3], 10: [1, 3],
+    11: [1, 2, 3], 12: [0, 1, 3], 13: [0, 2, 3], 14: [0, 1, 2],
+    15: [0, 1, 2, 3]
 }
 
 
@@ -89,17 +89,18 @@ cdef class HydeData(object):
         import phyde as hd
         data = hd.HydeData("infile.txt", "mapfile.txt", "outgroup", 100, 6, 10000)
     """
-    cdef DNA_t[:, ::1] dnaMat
-    cdef INDEX_t[::1] outIndex # outgroup sequence indices
-    cdef int nind, nsites
-    cdef dict taxonMap
-    cdef dict taxonMap_cp
-    cdef double counts[16][16]
-    cdef double site_pattern_probs[15]
-    cdef double ind_nucl_probs[4][15]
-    cdef str outgroup
-    cdef bint quiet
-    cdef bint ignore_amb_sites
+    cdef:
+        DNA_t[:, ::1] dnaMat
+        INDEX_t[::1] outIndex # outgroup sequence indices
+        int nind, nsites
+        dict taxonMap
+        dict taxonMap_cp
+        double counts[16][16]
+        double site_pattern_probs[15]
+        double ind_nucl_probs[4][15]
+        str outgroup
+        bint quiet
+        bint ignore_amb_sites
 
     def __init__(self, infile=None, mapfile=None, str outgroup=None,
                  int nind=-1, int ntaxa=-1, int nsites=-1, bint quiet=False,
@@ -235,10 +236,11 @@ cdef class HydeData(object):
           data = hd.HydeData("data.txt", "map.txt", "out", 16, 4, 50000)
           res = data.test_triple("sp1", "sp2", "sp3")
         """
-        cdef np.ndarray[INDEX_t, ndim=1] p1_rows  = np.array([i[0] for i in self.taxonMap[p1]], dtype=INDEX)
-        cdef np.ndarray[INDEX_t, ndim=1] hyb_rows = np.array([i[0] for i in self.taxonMap[hyb]],  dtype=INDEX)
-        cdef np.ndarray[INDEX_t, ndim=1] p2_rows  = np.array([i[0] for i in self.taxonMap[p2]],  dtype=INDEX)
-        cdef dict res
+        cdef:
+            np.ndarray[INDEX_t, ndim=1] p1_rows  = np.array([i[0] for i in self.taxonMap[p1]], dtype=INDEX)
+            np.ndarray[INDEX_t, ndim=1] hyb_rows = np.array([i[0] for i in self.taxonMap[hyb]],  dtype=INDEX)
+            np.ndarray[INDEX_t, ndim=1] p2_rows  = np.array([i[0] for i in self.taxonMap[p2]],  dtype=INDEX)
+            dict res
         res = self._test_triple_c(p1_rows, hyb_rows, p2_rows)
         return res
 
@@ -294,12 +296,13 @@ cdef class HydeData(object):
           data = hd.HydeData("data.txt", "map.txt", "out", 16, 4, 50000)
           res = data.bootstrap_triple("sp1", "sp2", "sp3")
         """
-        cdef np.ndarray[INDEX_t, ndim=1] p1_rows  = np.array([i[0] for i in self.taxonMap[p1]], dtype=INDEX)
-        cdef np.ndarray[INDEX_t, ndim=1] hyb_rows = np.array([i[0] for i in self.taxonMap[hyb]],  dtype=INDEX)
-        cdef np.ndarray[INDEX_t, ndim=1] p2_rows  = np.array([i[0] for i in self.taxonMap[p2]],  dtype=INDEX)
-        cdef np.ndarray[INDEX_t, ndim=1] hyb_resampled = hyb_rows
-        cdef dict res = {}
-        cdef int r
+        cdef:
+            np.ndarray[INDEX_t, ndim=1] p1_rows  = np.array([i[0] for i in self.taxonMap[p1]], dtype=INDEX)
+            np.ndarray[INDEX_t, ndim=1] hyb_rows = np.array([i[0] for i in self.taxonMap[hyb]],  dtype=INDEX)
+            np.ndarray[INDEX_t, ndim=1] p2_rows  = np.array([i[0] for i in self.taxonMap[p2]],  dtype=INDEX)
+            np.ndarray[INDEX_t, ndim=1] hyb_resampled = hyb_rows
+            dict res = {}
+            int r
         for r in range(reps):
             hyb_resampled = np.random.choice(hyb_rows, hyb_rows.shape[0], replace=True)
             res[r+1] = {}
