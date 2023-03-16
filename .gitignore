@@ -23,3 +23,5 @@ README.ipynb
 .ipynb_checkpoints
 !.travis.yml
 conda.recipe
+.idea
+.vscode
