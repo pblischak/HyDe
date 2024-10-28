@@ -91,9 +91,6 @@ Documentation
    results.rst
    api.rst
 
-.. |Build Status| image:: https://travis-ci.org/pblischak/HyDe.svg?branch=master
-   :target: https://travis-ci.org/pblischak/HyDe
-
 .. |Documentation| image:: https://readthedocs.org/projects/hybridization-detection/badge/?version=latest
    :target: http://hybridization-detection.readthedocs.io/en/latest/?badge=latest
 

@@ -55,7 +55,7 @@ The commands below take you through every step to accomplish this:
     cd HyDe/
 
     # Builds and installs phyde module
-    python setup.py install
+    python3 -m pip install .
 
     # Test installation
     make test
@@ -66,7 +66,7 @@ Step-By-Step
 After cloning HyDe from GitHub and moving into the main HyDe directory, the next two
 steps accomplish the following tasks:
 
-  #. ``python setup.py install``: this will build and install the HyDe Python
+  #. ``python3 -m pip install .``: this will build and install the HyDe Python
      module, including the compilation of any Cython files (C++ compiler required).
   #. ``make test``: this will test the installation by running a series of commands
      designed to check that the installation was completed successfully. The main

@@ -84,7 +84,7 @@ Installation
 Requirements:
 ~~~~~~~~~~~~~
 
--  Python 3.7+
+-  Python 3.9+
 -  Python Modules:
 
    -  cython
@@ -97,14 +97,14 @@ Requirements:
 .. code:: bash
 
     # To install dependencies -- add 'progress' if you're using the GUI
-    pip install cython numpy multiprocess
+    python3 -m pip install -r requirements.txt
 
     # Clone HyDe repository from GitHub
     git clone https://github.com/pblischak/HyDe.git
     cd HyDe
 
     # Now install phyde module
-    python setup.py install
+    python3 -m pip install .
 
     # Test the installation
     make test
@@ -121,9 +121,6 @@ The ``phyde`` module is also hosted on the Python Package Index (PyPI), and can 
   pip install phyde
 
 Documentation for analyzing data using HyDe can be found `here <http://hybridization-detection.readthedocs.io/analyze.html>`_.
-
-.. |Build Status| image:: https://travis-ci.org/pblischak/HyDe.svg?branch=master
-   :target: https://travis-ci.org/pblischak/HyDe
 
 .. |Documentation| image:: http://readthedocs.org/projects/hybridization-detection/badge/?version=latest
    :target: http://hybridization-detection.readthedocs.io

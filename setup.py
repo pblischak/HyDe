@@ -34,8 +34,7 @@ if INSTALL_ERROR:
     print("ERROR:")
     print("  Unable to install phyde.")
     print(
-        "Please see the documentation at "
-        "http://hybridization-detection.rtfd.io/.\n"
+        "Please see the documentation at " "http://hybridization-detection.rtfd.io/.\n"
     )
     sys.exit(-1)
 else:
@@ -67,14 +66,14 @@ else:
             "scripts/bootstrap_hyde_mp.py",
             "scripts/hyde_gui.py",
         ],
-        license="GPLv3",
+        license="MIT",
         classifiers=[
             "Programming Language :: Python",
             "Programming Language :: Python :: 3",
             "Programming Language :: Cython",
             "Development Status :: 5 - Production/Stable",
             "Intended Audience :: Science/Research",
-            "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+            "License :: OSI Approved :: MIT License",
         ],
         zip_safe=False,
     )
