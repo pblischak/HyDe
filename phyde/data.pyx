@@ -553,7 +553,7 @@ cdef class HydeData(object):
         cdef unsigned i, j, k, l
         if (out >= 4 and p1 >= 4 and hyb >= 4 or
             out >= 4 and hyb >= 4 and p2 >= 4 or
-            out >= 4 and hyb >= 4 and p2 >= 4 or
+            out >= 4 and p1 >= 4 and p2 >= 4 or
             p1 >= 4 and hyb >= 4 and p2 >= 4):
             return 0.0
         elif (out == 4 or p1 == 4 or hyb ==4 or p2 == 4):
@@ -575,7 +575,7 @@ cdef class HydeData(object):
         cdef unsigned i, j, k, l
         if (out >= 4 and p1 >= 4 and hyb >= 4 or
             out >= 4 and hyb >= 4 and p2 >= 4 or
-            out >= 4 and hyb >= 4 and p2 >= 4 or
+            out >= 4 and p1 >= 4 and p2 >= 4 or
             p1 >= 4 and hyb >= 4 and p2 >= 4):
             return 0.0
         elif (out == 4 or p1 == 4 or hyb ==4 or p2 == 4):
