@@ -5,7 +5,8 @@ include test/triples.txt
 include examples/snake-data.txt
 include examples/snake-map.txt
 include Makefile
-include phyde/core/data.pyx
-include LICENSE.rst
+include phyde/data.pyx
+include LICENSE
 include README.rst
 include CHANGELOG.md
+include docs/img/gui.png

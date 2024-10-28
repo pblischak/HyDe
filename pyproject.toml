@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools", "cython"]
+
+[project]
+name = "phyde"
+version = "1.0.0"
+description = "Hybridization Detection Using Phylogenetic Invariants"
+readme = "README.rst"
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Cython",
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+]
+dependencies = ["multiprocess", "numpy", "progress"]
+
+[tool.setuptools.packages.find]
+include = ["phyde*"]
+
+[project.urls]
+Home = "https://github.com/pblischak/HyDe"
+Issues = "https://github.com/pblischak/HyDe/issues"
+Docs = "http://hybridization-detection.readthedocs.io"
