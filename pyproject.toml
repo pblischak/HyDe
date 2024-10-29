@@ -16,7 +16,7 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: MIT License",
 ]
-dependencies = ["multiprocess", "numpy", "progress"]
+dependencies = ["cython", "multiprocess", "numpy", "progress"]
 
 [project.urls]
 Home = "https://github.com/pblischak/HyDe"
