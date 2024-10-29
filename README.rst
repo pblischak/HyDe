@@ -1,5 +1,5 @@
 
-|Build Status| |Documentation|  |PyPI Badge|
+|Documentation|  |PyPI Badge|
 
 HyDe: Hybridization Detection Using Phylogenetic Invariants
 -----------------------------------------------------------
@@ -11,7 +11,7 @@ HyDe: A Python Package For Genome-Scale Hybridization Detection.
 *Systematic Biology*, doi: `https://doi.org/10.1093/sysbio/syy023 <https://doi.org/10.1093/sysbio/syy023>`__.
 
 `Read the Docs <https://hybridization-detection.rtfd.io/>`__
------------------------------------------------------------
+------------------------------------------------------------
 
 HyDe is a software package that detects hybridization in phylogenomic
 data sets using phylogenetic invariants. The primary interface for HyDe is a Python
