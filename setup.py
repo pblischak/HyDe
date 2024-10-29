@@ -6,19 +6,7 @@ import numpy
 
 
 setup(
-    name="phyde",
-    version="1.0.1",
-    description="Hybridization detection using phylogenetic invariants",
-    long_description=open("README.rst").read(),
-    url="https://github.com/pblischak/HyDe",
-    author="Paul Blischak & Laura Kubatko",
-    author_email="paul.blischak@gmail.com",
     packages=find_packages(),
-    install_requires=[
-        "Cython",
-        "multiprocess",
-        "numpy",
-    ],
     ext_modules=cythonize(
         [
             Extension(
@@ -37,15 +25,6 @@ setup(
         "scripts/bootstrap_hyde.py",
         "scripts/bootstrap_hyde_mp.py",
         "scripts/hyde_gui.py",
-    ],
-    license="MIT",
-    classifiers=[
-        "Programming Language :: Python",
-        "Programming Language :: Python :: 3",
-        "Programming Language :: Cython",
-        "Development Status :: 5 - Production/Stable",
-        "Intended Audience :: Science/Research",
-        "License :: OSI Approved :: MIT License",
     ],
     zip_safe=False,
 )
