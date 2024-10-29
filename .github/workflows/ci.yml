@@ -29,6 +29,4 @@ jobs:
       - name: Install phyde
         run: python3 -m pip install .
       - name: Run tests
-        run: |
-          cd test
-          python3 test.py
+        run: make
